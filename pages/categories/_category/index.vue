@@ -22,7 +22,7 @@
           {{ product.name }}
         </v-card-title>
         <v-card-text>
-          <span>R$ {{ (Math.random() * 100).toFixed(2) }}</span>
+          <span>$ {{ (Math.random() * 100).toFixed(2) }}</span>
         </v-card-text>
         <v-card-actions>
           <v-spacer />

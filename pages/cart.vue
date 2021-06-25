@@ -22,7 +22,7 @@
 export default {
   filters: {
     price(value) {
-      return `R$ ${value}`
+      return `$ ${value}`
     },
   },
   data() {

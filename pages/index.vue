@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12">
-      <span class="title">Categories</span>
+    <v-col cols="12" class="text-center">
+      <h2 class="text-h2">Categories</h2>
     </v-col>
     <v-col
       v-for="category in categories"

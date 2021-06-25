@@ -11,7 +11,10 @@
             />
           </v-carousel>
         </v-col>
-        <v-col>
+        <v-col cols="12">
+          <span class="title">Price: $ {{ price }}</span>
+        </v-col>
+        <v-col cols="12">
           <v-btn block tile>
             <v-icon left>mdi-cart</v-icon>
             Add to cart
@@ -83,11 +86,17 @@
 </template>
 
 <script>
+import faker from 'faker'
 export default {
   data() {
     return {
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
     }
+  },
+  computed: {
+    price() {
+      return faker.commerce.price()
+    },
   },
 }
 </script>
