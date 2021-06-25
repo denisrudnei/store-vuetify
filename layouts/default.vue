@@ -1,6 +1,12 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer clipped fixed :value="true" :mini-variant="false" app>
+    <v-navigation-drawer
+      v-model="drawer"
+      clipped
+      fixed
+      :mini-variant="false"
+      app
+    >
       <v-list>
         <v-list-item>
           <v-list-item-content>
@@ -57,6 +63,7 @@ export default {
   data() {
     return {
       clipped: false,
+      drawer: true,
       items: [
         {
           icon: 'mdi-apps',
