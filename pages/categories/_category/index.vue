@@ -1,6 +1,10 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12">Items: {{ length }}</v-col>
+    <v-col cols="12">
+      <v-card>
+        <v-card-text> Items: {{ length }} </v-card-text>
+      </v-card>
+    </v-col>
     <v-col v-for="product in products" :key="product.id" cols="12" md="4">
       <v-card>
         <nuxt-link :to="`/categories/${category}/product/${product.id}`">
@@ -18,23 +22,24 @@
             </template>
           </v-img>
         </nuxt-link>
-        <v-card-title>
-          {{ product.name }}
-        </v-card-title>
-        <v-card-text>
-          <span>$ {{ (Math.random() * 100).toFixed(2) }}</span>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
+        <v-card-text style="position: relative">
           <v-btn
-            icon
+            absolute
+            :color="inCart(product) ? 'red' : 'primary'"
+            fab
             large
-            :color="inCart(product) ? 'red' : 'white'"
+            right
+            top
+            class="white--text"
             @click="addToCart(product)"
           >
             <v-icon>mdi-cart</v-icon>
           </v-btn>
-        </v-card-actions>
+          <h3 class="text-h4 font-weight-light primary--text mb-2">
+            {{ product.name }}
+          </h3>
+          <span>$ {{ (Math.random() * 100).toFixed(2) }}</span>
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>
