@@ -4,15 +4,10 @@
       <v-list>
         <v-list-item>
           <v-list-item-content>
-            <v-row align="align-center">
-              <v-col cols="12">
-                <v-avatar :size="185">
-                  <v-img
-                    :src="`https://picsum.photos/800/600/?${Math.random()}`"
-                  />
-                </v-avatar>
-              </v-col>
-            </v-row>
+            <v-img
+              :src="`https://picsum.photos/800/600/?${Math.random()}`"
+              :aspect-ratio="1"
+            />
           </v-list-item-content>
         </v-list-item>
         <v-list-item
@@ -49,13 +44,14 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer :absolute="!fixed" app>
+    <v-footer app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+import faker from 'faker'
 export default {
   data() {
     return {
@@ -65,16 +61,6 @@ export default {
           icon: 'mdi-apps',
           title: 'Home',
           to: '/',
-        },
-        {
-          icon: 'mdi-label',
-          title: 'Diversos',
-          to: '/categories/Diversos/',
-        },
-        {
-          icon: 'mdi-label',
-          title: 'Diversos 2',
-          to: '/categories/Diversos 2',
         },
       ],
       title: 'Store',
@@ -86,6 +72,26 @@ export default {
         return this.$store.getters['products/getCart']
       },
     },
+    categories() {
+      return this.$store.getters['category/getCategories']
+    },
+  },
+  created() {
+    this.$store.commit(
+      'category/setCategories',
+      Array.from({ length: 5 }, (_, x) => (x += 1)).map((item) => ({
+        id: item,
+        name: faker.commerce.department(),
+      }))
+    )
+    this.items = [
+      ...this.items,
+      ...this.categories.map((category) => ({
+        icon: 'mdi-label',
+        title: `${category.name}`,
+        to: `/categories/${category.name}`,
+      })),
+    ]
   },
 }
 </script>

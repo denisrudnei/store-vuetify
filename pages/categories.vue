@@ -2,10 +2,13 @@
   <v-row>
     <v-col cols="12">
       <v-tabs>
-        <v-tab to="/categories/1">Diversos 1</v-tab>
-        <v-tab to="/categories/2">Diversos 2</v-tab>
-        <v-tab to="/categories/3">Diversos 3</v-tab>
-        <v-tab to="/categories/4">Diversos 4</v-tab>
+        <v-tab
+          v-for="category in categories"
+          :key="category.id"
+          :to="`/categories/${category.id}`"
+        >
+          {{ category.name }}
+        </v-tab>
       </v-tabs>
     </v-col>
     <v-col cols="12">
@@ -15,7 +18,17 @@
 </template>
 
 <script>
-export default {}
+import faker from 'faker'
+export default {
+  data() {
+    return {
+      categories: Array.from({ length: 5 }, (_, x) => (x += 1)).map((item) => ({
+        id: item,
+        name: faker.commerce.department(),
+      })),
+    }
+  },
+}
 </script>
 
 <style></style>

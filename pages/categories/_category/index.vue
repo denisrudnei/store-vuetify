@@ -3,10 +3,21 @@
     <v-col cols="12">Items: {{ length }}</v-col>
     <v-col v-for="product in products" :key="product.id" cols="12" md="4">
       <v-card>
-        <v-img
-          :src="`https://picsum.photos/800/600/?${Math.random()}`"
-          :aspect-ratio="16 / 9"
-        />
+        <nuxt-link :to="`/categories/${category}/product/${product.id}`">
+          <v-img
+            :src="`https://picsum.photos/800/600/?${Math.random()}`"
+            :aspect-ratio="16 / 9"
+          >
+            <template #placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
+        </nuxt-link>
         <v-card-title>
           {{ product.name }}
         </v-card-title>
@@ -30,6 +41,7 @@
 </template>
 
 <script>
+import faker from 'faker'
 export default {
   data() {
     return {
@@ -42,12 +54,15 @@ export default {
         return this.$store.getters['products/getCart']
       },
     },
+    category() {
+      return this.$route.params.category
+    },
     products() {
       return Array.from({ length: this.length }, (_, x) => (x += 1)).map(
         (item) => ({
           id: item,
-          name: `Item: ${item}`,
-          price: Math.floor(Math.random() * 100),
+          name: faker.commerce.productName(),
+          price: faker.commerce.price(),
         })
       )
     },
