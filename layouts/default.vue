@@ -7,6 +7,7 @@
             <v-img
               :src="`https://picsum.photos/800/600/?${Math.random()}`"
               :aspect-ratio="1"
+              class="rounded-circle"
             />
           </v-list-item-content>
         </v-list-item>
