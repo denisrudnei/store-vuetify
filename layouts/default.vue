@@ -37,19 +37,24 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-badge overlap left>
-        <v-menu open-on-hover nudge-width="450" :close-on-content-click="false">
-          <template #activator="{ on }">
-            <v-btn icon to="/cart" v-on="on">
+      <v-menu
+        v-model="cartMenu"
+        open-on-hover
+        nudge-width="450"
+        :close-on-content-click="false"
+      >
+        <template #activator="{ on }">
+          <v-btn icon class="acdent primary--text" v-on="on">
+            <v-badge left bottom overlap bordered color="accent">
               <v-icon>mdi-cart</v-icon>
-            </v-btn>
-          </template>
-          <cart-menu />
-        </v-menu>
-        <template #badge>
-          {{ products.length }}
+              <template #badge>
+                {{ products.length }}
+              </template>
+            </v-badge>
+          </v-btn>
         </template>
-      </v-badge>
+        <cart-menu />
+      </v-menu>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -82,6 +87,14 @@ export default {
     }
   },
   computed: {
+    cartMenu: {
+      get() {
+        return this.$store.getters['menus/getCartMenu']
+      },
+      set(value) {
+        this.$store.commit('menus/setCartMenu', value)
+      },
+    },
     products: {
       get() {
         return this.$store.getters['products/getCart']

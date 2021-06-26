@@ -37,9 +37,16 @@
           <cart-info />
         </v-col>
         <v-col cols="12">
-          <v-btn to="/cart" block class="primary white--text">Go to cart</v-btn>
+          <v-btn
+            to="/cart"
+            block
+            class="primary white--text"
+            @click="cartMenu = false"
+          >
+            Go to cart
+          </v-btn>
         </v-col>
-        <v-col v-if="products.length" cols="12">
+        <v-col v-if="products.length" cols="12" @click="cartMenu = false">
           <v-btn to="/buy" block class="primary white--text">Buy</v-btn>
         </v-col>
       </v-row>
@@ -57,9 +64,19 @@ export default {
     },
   },
   components: { cartInfo },
-  computed: mapGetters({
-    products: 'products/getCart',
-  }),
+  computed: {
+    cartMenu: {
+      get() {
+        return this.$store.getters['menus/getCartMenu']
+      },
+      set(value) {
+        this.$store.commit('menus/setCartMenu', value)
+      },
+    },
+    ...mapGetters({
+      products: 'products/getCart',
+    }),
+  },
   methods: {
     remove(id) {
       this.$store.commit('products/remove', id)
