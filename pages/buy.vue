@@ -22,6 +22,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-mask="['(##) ####-####', '(##) #####-####']"
+                  type="tel"
                   outlined
                   label="Phone"
                 />
@@ -74,16 +75,23 @@
                 <v-text-field
                   v-mask="'#### #### #### ####'"
                   outlined
+                  type="tel"
                   label="Card number"
                 />
               </v-col>
               <v-col cols="6">
-                <v-text-field v-mask="'##/##/####'" outlined label="Exp data" />
+                <v-text-field
+                  v-mask="'##/##/####'"
+                  outlined
+                  label="Exp data"
+                  type="tel"
+                />
               </v-col>
               <v-col cols="6">
                 <v-text-field
                   v-mask="'###'"
                   outlined
+                  type="tel"
                   label="Card code"
                 ></v-text-field>
               </v-col>
