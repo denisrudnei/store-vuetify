@@ -2,6 +2,14 @@
   <v-row>
     <v-col>
       <v-data-table :items="cart" :headers="headers">
+        <template #item.image>
+          <v-img
+            :src="`https://picsum.photos/800/600/?${Math.random()}`"
+            :aspect-ratio="21 / 9"
+            :width="250"
+            class="pa-2 ma-1"
+          />
+        </template>
         <template #item.actions="{ item }">
           <v-btn icon class="red--text" @click="remove(item.id)">
             <v-icon>mdi-delete</v-icon>
@@ -28,6 +36,11 @@ export default {
   data() {
     return {
       headers: [
+        {
+          text: 'Image',
+          value: 'image',
+          sortable: false,
+        },
         {
           text: 'Name',
           value: 'name',
