@@ -12,7 +12,7 @@
     >
       <v-card :to="`/categories/${category.name}`">
         <v-img
-          :src="`https://picsum.photos/800/600/?${Math.random()}`"
+          :src="`https://picsum.photos/800/600/?${category.name}`"
           :aspect-ratio="16 / 9"
         >
           <template #placeholder>

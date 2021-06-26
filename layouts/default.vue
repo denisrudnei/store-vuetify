@@ -37,10 +37,15 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-badge overlap left inline>
-        <v-btn icon to="/cart">
-          <v-icon>mdi-cart</v-icon>
-        </v-btn>
+      <v-badge overlap left>
+        <v-menu open-on-hover nudge-width="450" :close-on-content-click="false">
+          <template #activator="{ on }">
+            <v-btn icon to="/cart" v-on="on">
+              <v-icon>mdi-cart</v-icon>
+            </v-btn>
+          </template>
+          <cart-menu />
+        </v-menu>
         <template #badge>
           {{ products.length }}
         </template>
@@ -59,7 +64,9 @@
 
 <script>
 import faker from 'faker'
+import cartMenu from '~/components/cartMenu.vue'
 export default {
+  components: { cartMenu },
   data() {
     return {
       clipped: false,

@@ -60,6 +60,9 @@
                 </v-data-table>
               </v-col>
               <v-col cols="12">
+                <cart-info />
+              </v-col>
+              <v-col cols="12">
                 <v-btn class="primary white--text" @click="step = 1">
                   Back
                 </v-btn>
@@ -114,7 +117,9 @@
 <script>
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
+import cartInfo from '~/components/cartInfo.vue'
 export default {
+  components: { cartInfo },
   directives: { TheMask },
   filters: {
     price(value) {
