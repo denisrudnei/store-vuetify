@@ -23,6 +23,12 @@
         </template>
       </v-data-table>
     </v-col>
+    <v-col cols="12">
+      <v-btn class="primary white--text" :disabled="!cart.length" to="/buy">
+        Buy
+        <v-icon right> mdi-cash-multiple </v-icon>
+      </v-btn>
+    </v-col>
   </v-row>
 </template>
 
