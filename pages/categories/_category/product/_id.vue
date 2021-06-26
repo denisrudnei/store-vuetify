@@ -1,5 +1,10 @@
 <template>
   <v-row>
+    <v-col cols="12">
+      <span class="title">
+        {{ product.name }}
+      </span>
+    </v-col>
     <v-col cols="12" md="4">
       <v-row>
         <v-col cols="12">
@@ -12,10 +17,10 @@
           </v-carousel>
         </v-col>
         <v-col cols="12">
-          <span class="title">Price: $ {{ price }}</span>
+          <span class="title">Price: $ {{ product.price }}</span>
         </v-col>
         <v-col cols="12">
-          <v-btn block tile>
+          <v-btn block tile @click="addToCart(product)">
             <v-icon left>mdi-cart</v-icon>
             Add to cart
           </v-btn>
@@ -27,7 +32,6 @@
         <v-col cols="12">
           <v-rating length="5" :value="4.5" half-increments readonly />
         </v-col>
-
         <v-col cols="12">
           <span>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -91,11 +95,19 @@ export default {
   data() {
     return {
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
+      product: {
+        price: 0,
+        name: '',
+      },
     }
   },
-  computed: {
-    price() {
-      return faker.commerce.price()
+  created() {
+    this.product.price = faker.commerce.price()
+    this.product.name = faker.commerce.productName()
+  },
+  methods: {
+    addToCart(product) {
+      this.$store.commit('products/addToCart', product)
     },
   },
 }
