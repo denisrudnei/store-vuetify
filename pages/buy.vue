@@ -72,7 +72,7 @@
             <v-row class="py-2">
               <v-col cols="12">
                 <v-text-field
-                  v-mask="'#### #### #### #####'"
+                  v-mask="'#### #### #### ####'"
                   outlined
                   label="Card number"
                 />
