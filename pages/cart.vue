@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="10">
+    <v-col cols="12" md="10">
       <v-data-table :items="cart" :headers="headers">
         <template #item.image>
           <v-img
@@ -23,7 +23,7 @@
         </template>
       </v-data-table>
     </v-col>
-    <v-col cols="2">
+    <v-col cols="12" md="2">
       <cart-info />
     </v-col>
     <v-col cols="12">
