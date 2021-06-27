@@ -37,6 +37,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <notification-list />
       <v-menu
         v-model="cartMenu"
         open-on-hover
@@ -70,8 +71,9 @@
 <script>
 import faker from 'faker'
 import cartMenu from '~/components/cartMenu.vue'
+import NotificationList from '~/components/notification-list.vue'
 export default {
-  components: { cartMenu },
+  components: { cartMenu, NotificationList },
   data() {
     return {
       clipped: false,
