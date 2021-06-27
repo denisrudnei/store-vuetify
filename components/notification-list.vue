@@ -1,5 +1,5 @@
 <template>
-  <v-menu max-height="450" nudge-width="450">
+  <v-menu max-height="450" nudge-width="450" :close-on-content-click="false">
     <template #activator="{ on }">
       <v-btn icon v-on="on">
         <v-icon>mdi-bell</v-icon>
