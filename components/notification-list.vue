@@ -37,9 +37,10 @@
       <v-card-text>
         <v-row>
           <v-col cols="12">
-            <v-btn block class="primary white--text"
-              >Read all <v-icon right>mdi-check-all</v-icon></v-btn
-            >
+            <v-btn block class="primary white--text">
+              Read all
+              <v-icon right>mdi-check-all</v-icon>
+            </v-btn>
           </v-col>
           <v-col cols="12">
             <v-btn class="primary white--text" block> View all</v-btn>

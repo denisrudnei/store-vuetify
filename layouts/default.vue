@@ -40,7 +40,6 @@
       <notification-list />
       <v-menu
         v-model="cartMenu"
-        open-on-hover
         nudge-width="450"
         :close-on-content-click="false"
       >
@@ -55,6 +54,14 @@
           </v-btn>
         </template>
         <cart-menu />
+        <v-card v-if="$vuetify.breakpoint.mobile">
+          <v-card-text>
+            <v-btn class="primary white--text" block @click="cartMenu = false">
+              Close
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-text>
+        </v-card>
       </v-menu>
     </v-app-bar>
     <v-main>
