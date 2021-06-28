@@ -25,9 +25,11 @@
           exact
         >
           <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon color="primary">{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content
+            :class="{ 'primary--text': !$vuetify.theme.isDark }"
+          >
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
@@ -37,6 +39,21 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-btn
+        icon
+        :class="{
+          'white--text': $vuetify.theme.dark,
+          'primary--text': !$vuetify.theme.dark,
+        }"
+      >
+        <v-icon @click="toggleTheme">
+          {{
+            $vuetify.theme.dark
+              ? 'mdi-weather-night'
+              : 'mdi-white-balance-sunny'
+          }}
+        </v-icon>
+      </v-btn>
       <notification-list />
       <v-menu
         v-model="cartMenu"
@@ -44,7 +61,7 @@
         :close-on-content-click="false"
       >
         <template #activator="{ on }">
-          <v-btn icon class="acdent primary--text" v-on="on">
+          <v-btn icon class="primary--text" v-on="on">
             <v-badge left bottom overlap bordered color="accent">
               <v-icon>mdi-cart</v-icon>
               <template #badge>
@@ -56,13 +73,31 @@
         <cart-menu />
         <v-card v-if="$vuetify.breakpoint.mobile">
           <v-card-text>
-            <v-btn class="primary white--text" block @click="cartMenu = false">
+            <v-btn
+              :class="{
+                primary: true,
+                'white--text': $vuetify.theme.dark,
+                'primary--text': !$vuetify.theme.dark,
+              }"
+              block
+              @click="cartMenu = false"
+            >
               Close
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-text>
         </v-card>
       </v-menu>
+      <v-btn
+        :class="{
+          'white--text': $vuetify.theme.dark,
+          'primary--text': !$vuetify.theme.dark,
+        }"
+        icon
+        to="/admin"
+      >
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -129,6 +164,11 @@ export default {
         to: `/categories/${category.name}`,
       })),
     ]
+  },
+  methods: {
+    toggleTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.isDark
+    },
   },
 }
 </script>

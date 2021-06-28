@@ -5,7 +5,14 @@
     nudge-width="450"
   >
     <template #activator="{ on }">
-      <v-btn icon v-on="on">
+      <v-btn
+        icon
+        :class="{
+          'white--text': $vuetify.theme.dark,
+          'primary--text': !$vuetify.theme.dark,
+        }"
+        v-on="on"
+      >
         <v-icon>mdi-bell</v-icon>
       </v-btn>
     </template>
