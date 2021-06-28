@@ -73,15 +73,7 @@
         <cart-menu />
         <v-card v-if="$vuetify.breakpoint.mobile">
           <v-card-text>
-            <v-btn
-              :class="{
-                primary: true,
-                'white--text': $vuetify.theme.dark,
-                'primary--text': !$vuetify.theme.dark,
-              }"
-              block
-              @click="cartMenu = false"
-            >
+            <v-btn class="primary white--text" block @click="cartMenu = false">
               Close
               <v-icon>mdi-close</v-icon>
             </v-btn>
