@@ -1,5 +1,9 @@
 <template>
-  <v-menu max-height="450" nudge-width="450">
+  <v-menu
+    v-model="menu"
+    :max-height="$vuetify.breakpoint.mobile ? '90vh' : 450"
+    nudge-width="450"
+  >
     <template #activator="{ on }">
       <v-btn icon v-on="on">
         <v-icon>mdi-bell</v-icon>
@@ -33,10 +37,23 @@
       <v-card-text>
         <v-row>
           <v-col cols="12">
-            <v-btn block class="primary white--text">Read all</v-btn>
+            <v-btn block class="primary white--text"
+              >Read all <v-icon right>mdi-check-all</v-icon></v-btn
+            >
           </v-col>
           <v-col cols="12">
             <v-btn class="primary white--text" block> View all</v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              v-if="$vuetify.breakpoint.mobile"
+              block
+              class="primary white--text"
+              @click="menu = false"
+            >
+              Close
+              <v-icon right> mdi-close </v-icon>
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-text>
@@ -49,6 +66,7 @@ import faker from 'faker'
 export default {
   data() {
     return {
+      menu: false,
       notifications: Array.from({ length: 15 }, (_, i) => (i += 1)).map(
         (item) => ({
           id: item,
