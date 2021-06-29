@@ -5,6 +5,8 @@ export default {
     fallback: true,
   },
 
+  target: 'static',
+
   env: {
     GOOGLE_GTAG: process.env.GOOGLE_GTAG,
   },
