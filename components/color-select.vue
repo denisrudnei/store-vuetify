@@ -2,10 +2,13 @@
   <v-menu :close-on-content-click="false" min-width="auto">
     <template #activator="{ on }">
       <v-text-field
-        outlined
+        filled
         :label="label"
         :value="getColor()"
         readonly
+        dark
+        :background-color="getColor()"
+        append-icon="mdi-palette"
         v-on="on"
       />
     </template>
