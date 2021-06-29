@@ -9,7 +9,7 @@ export default {
   },
 
   env: {
-    GOOGLE_ANALYTICS: process.env.GOOGLE_ANALYTICS,
+    GOOGLE_GTAG: process.env.GOOGLE_GTAG,
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -39,13 +39,12 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    [
-      '@nuxtjs/google-analytics',
-      {
-        id: process.env.GOOGLE_ANALYTICS,
-      },
-    ],
+    '@nuxtjs/google-gtag',
   ],
+
+  'google-gtag': {
+    id: process.env.GOOGLE_GTAG,
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
