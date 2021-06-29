@@ -1,11 +1,14 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
   generate: {
     fallback: true,
+  },
+
+  env: {
+    GOOGLE_GTAG: process.env.GOOGLE_GTAG,
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -35,7 +38,12 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/google-gtag',
   ],
+
+  'google-gtag': {
+    id: process.env.GOOGLE_GTAG,
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [

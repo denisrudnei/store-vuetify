@@ -101,6 +101,18 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: this.product.name,
+      meta: [
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: 'https://picsum.photos/800/600/',
+        },
+      ],
+    }
+  },
   created() {
     this.product.price = faker.commerce.price()
     this.product.name = faker.commerce.productName()

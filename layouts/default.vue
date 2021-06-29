@@ -25,27 +25,40 @@
           exact
         >
           <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon color="primary">{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content
+            :class="{ 'primary--text': !$vuetify.theme.isDark }"
+          >
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar clipped-left fixed app>
+    <v-app-bar clipped-left fixed app flat>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-btn
+        icon
+        :class="{
+          'white--text': isDark,
+          'primary--text': !isDark,
+        }"
+        @click="toggleTheme"
+      >
+        <v-icon>
+          {{ isDark ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
+        </v-icon>
+      </v-btn>
       <notification-list />
       <v-menu
         v-model="cartMenu"
-        open-on-hover
         nudge-width="450"
         :close-on-content-click="false"
       >
         <template #activator="{ on }">
-          <v-btn icon class="acdent primary--text" v-on="on">
+          <v-btn icon class="primary--text" v-on="on">
             <v-badge left bottom overlap bordered color="accent">
               <v-icon>mdi-cart</v-icon>
               <template #badge>
@@ -55,15 +68,41 @@
           </v-btn>
         </template>
         <cart-menu />
+        <v-card v-if="isMobile">
+          <v-card-text>
+            <v-btn class="primary white--text" block @click="cartMenu = false">
+              Close
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-text>
+        </v-card>
       </v-menu>
+      <v-btn
+        :class="{
+          'white--text': isDark,
+          'primary--text': !isDark,
+        }"
+        icon
+        to="/admin"
+      >
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer :dark="isDark" padless class="text-center">
+      <v-card flat tile width="100%">
+        <v-card-text>
+          <v-btn v-for="icon in icons" :key="icon" icon>
+            <v-icon>{{ icon }}</v-icon>
+          </v-btn>
+          <v-spacer />
+          <span>&copy; {{ new Date().getFullYear() }}</span>
+        </v-card-text>
+      </v-card>
     </v-footer>
   </v-app>
 </template>
@@ -72,8 +111,10 @@
 import faker from 'faker'
 import cartMenu from '~/components/cartMenu.vue'
 import NotificationList from '~/components/notification-list.vue'
+import theme from '~/mixins/theme'
 export default {
   components: { cartMenu, NotificationList },
+  mixins: [theme],
   data() {
     return {
       clipped: false,
@@ -85,6 +126,7 @@ export default {
           to: '/',
         },
       ],
+      icons: ['mdi-facebook', 'mdi-youtube', 'mdi-twitter', 'mdi-discord'],
       title: 'Store',
     }
   },
@@ -122,6 +164,11 @@ export default {
         to: `/categories/${category.name}`,
       })),
     ]
+  },
+  methods: {
+    toggleTheme() {
+      this.isDark = !this.$vuetify.theme.isDark
+    },
   },
 }
 </script>
