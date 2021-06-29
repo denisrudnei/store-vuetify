@@ -42,16 +42,12 @@
       <v-btn
         icon
         :class="{
-          'white--text': $vuetify.theme.dark,
-          'primary--text': !$vuetify.theme.dark,
+          'white--text': isDark,
+          'primary--text': !isDark,
         }"
       >
         <v-icon @click="toggleTheme">
-          {{
-            $vuetify.theme.dark
-              ? 'mdi-weather-night'
-              : 'mdi-white-balance-sunny'
-          }}
+          {{ isDark ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
         </v-icon>
       </v-btn>
       <notification-list />
@@ -71,7 +67,7 @@
           </v-btn>
         </template>
         <cart-menu />
-        <v-card v-if="$vuetify.breakpoint.mobile">
+        <v-card v-if="isMobile">
           <v-card-text>
             <v-btn class="primary white--text" block @click="cartMenu = false">
               Close
@@ -82,8 +78,8 @@
       </v-menu>
       <v-btn
         :class="{
-          'white--text': $vuetify.theme.dark,
-          'primary--text': !$vuetify.theme.dark,
+          'white--text': isDark,
+          'primary--text': !isDark,
         }"
         icon
         to="/admin"
@@ -96,7 +92,7 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer :dark="$vuetify.theme.dark" padless class="text-center">
+    <v-footer :dark="isDark" padless class="text-center">
       <v-card flat tile width="100%">
         <v-card-text>
           <v-btn v-for="icon in icons" :key="icon" icon>
@@ -114,8 +110,10 @@
 import faker from 'faker'
 import cartMenu from '~/components/cartMenu.vue'
 import NotificationList from '~/components/notification-list.vue'
+import theme from '~/mixins/theme'
 export default {
   components: { cartMenu, NotificationList },
+  mixins: [theme],
   data() {
     return {
       clipped: false,
@@ -168,7 +166,7 @@ export default {
   },
   methods: {
     toggleTheme() {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.isDark
+      this.isDark = !this.$vuetify.theme.isDark
     },
   },
 }
