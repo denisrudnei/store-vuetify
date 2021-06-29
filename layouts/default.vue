@@ -35,7 +35,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar clipped-left fixed app>
+    <v-app-bar clipped-left fixed app flat>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
@@ -96,8 +96,16 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer :dark="$vuetify.theme.dark" padless class="text-center">
+      <v-card flat tile width="100%">
+        <v-card-text>
+          <v-btn v-for="icon in icons" :key="icon" icon>
+            <v-icon>{{ icon }}</v-icon>
+          </v-btn>
+          <v-spacer />
+          <span>&copy; {{ new Date().getFullYear() }}</span>
+        </v-card-text>
+      </v-card>
     </v-footer>
   </v-app>
 </template>
@@ -119,6 +127,7 @@ export default {
           to: '/',
         },
       ],
+      icons: ['mdi-facebook', 'mdi-youtube', 'mdi-twitter', 'mdi-discord'],
       title: 'Store',
     }
   },

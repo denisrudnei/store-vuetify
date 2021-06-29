@@ -1,8 +1,12 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12">
-      <v-card>
-        <v-card-text> Items: {{ length }} </v-card-text>
+      <v-card
+        :dark="!$vuetify.theme.dark"
+        :color="!$vuetify.theme.dark ? 'primary' : undefined"
+        flat
+      >
+        <v-card-text class="title"> Items: {{ length }} </v-card-text>
       </v-card>
     </v-col>
     <v-col v-for="product in products" :key="product.id" cols="12" md="4">
