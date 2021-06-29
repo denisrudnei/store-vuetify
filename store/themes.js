@@ -9,7 +9,7 @@ export const state = () => ({
     secondary: '#FFFFFF',
     accent: '#FFFFFF',
   },
-  darkTheme: true,
+  isDark: true,
 })
 
 export const mutations = {
