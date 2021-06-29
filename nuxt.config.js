@@ -8,6 +8,10 @@ export default {
     fallback: true,
   },
 
+  env: {
+    GOOGLE_ANALYTICS: process.env.GOOGLE_ANALYTICS,
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - test-store',
@@ -35,6 +39,12 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: process.env.GOOGLE_ANALYTICS,
+      },
+    ],
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
