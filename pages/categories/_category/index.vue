@@ -57,6 +57,18 @@ export default {
       length: undefined,
     }
   },
+  head() {
+    return {
+      title: this.category,
+      meta: [
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: 'https://picsum.photos/800/600',
+        },
+      ],
+    }
+  },
   computed: {
     cart: {
       get() {
