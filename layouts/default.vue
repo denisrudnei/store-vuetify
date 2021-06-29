@@ -45,8 +45,9 @@
           'white--text': isDark,
           'primary--text': !isDark,
         }"
+        @click="toggleTheme"
       >
-        <v-icon @click="toggleTheme">
+        <v-icon>
           {{ isDark ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
         </v-icon>
       </v-btn>
