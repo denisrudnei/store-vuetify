@@ -43,7 +43,7 @@
         <v-divider v-if="!isMobile" vertical />
         <v-col md="2" cols="12">
           <v-card flat>
-            <v-card-title>Quick actions</v-card-title>
+            <v-card-title class="text-no-wrap">Quick actions</v-card-title>
             <v-card-text>
               <a href="#"> Quick action #1</a>
               <br />
