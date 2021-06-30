@@ -25,13 +25,13 @@
             Add to cart
           </v-btn>
         </v-col>
+        <v-col cols="12">
+          <rating />
+        </v-col>
       </v-row>
     </v-col>
     <v-col cols="12" md="8">
       <v-row>
-        <v-col cols="12">
-          <v-rating length="5" :value="4.5" half-increments readonly />
-        </v-col>
         <v-col cols="12">
           <span>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -91,6 +91,7 @@
 
 <script>
 import faker from 'faker'
+import Rating from '~/components/rating.vue'
 export default {
   data() {
     return {
@@ -112,6 +113,9 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    Rating,
   },
   created() {
     this.product.price = faker.commerce.price()
