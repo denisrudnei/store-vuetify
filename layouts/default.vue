@@ -125,7 +125,6 @@ export default {
   data() {
     return {
       clipped: false,
-      drawer: true,
       items: [
         {
           icon: 'mdi-apps',
@@ -138,6 +137,14 @@ export default {
     }
   },
   computed: {
+    drawer: {
+      get() {
+        return this.$store.getters['menus/getMainDrawer']
+      },
+      set(value) {
+        this.$store.commit('menus/setMainDrawer', value)
+      },
+    },
     cartMenu: {
       get() {
         return this.$store.getters['menus/getCartMenu']
@@ -179,3 +186,8 @@ export default {
   },
 }
 </script>
+<style scoped>
+.v-application {
+  background-color: var(--v-background-base);
+}
+</style>
