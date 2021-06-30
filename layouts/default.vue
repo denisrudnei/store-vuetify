@@ -51,6 +51,13 @@
           {{ isDark ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
         </v-icon>
       </v-btn>
+      <v-btn
+        icon
+        :class="{ 'white--text': isDark, 'primary--text': !isDark }"
+        to="/profile"
+      >
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
       <notification-list />
       <v-menu
         v-model="cartMenu"
