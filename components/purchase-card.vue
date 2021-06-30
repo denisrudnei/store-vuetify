@@ -2,14 +2,14 @@
   <v-card>
     <v-card-text>
       <v-row align="center" justify="center">
-        <v-col cols="1" class="pa-5">
+        <v-col md="1" cols="12" class="pa-5">
           <v-img
             :src="`https://picsum.photos/800/800/?${Math.random()}`"
             :aspect-ratio="1"
           />
         </v-col>
-        <v-divider vertical />
-        <v-col cols="7">
+        <v-divider v-if="!isMobile" vertical />
+        <v-col md="7" cols="12">
           <v-card flat>
             <v-card-title>
               {{ productName }}
@@ -21,10 +21,10 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-divider vertical />
-        <v-col cols="2">
+        <v-divider v-if="!isMobile" vertical />
+        <v-col md="2" cols="12">
           <v-row>
-            <v-col>
+            <v-col cols="12">
               <v-btn
                 block
                 class="primary white--text"
@@ -33,15 +33,15 @@
                 See purchase
               </v-btn>
             </v-col>
-            <v-col>
+            <v-col cols="12">
               <v-btn block class="primary white--text" to="/buy">
                 Buy again
               </v-btn>
             </v-col>
           </v-row>
         </v-col>
-        <v-divider vertical />
-        <v-col cols="2">
+        <v-divider v-if="!isMobile" vertical />
+        <v-col md="2" cols="12">
           <v-card flat>
             <v-card-title>Quick actions</v-card-title>
             <v-card-text>
@@ -58,7 +58,9 @@
 
 <script>
 import faker from 'faker'
+import theme from '~/mixins/theme'
 export default {
+  mixins: [theme],
   data() {
     return {
       productName: faker.commerce.productName(),
