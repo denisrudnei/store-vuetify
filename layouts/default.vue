@@ -99,18 +99,18 @@
       <v-container>
         <nuxt />
       </v-container>
+      <v-footer :dark="isDark" padless class="text-center">
+        <v-card flat tile width="100%">
+          <v-card-text>
+            <v-btn v-for="icon in icons" :key="icon" icon>
+              <v-icon>{{ icon }}</v-icon>
+            </v-btn>
+            <v-spacer />
+            <span>&copy; {{ new Date().getFullYear() }}</span>
+          </v-card-text>
+        </v-card>
+      </v-footer>
     </v-main>
-    <v-footer :dark="isDark" padless class="text-center">
-      <v-card flat tile width="100%">
-        <v-card-text>
-          <v-btn v-for="icon in icons" :key="icon" icon>
-            <v-icon>{{ icon }}</v-icon>
-          </v-btn>
-          <v-spacer />
-          <span>&copy; {{ new Date().getFullYear() }}</span>
-        </v-card-text>
-      </v-card>
-    </v-footer>
   </v-app>
 </template>
 
