@@ -3,6 +3,7 @@
     <v-col cols="12">
       <v-tabs>
         <v-tab to="/admin/customization">Customization</v-tab>
+        <v-tab to="/admin/social-networks">Social networks</v-tab>
       </v-tabs>
     </v-col>
     <v-col cols="12">
