@@ -18,7 +18,7 @@
     <v-divider vertical></v-divider>
     <v-col cols="12" md="4">
       <v-card :flat="isDark">
-        <v-card-title> Defailts of purchase </v-card-title>
+        <v-card-title> Details of purchase </v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="12">Date 06/29/2021</v-col>
