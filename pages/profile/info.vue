@@ -60,13 +60,13 @@
             <v-col cols="12" md="2">
               <v-text-field outlined label="Zip code"> </v-text-field>
             </v-col>
-            <v-col md="5">
+            <v-col cols="12" md="5">
               <v-text-field outlined label="Country"> </v-text-field>
             </v-col>
-            <v-col md="5">
+            <v-col cols="12" md="5">
               <v-text-field outlined label="City"> </v-text-field>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="12" md="4">
               <v-text-field outlined label="Number"> </v-text-field>
             </v-col>
             <v-col cols="12" md="8">
