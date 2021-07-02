@@ -12,7 +12,8 @@ const server = express()
 process.on('SIGTERM', () => process.exit())
 
 async function start() {
-  const port = process.env.PORT || 3000
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+  const host = process.env.HOST || '0.0.0.0'
 
   const nuxt = await loadNuxt(isDev ? 'dev' : 'start')
 
@@ -24,11 +25,10 @@ async function start() {
     build(nuxt)
   }
 
-  server.listen(port, () => {
-    consola.info({
-      badge: true,
-      message: `Server started on port ${port}`,
-    })
+  server.listen(port, host)
+  consola.info({
+    badge: true,
+    message: `Server started on port ${port}`,
   })
 }
 start()
