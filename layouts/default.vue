@@ -33,6 +33,22 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        <v-list-item
+          v-for="item in categoriesItems"
+          :key="item.title"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon color="primary">{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content
+            :class="{ 'primary--text': !$vuetify.theme.isDark }"
+          >
+            <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar clipped-left fixed app>
@@ -115,7 +131,6 @@
 </template>
 
 <script>
-import faker from 'faker'
 import cartMenu from '~/components/cartMenu.vue'
 import NotificationList from '~/components/notification-list.vue'
 import theme from '~/mixins/theme'
@@ -161,23 +176,18 @@ export default {
     categories() {
       return this.$store.getters['category/getCategories']
     },
-  },
-  created() {
-    this.$store.commit(
-      'category/setCategories',
-      Array.from({ length: 5 }, (_, x) => (x += 1)).map((item) => ({
-        id: item,
-        name: faker.commerce.department(),
-      }))
-    )
-    this.items = [
-      ...this.items,
-      ...this.categories.map((category) => ({
+    categoriesItems() {
+      return this.categories.map((category) => ({
         icon: 'mdi-label',
         title: `${category.name}`,
         to: `/categories/${category.name}`,
-      })),
-    ]
+      }))
+    },
+  },
+  created() {
+    this.$axios.get('/category').then((response) => {
+      this.$store.commit('category/setCategories', response.data)
+    })
   },
   methods: {
     toggleTheme() {

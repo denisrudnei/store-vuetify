@@ -31,10 +31,12 @@
 
 <script>
 export default {
-  computed: {
-    categories() {
-      return this.$store.getters['category/getCategories']
-    },
+  async asyncData({ $axios, store }) {
+    const { data } = await $axios.get('/category')
+    store.commit('category/setCategories', data)
+    return {
+      categories: data,
+    }
   },
 }
 </script>

@@ -6,7 +6,7 @@
         :color="!$vuetify.theme.dark ? 'primary' : undefined"
         flat
       >
-        <v-card-text class="title"> Items: {{ length }} </v-card-text>
+        <v-card-text class="title"> Items: {{ products.length }} </v-card-text>
       </v-card>
     </v-col>
     <v-col v-for="product in products" :key="product.id" cols="12" md="4">
@@ -50,11 +50,17 @@
 </template>
 
 <script>
-import faker from 'faker'
 export default {
+  async asyncData({ $axios }) {
+    const { data } = await $axios.get('/product')
+    return {
+      products: data,
+    }
+  },
   data() {
     return {
-      length: undefined,
+      length: 0,
+      products: [],
     }
   },
   head() {
@@ -78,35 +84,8 @@ export default {
     category() {
       return this.$route.params.category
     },
-    products() {
-      return Array.from({ length: this.length }, (_, x) => (x += 1)).map(
-        (item) => ({
-          id: item,
-          name: faker.commerce.productName(),
-          price: faker.commerce.price(),
-        })
-      )
-    },
-  },
-  watch: {
-    $route: {
-      deep: true,
-      handler() {
-        this.length = this.generateLength()
-      },
-    },
-  },
-  watchQuery: true,
-  beforeUpdate() {
-    this.length = this.generateLength()
-  },
-  created() {
-    this.length = this.generateLength()
   },
   methods: {
-    generateLength() {
-      return Math.floor(Math.random() * 25)
-    },
     addToCart(product) {
       this.$store.commit('products/addToCart', product)
     },

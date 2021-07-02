@@ -109,6 +109,13 @@ export default {
   directives: {
     TheMask,
   },
+  async asyncData({ $axios, route }) {
+    const id = route.params.id
+    const { data } = await $axios.get(`/product/${id}`)
+    return {
+      product: data,
+    }
+  },
   data() {
     return {
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
@@ -127,6 +134,31 @@ export default {
           hid: 'og:image',
           property: 'og:image',
           content: 'https://picsum.photos/800/600/',
+        },
+        {
+          hid: 'og:type',
+          property: 'og:type',
+          content: 'product',
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.product.name,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.product.description,
+        },
+        {
+          hid: 'og:ammount',
+          property: 'og:ammount',
+          content: this.product.price,
+        },
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: `product/${this.product.id}`,
         },
       ],
     }
