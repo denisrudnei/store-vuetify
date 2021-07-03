@@ -1,5 +1,12 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
+import { Category } from './Category'
 
 @Entity()
 @ObjectType()
@@ -15,6 +22,10 @@ export class Product extends BaseEntity {
   @Field()
   @Column({ type: 'text' })
   public description!: string
+
+  @Field(() => Category)
+  @ManyToOne(() => Category)
+  public category?: Category
 
   @Field()
   @Column({ type: 'decimal' })

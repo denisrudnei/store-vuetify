@@ -9,6 +9,8 @@ export default {
   env: {
     GOOGLE_GTAG: process.env.GOOGLE_GTAG,
     API: process.env.API,
+    GRAPHQL: process.env.GRAPHQL,
+    SUBSCRIPTIONS: process.env.SUBSCRIPTIONS,
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -51,6 +53,7 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/google-gtag',
+    '@nuxtjs/apollo',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -62,6 +65,16 @@ export default {
   pwa: {
     manifest: {
       lang: 'en',
+    },
+  },
+
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: process.env.GRAPHQL || 'http://localhost:3000/graphql',
+        wsEndpoint:
+          process.env.SUBSCRIPTIONS || 'ws://localhost:3000/subscriptions',
+      },
     },
   },
 
