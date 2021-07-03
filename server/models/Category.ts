@@ -10,7 +10,7 @@ export class Category extends BaseEntity {
 
   @Field()
   @Column()
-  public name!: number
+  public name!: string
 
   @Field()
   @Column({ type: 'text' })
