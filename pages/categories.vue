@@ -5,7 +5,7 @@
         <v-tab
           v-for="category in categories"
           :key="category.id"
-          :to="`/categories/${category.id}`"
+          :to="`/categories/${category.name}`"
         >
           {{ category.name }}
         </v-tab>

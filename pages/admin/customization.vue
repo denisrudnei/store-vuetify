@@ -70,6 +70,9 @@ export default {
       description: faker.lorem.sentence(),
     }
   },
+  head: {
+    title: 'Customization',
+  },
   computed: {
     light: {
       get() {

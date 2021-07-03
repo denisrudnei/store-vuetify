@@ -38,5 +38,8 @@ export default {
       categories: data,
     }
   },
+  head: {
+    title: 'Home',
+  },
 }
 </script>

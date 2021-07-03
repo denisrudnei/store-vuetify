@@ -44,6 +44,11 @@ export default {
       price: faker.commerce.price(),
     }
   },
+  head() {
+    return {
+      title: `Purchase - ${this.productName}`,
+    }
+  },
 }
 </script>
 

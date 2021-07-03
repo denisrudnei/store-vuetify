@@ -14,6 +14,9 @@
 
 <script>
 export default {
+  head: {
+    title: 'Profile',
+  },
   created() {
     this.$store.commit('menus/setMainDrawer', false)
   },

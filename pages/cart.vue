@@ -77,6 +77,9 @@ export default {
       ],
     }
   },
+  head: {
+    title: 'Cart',
+  },
   computed: {
     cart: {
       get() {

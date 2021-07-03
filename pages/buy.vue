@@ -158,6 +158,9 @@ export default {
       ],
     }
   },
+  head: {
+    title: 'Payment',
+  },
   computed: mapGetters({
     products: 'products/getCart',
   }),

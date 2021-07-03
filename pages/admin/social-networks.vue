@@ -27,7 +27,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head: {
+    title: 'Social Networks',
+  },
+}
 </script>
 
 <style></style>
