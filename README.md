@@ -1,4 +1,4 @@
-# test-store
+# Shop
 
 ## Build Setup
 
