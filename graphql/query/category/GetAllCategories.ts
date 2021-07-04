@@ -1,8 +1,8 @@
 import ggl from 'graphql-tag'
 
-export const GetCategories = ggl`
+export const GetAllCategories = ggl`
 query {
-  GetCategories {
+  GetAllCategories {
     id
     name
     description

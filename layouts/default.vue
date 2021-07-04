@@ -133,6 +133,7 @@
 <script>
 import cartMenu from '~/components/cartMenu.vue'
 import NotificationList from '~/components/notification-list.vue'
+import { GetCategories } from '~/graphql/query/category/GetCategories'
 import theme from '~/mixins/theme'
 export default {
   components: { cartMenu, NotificationList },
@@ -180,14 +181,21 @@ export default {
       return this.categories.map((category) => ({
         icon: 'mdi-label',
         title: `${category.name}`,
-        to: `/categories/${category.name}`,
+        to: `/categories/${category.slug}`,
       }))
     },
   },
   created() {
-    this.$axios.get('/category').then((response) => {
-      this.$store.commit('category/setCategories', response.data)
-    })
+    this.$apollo
+      .query({
+        query: GetCategories,
+      })
+      .then((response) => {
+        this.$store.commit(
+          'category/setCategories',
+          response.data.GetCategories
+        )
+      })
   },
   methods: {
     toggleTheme() {

@@ -10,7 +10,7 @@
       sm="8"
       md="6"
     >
-      <v-card :to="`/categories/${category.name}`">
+      <v-card :to="`/categories/${category.slug}`">
         <v-img
           :src="`https://picsum.photos/800/600/?${category.name}`"
           :aspect-ratio="16 / 9"
@@ -30,12 +30,15 @@
 </template>
 
 <script>
+import { GetCategories } from '../graphql/query/category/GetCategories'
 export default {
-  async asyncData({ $axios, store }) {
-    const { data } = await $axios.get('/category')
-    store.commit('category/setCategories', data)
+  async asyncData({ store, app }) {
+    const { data } = await app.apolloProvider.defaultClient.query({
+      query: GetCategories,
+    })
+    store.commit('category/setCategories', data.GetCategories)
     return {
-      categories: data,
+      categories: data.GetCategories,
     }
   },
   head: {

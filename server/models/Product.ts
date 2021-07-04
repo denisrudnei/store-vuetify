@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   Column,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -30,4 +31,7 @@ export class Product extends BaseEntity {
   @Field()
   @Column({ type: 'decimal' })
   public price!: number
+
+  @DeleteDateColumn()
+  public deletedAt?: Date
 }

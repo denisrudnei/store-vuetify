@@ -54,6 +54,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/google-gtag',
     '@nuxtjs/apollo',
+    '@nuxtjs/toast',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
