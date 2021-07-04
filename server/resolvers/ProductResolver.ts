@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Mutation, Query, Resolver, ID } from 'type-graphql'
 
 import { CreateProductInput } from '../../inputs/CreateProductInput'
 import { Category } from '../models/Category'
@@ -19,10 +19,30 @@ export class ProductResolver {
     return ProductService.getProductsForCategory(name)
   }
 
+  @Query(() => [Product])
+  public GetInactivatedProducts() {
+    return ProductService.getInactivatedProducts()
+  }
+
   @Mutation(() => Product)
   public CreateProduct(
     @Arg('product', () => CreateProductInput) product: CreateProductInput
   ) {
     return ProductService.createProduct(product)
+  }
+
+  @Mutation(() => Boolean)
+  public InactivateProduct(@Arg('id', () => ID) id: Product['id']) {
+    return ProductService.inactivate(id)
+  }
+
+  @Mutation(() => Boolean)
+  public ReactivateProduct(@Arg('id', () => ID) id: Product['id']) {
+    return ProductService.reactivate(id)
+  }
+
+  @Mutation(() => Boolean)
+  public ReactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
+    return ProductService.reactivateMany(ids)
   }
 }

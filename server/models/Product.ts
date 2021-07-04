@@ -32,6 +32,7 @@ export class Product extends BaseEntity {
   @Column({ type: 'decimal' })
   public price!: number
 
+  @Field()
   @DeleteDateColumn()
   public deletedAt?: Date
 }

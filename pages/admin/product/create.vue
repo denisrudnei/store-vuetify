@@ -47,7 +47,7 @@ export default {
       product: {
         name: '',
         description: '',
-        price: 0,
+        price: '',
         category: undefined,
       },
       categories: [],

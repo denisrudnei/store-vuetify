@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <v-data-table :items="products" :headers="headers">
-        <template #item.actions>
+        <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
               <v-btn class="primary--text" icon v-on="on">
@@ -13,7 +13,12 @@
           </v-tooltip>
           <v-tooltip right>
             <template #activator="{ on }">
-              <v-btn class="primary--text" icon v-on="on">
+              <v-btn
+                class="primary--text"
+                icon
+                v-on="on"
+                @click="inactivate(item.id)"
+              >
                 <v-icon>mdi-tag-off</v-icon>
               </v-btn>
             </template>
@@ -26,7 +31,9 @@
 </template>
 
 <script>
+import { InactivateProduct } from '../../../graphql/mutation/product/InactivateProduct'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
+import { GetInactivatedProducts } from '~/graphql/query/product/GetInactivatedProducts'
 export default {
   data() {
     return {
@@ -55,6 +62,28 @@ export default {
       .then((response) => {
         this.products = response.data.GetProducts
       })
+  },
+  methods: {
+    inactivate(id) {
+      this.$apollo
+        .mutate({
+          mutation: InactivateProduct,
+          variables: {
+            id,
+          },
+          awaitRefetchQueries: true,
+          refetchQueries: [
+            { query: GetProducts },
+            { query: GetInactivatedProducts },
+          ],
+        })
+        .then(() => {
+          this.products = this.products.filter((product) => product.id !== id)
+          this.$toast.show('Inactivated', {
+            duration: 1000,
+          })
+        })
+    },
   },
 }
 </script>
