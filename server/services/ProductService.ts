@@ -44,6 +44,12 @@ export class ProductService {
     return true
   }
 
+  public static async inactivateMany(ids: Product['id'][]) {
+    const products = await Product.findByIds(ids)
+    await Product.softRemove(products)
+    return true
+  }
+
   public static async reactivate(id: Product['id']) {
     const product = await Product.findOne(id, { withDeleted: true })
     if (!product) throw new Error('Product not found')

@@ -37,6 +37,11 @@ export class ProductResolver {
   }
 
   @Mutation(() => Boolean)
+  public InactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
+    return ProductService.inactivateMany(ids)
+  }
+
+  @Mutation(() => Boolean)
   public ReactivateProduct(@Arg('id', () => ID) id: Product['id']) {
     return ProductService.reactivate(id)
   }

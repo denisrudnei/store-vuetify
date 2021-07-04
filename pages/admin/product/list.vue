@@ -1,7 +1,17 @@
 <template>
   <v-row>
-    <v-col>
-      <v-data-table :items="products" :headers="headers">
+    <v-col v-if="selected.length" cols="12">
+      <v-btn class="red white--text" @click="inactivateMany">
+        Inactivate
+      </v-btn>
+    </v-col>
+    <v-col cols="12">
+      <v-data-table
+        v-model="selected"
+        :items="products"
+        :headers="headers"
+        show-select
+      >
         <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
@@ -32,6 +42,7 @@
 
 <script>
 import { InactivateProduct } from '../../../graphql/mutation/product/InactivateProduct'
+import { InactivateProducts } from '../../../graphql/mutation/product/InactivateProducts'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 import { GetInactivatedProducts } from '~/graphql/query/product/GetInactivatedProducts'
 export default {
@@ -52,6 +63,7 @@ export default {
         },
       ],
       products: [],
+      selected: [],
     }
   },
   created() {
@@ -82,6 +94,30 @@ export default {
           this.$toast.show('Inactivated', {
             duration: 1000,
           })
+        })
+    },
+    inactivateMany() {
+      this.$apollo
+        .mutate({
+          mutation: InactivateProducts,
+          variables: {
+            ids: this.selected.map((item) => item.id),
+          },
+          awaitRefetchQueries: true,
+          refetchQueries: [
+            { query: GetProducts },
+            { query: GetInactivatedProducts },
+          ],
+        })
+        .then(() => {
+          this.products = this.products.filter(
+            (product) =>
+              !this.selected.map((item) => item.id).includes(product.id)
+          )
+          this.$toast.show('Inactivated', {
+            duration: 1000,
+          })
+          this.selected = []
         })
     },
   },

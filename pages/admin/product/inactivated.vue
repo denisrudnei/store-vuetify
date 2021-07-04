@@ -115,6 +115,7 @@ export default {
           this.$toast.show('Reactivated', {
             duration: 1000,
           })
+          this.selected = []
         })
     },
   },
