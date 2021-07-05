@@ -8,6 +8,10 @@ export class ProductService {
     return Product.find()
   }
 
+  public static getProduct(id: Product['id']) {
+    return Product.findOne(id)
+  }
+
   public static async getProductsForCategory(name: Category['name']) {
     const category = await Category.findOne({
       where: {

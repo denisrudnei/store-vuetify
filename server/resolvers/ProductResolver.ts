@@ -12,6 +12,11 @@ export class ProductResolver {
     return ProductService.getProducts()
   }
 
+  @Query(() => Product)
+  GetProduct(@Arg('id', () => ID) id: Product['id']) {
+    return ProductService.getProduct(id)
+  }
+
   @Query(() => [Product])
   public GetProductsForCategory(
     @Arg('name', () => String) name: Category['name']
