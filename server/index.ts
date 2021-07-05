@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import path from 'path'
 import http from 'http'
 import { ApolloServer } from 'apollo-server-express'
