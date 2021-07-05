@@ -6,6 +6,7 @@ import consola from 'consola'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 
+import cors from 'cors'
 import { app } from './app'
 import createConnection from './db/typeormConnection'
 
@@ -37,6 +38,7 @@ async function start() {
 
   const nuxt = await loadNuxt(isDev ? 'dev' : 'start')
 
+  server.use(cors())
   server.use('/api', app)
 
   const httpServer = http.createServer(server)
