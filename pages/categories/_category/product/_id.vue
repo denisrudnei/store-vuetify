@@ -96,7 +96,7 @@ export default {
         {
           hid: 'og:type',
           property: 'og:type',
-          content: 'product',
+          content: 'og:product',
         },
         {
           hid: 'og:title',
