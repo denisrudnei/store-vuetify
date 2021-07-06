@@ -109,8 +109,8 @@ export default {
           content: this.product.description,
         },
         {
-          hid: 'og:ammount',
-          property: 'og:price:ammount',
+          hid: 'product:price:amount',
+          property: 'product:price:amount',
           content: this.product.price,
         },
         {
