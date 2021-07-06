@@ -62,6 +62,18 @@ export default {
   directives: {
     TheMask,
   },
+  async asyncData({ app, route }) {
+    const { data } = await app.apolloProvider.defaultClient.query({
+      query: GetProduct,
+      variables: {
+        id: route.params.id,
+      },
+    })
+    return {
+      product: data.GetProduct,
+    }
+  },
+
   data() {
     return {
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
@@ -122,18 +134,6 @@ export default {
         this.quantity = '0,000'
       }
     },
-  },
-  created() {
-    this.$apollo
-      .query({
-        query: GetProduct,
-        variables: {
-          id: this.$route.params.id,
-        },
-      })
-      .then((response) => {
-        this.product = response.data.GetProduct
-      })
   },
   methods: {
     addToCart(product) {
