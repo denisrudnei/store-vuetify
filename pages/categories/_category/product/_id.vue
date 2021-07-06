@@ -114,6 +114,11 @@ export default {
           content: this.product.price,
         },
         {
+          hid: 'product:price:currency',
+          property: 'product:price:currency',
+          content: 'BRL',
+        },
+        {
           hid: 'og:url',
           property: 'og:url',
           content: `product/${this.product.id}`,
