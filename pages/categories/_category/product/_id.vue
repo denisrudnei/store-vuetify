@@ -110,7 +110,7 @@ export default {
         },
         {
           hid: 'og:ammount',
-          property: 'og:ammount',
+          property: 'og:price:ammount',
           content: this.product.price,
         },
         {
