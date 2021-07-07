@@ -29,7 +29,7 @@
       </v-row>
     </v-card-text>
     <v-card-actions>
-      <v-btn class="primary white--text" @click="save">
+      <v-btn class="primary white--text" :disabled="disabled" @click="save">
         Save <v-icon right>mdi-check-all</v-icon>
       </v-btn>
     </v-card-actions>
@@ -65,6 +65,14 @@ export default {
   computed: {
     product() {
       return Object.assign(this.productData, this.value)
+    },
+    disabled() {
+      return (
+        this.product.name === '' ||
+        this.product.description === '' ||
+        !this.product.price ||
+        !this.product.category
+      )
     },
   },
   mounted() {
