@@ -124,7 +124,10 @@ export default {
       })
       .then((response) => {
         this.category = response.data.GetCategoryByName
-        this.subCategories = response.data.GetCategoryByName.subCategories
+        this.subCategories = [
+          this.category,
+          ...response.data.GetCategoryByName.subCategories,
+        ]
         this.products = response.data.GetCategoryByName.products
       })
   },
