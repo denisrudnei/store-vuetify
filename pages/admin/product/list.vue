@@ -15,7 +15,12 @@
         <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
-              <v-btn class="primary--text" icon v-on="on">
+              <v-btn
+                class="primary--text"
+                icon
+                :to="`/admin/product/edit/${item.id}`"
+                v-on="on"
+              >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>

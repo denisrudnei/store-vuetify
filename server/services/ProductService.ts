@@ -2,6 +2,7 @@ import { In, IsNull, Not } from 'typeorm'
 import { Product } from '../models/Product'
 import { Category } from '../models/Category'
 import { CreateProductInput } from '../../inputs/CreateProductInput'
+import { EditProductInput } from '../../inputs/EditProductInput'
 
 export class ProductService {
   public static getProducts() {
@@ -38,6 +39,17 @@ export class ProductService {
     const category = await Category.findOne(productToCreate.category)
     if (!category) throw new Error('Category not found')
     product.category = category
+    return product.save()
+  }
+
+  public static async editProduct(
+    id: Product['id'],
+    productToEdit: EditProductInput
+  ) {
+    const product = await Product.findOne(id)
+    if (!product) throw new Error('Product not found')
+    Object.assign(product, productToEdit)
+    product.category = await Category.findOne(productToEdit.category)
     return product.save()
   }
 

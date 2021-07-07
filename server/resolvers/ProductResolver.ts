@@ -1,11 +1,20 @@
-import { Arg, Mutation, Query, Resolver, ID } from 'type-graphql'
+import {
+  Arg,
+  Mutation,
+  Query,
+  Resolver,
+  ID,
+  FieldResolver,
+  Root,
+} from 'type-graphql'
 
 import { CreateProductInput } from '../../inputs/CreateProductInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { ProductService } from '../services/ProductService'
+import { EditProductInput } from '../../inputs/EditProductInput'
 
-@Resolver()
+@Resolver(() => Product)
 export class ProductResolver {
   @Query(() => [Product])
   public GetProducts() {
@@ -36,6 +45,14 @@ export class ProductResolver {
     return ProductService.createProduct(product)
   }
 
+  @Mutation(() => Product)
+  public EditProduct(
+    @Arg('id', () => ID) id: Product['id'],
+    @Arg('product', () => EditProductInput) product: EditProductInput
+  ) {
+    return ProductService.editProduct(id, product)
+  }
+
   @Mutation(() => Boolean)
   public InactivateProduct(@Arg('id', () => ID) id: Product['id']) {
     return ProductService.inactivate(id)
@@ -54,5 +71,13 @@ export class ProductResolver {
   @Mutation(() => Boolean)
   public ReactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
     return ProductService.reactivateMany(ids)
+  }
+
+  @FieldResolver()
+  public async category(@Root() root: Product) {
+    const { category } = (await Product.findOne(root.id, {
+      relations: ['category'],
+    })) as Product
+    return category
   }
 }
