@@ -5,12 +5,10 @@
         <v-col cols="12">
           <v-text-field v-model="product.name" outlined label="Name" />
         </v-col>
-        <v-col cols="12">
-          <v-textarea
-            v-model="product.description"
-            outlined
-            label="Description"
-          />
+        <v-col cols="12" class="black--text">
+          <client-only>
+            <ckeditor v-model="product.description" :editor="editor" dark />
+          </client-only>
         </v-col>
         <v-col cols="12">
           <v-text-field
@@ -54,6 +52,7 @@ export default {
   },
   data() {
     return {
+      editor: undefined,
       productData: {
         name: '',
         description: '',
@@ -67,6 +66,9 @@ export default {
     product() {
       return Object.assign(this.productData, this.value)
     },
+  },
+  mounted() {
+    this.editor = require('@ckeditor/ckeditor5-build-classic')
   },
   created() {
     Object.assign(this.productData, this.value)

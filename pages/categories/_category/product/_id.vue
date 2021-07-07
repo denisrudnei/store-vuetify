@@ -45,9 +45,7 @@
     <v-col cols="12" md="8">
       <v-row>
         <v-col cols="12">
-          <span>
-            {{ product.description }}
-          </span>
+          <span v-html="product.description" />
         </v-col>
       </v-row>
     </v-col>
@@ -73,7 +71,6 @@ export default {
       product: data.GetProduct,
     }
   },
-
   data() {
     return {
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
