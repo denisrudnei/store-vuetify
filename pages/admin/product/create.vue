@@ -5,6 +5,7 @@
 <script>
 import create from '@/components/product/create.vue'
 import { CreateProduct } from '../../../graphql/mutation/product/CreateProduct'
+import { GetProducts } from '~/graphql/query/product/GetProducts'
 export default {
   components: { create },
 
@@ -16,6 +17,8 @@ export default {
           variables: {
             product,
           },
+          awaitRefetchQueries: true,
+          refetchQueries: [{ query: GetProducts }],
         })
         .then(() => {
           this.$toast.show('Created', {

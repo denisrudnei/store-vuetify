@@ -13,6 +13,7 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { ProductService } from '../services/ProductService'
 import { EditProductInput } from '../../inputs/EditProductInput'
+import { DeletedProductResult } from '../types/DeletedProductResult'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -71,6 +72,16 @@ export class ProductResolver {
   @Mutation(() => Boolean)
   public ReactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
     return ProductService.reactivateMany(ids)
+  }
+
+  @Mutation(() => Boolean)
+  public DeleteProduct(@Arg('id', () => ID) id: Product['id']) {
+    return ProductService.deleteProduct(id)
+  }
+
+  @Mutation(() => [DeletedProductResult])
+  public DeleteProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
+    return ProductService.deleteProducts(ids)
   }
 
   @FieldResolver()

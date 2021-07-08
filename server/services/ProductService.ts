@@ -3,6 +3,7 @@ import { Product } from '../models/Product'
 import { Category } from '../models/Category'
 import { CreateProductInput } from '../../inputs/CreateProductInput'
 import { EditProductInput } from '../../inputs/EditProductInput'
+import { DeletedProductResult } from '../types/DeletedProductResult'
 
 export class ProductService {
   public static getProducts() {
@@ -76,5 +77,43 @@ export class ProductService {
   public static async reactivateMany(ids: Product['id'][]) {
     await Product.update({ id: In(ids) }, { deletedAt: undefined })
     return true
+  }
+
+  public static async deleteProduct(id: Product['id']) {
+    const product = await Product.findOne({
+      where: {
+        id,
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    })
+    if (!product) return false
+    await product.remove()
+    return true
+  }
+
+  public static async deleteProducts(
+    ids: Product['id'][]
+  ): Promise<DeletedProductResult[]> {
+    const products = await Product.find({
+      where: {
+        id: In(ids),
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    })
+    await Promise.all(products.map((product) => product.remove()))
+    const productsInDb = await Product.find({
+      where: {
+        id: In(ids),
+      },
+      withDeleted: true,
+    })
+    return ids.map((id) => {
+      return {
+        id,
+        deleted: !productsInDb.map((product) => product.id).includes(id),
+      }
+    })
   }
 }
