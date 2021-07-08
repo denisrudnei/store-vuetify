@@ -75,99 +75,138 @@ export default {
   },
   methods: {
     reactivate(id) {
-      this.$apollo
-        .mutate({
-          mutation: ReactivateProduct,
-          variables: {
-            id,
-          },
-          awaitRefetchQueries: true,
-          refetchQueries: [
-            { query: GetInactivatedProducts },
-            { query: GetProducts },
-          ],
-        })
+      this.$dialog('Reactivate?')
         .then(() => {
-          this.inactivated = this.inactivated.filter(
-            (product) => product.id !== id
-          )
-          this.$toast.show('Reactivated', {
+          this.$apollo
+            .mutate({
+              mutation: ReactivateProduct,
+              variables: {
+                id,
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [
+                { query: GetInactivatedProducts },
+                { query: GetProducts },
+              ],
+            })
+            .then(() => {
+              this.inactivated = this.inactivated.filter(
+                (product) => product.id !== id
+              )
+              this.$toast.show('Reactivated', {
+                duration: 1000,
+              })
+            })
+        })
+        .catch(() => {
+          this.$toast.show('Canceled', {
             duration: 1000,
           })
         })
     },
     reactivateMany() {
-      this.$apollo
-        .mutate({
-          mutation: ReactivateProducts,
-          variables: {
-            ids: this.selected.map((item) => item.id),
-          },
-          awaitRefetchQueries: true,
-          refetchQueries: [
-            { query: GetInactivatedProducts },
-            { query: GetProducts },
-          ],
-        })
+      this.$dialog('Reactivate?')
         .then(() => {
-          this.inactivated = this.inactivated.filter(
-            (product) =>
-              !this.selected.map((item) => item.id).includes(product.id)
-          )
-          this.$toast.show('Reactivated', {
+          this.$apollo
+            .mutate({
+              mutation: ReactivateProducts,
+              variables: {
+                ids: this.selected.map((item) => item.id),
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [
+                { query: GetInactivatedProducts },
+                { query: GetProducts },
+              ],
+            })
+            .then(() => {
+              this.inactivated = this.inactivated.filter(
+                (product) =>
+                  !this.selected.map((item) => item.id).includes(product.id)
+              )
+              this.$toast.show('Reactivated', {
+                duration: 1000,
+              })
+              this.selected = []
+            })
+        })
+        .catch(() => {
+          this.$toast.show('Canceled', {
             duration: 1000,
           })
-          this.selected = []
         })
     },
     remove(id) {
-      this.$apollo
-        .mutate({
-          mutation: DeleteProduct,
-          variables: {
-            id,
-          },
+      this.$dialog('Remove?')
+        .then(() => {
+          this.$apollo
+            .mutate({
+              mutation: DeleteProduct,
+              variables: {
+                id,
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [
+                { query: GetInactivatedProducts },
+                { query: GetProducts },
+              ],
+            })
+            .then((response) => {
+              if (response.data.DeleteProduct) {
+                this.$toast.show('Deleted', {
+                  duration: 5000,
+                })
+                this.inactivated = this.inactivated.filter(
+                  (item) => item.id !== id
+                )
+              } else {
+                this.$toast.show('It was not possible to delete', {
+                  duration: 5000,
+                })
+              }
+            })
         })
-        .then((response) => {
-          if (response.data.DeleteProduct) {
-            this.$toast.show('Deleted', {
-              duration: 5000,
-            })
-            this.inactivated = this.inactivated.filter((item) => item.id !== id)
-          } else {
-            this.$toast.show('It was not possible to delete', {
-              duration: 5000,
-            })
-          }
+        .catch(() => {
+          this.$toast.show('Canceled', {
+            duration: 1000,
+          })
         })
     },
     deleteMany() {
-      this.$apollo
-        .mutate({
-          mutation: DeleteProducts,
-          variables: {
-            ids: this.selected.map((item) => item.id),
-          },
-          awaitRefetchQueries: true,
-          refetchQueries: [{ query: GetInactivatedProducts }],
+      this.$dialog('Remove?')
+        .then(() => {
+          this.$apollo
+            .mutate({
+              mutation: DeleteProducts,
+              variables: {
+                ids: this.selected.map((item) => item.id),
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [{ query: GetInactivatedProducts }],
+            })
+            .then((response) => {
+              const products = response.data.DeleteProducts
+              const deleted = products.filter((product) => product.deleted)
+              deleted.forEach((product) => {
+                this.inactivated = this.inactivated.filter(
+                  (item) => item.id !== product.id
+                )
+              })
+              if (products.length !== deleted.length) {
+                this.$toast('It was not possible to delete some products', {
+                  duration: 5000,
+                })
+              } else {
+                this.$toast.show('Deleted', {
+                  duration: 1000,
+                })
+              }
+            })
         })
-        .then((response) => {
-          const products = response.data.DeleteProducts
-          const deleted = products.filter((product) => product.deleted)
-          deleted.forEach((product) => {
-            this.inactivated = this.inactivated.filter(
-              (item) => item.id !== product.id
-            )
+        .catch(() => {
+          this.$toast.show('Canceled', {
+            duration: 1000,
           })
-          if (products.length !== deleted.length) {
-            this.$toast('It was not possible to delete some products', {
-              duration: 5000,
-            })
-          } else {
-            this.$toast.show('Deleted', {
-              duration: 1000,
-            })
-          }
         })
     },
   },

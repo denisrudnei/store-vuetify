@@ -29,7 +29,11 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/mask', { src: '@/plugins/ckeditor', ssr: false }],
+  plugins: [
+    '~/plugins/mask',
+    { src: '@/plugins/ckeditor', ssr: false },
+    '~/plugins/dialog',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

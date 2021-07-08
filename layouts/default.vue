@@ -115,6 +115,7 @@
       <v-container>
         <nuxt />
       </v-container>
+      <dialog-box />
       <v-footer :dark="isDark" padless class="text-center">
         <v-card flat tile width="100%">
           <v-card-text>
@@ -132,11 +133,12 @@
 
 <script>
 import cartMenu from '~/components/cartMenu.vue'
+import DialogBox from '~/components/dialog-box.vue'
 import NotificationList from '~/components/notification-list.vue'
 import { GetCategories } from '~/graphql/query/category/GetCategories'
 import theme from '~/mixins/theme'
 export default {
-  components: { cartMenu, NotificationList },
+  components: { cartMenu, NotificationList, DialogBox },
   mixins: [theme],
   data() {
     return {

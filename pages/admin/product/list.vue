@@ -82,47 +82,65 @@ export default {
   },
   methods: {
     inactivate(id) {
-      this.$apollo
-        .mutate({
-          mutation: InactivateProduct,
-          variables: {
-            id,
-          },
-          awaitRefetchQueries: true,
-          refetchQueries: [
-            { query: GetProducts },
-            { query: GetInactivatedProducts },
-          ],
-        })
+      this.$dialog('Inactavate product?')
         .then(() => {
-          this.products = this.products.filter((product) => product.id !== id)
-          this.$toast.show('Inactivated', {
+          this.$apollo
+            .mutate({
+              mutation: InactivateProduct,
+              variables: {
+                id,
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [
+                { query: GetProducts },
+                { query: GetInactivatedProducts },
+              ],
+            })
+            .then(() => {
+              this.products = this.products.filter(
+                (product) => product.id !== id
+              )
+              this.$toast.show('Inactivated', {
+                duration: 1000,
+              })
+            })
+        })
+        .catch(() => {
+          this.$toast.show('Canceled', {
             duration: 1000,
           })
         })
     },
     inactivateMany() {
-      this.$apollo
-        .mutate({
-          mutation: InactivateProducts,
-          variables: {
-            ids: this.selected.map((item) => item.id),
-          },
-          awaitRefetchQueries: true,
-          refetchQueries: [
-            { query: GetProducts },
-            { query: GetInactivatedProducts },
-          ],
-        })
+      this.$dialog('Inactivate?')
         .then(() => {
-          this.products = this.products.filter(
-            (product) =>
-              !this.selected.map((item) => item.id).includes(product.id)
-          )
-          this.$toast.show('Inactivated', {
+          this.$apollo
+            .mutate({
+              mutation: InactivateProducts,
+              variables: {
+                ids: this.selected.map((item) => item.id),
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [
+                { query: GetProducts },
+                { query: GetInactivatedProducts },
+              ],
+            })
+            .then(() => {
+              this.products = this.products.filter(
+                (product) =>
+                  !this.selected.map((item) => item.id).includes(product.id)
+              )
+              this.$toast.show('Inactivated', {
+                duration: 1000,
+              })
+              this.selected = []
+            })
+        })
+        .catch(() => {
+          this.$toast.show('Canceled', {
             duration: 1000,
           })
-          this.selected = []
         })
     },
   },
