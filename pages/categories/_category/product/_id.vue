@@ -60,16 +60,22 @@ export default {
   directives: {
     TheMask,
   },
-  async asyncData({ app, route }) {
-    const { data } = await app.apolloProvider.defaultClient.query({
-      query: GetProduct,
-      variables: {
-        id: route.params.id,
-      },
-    })
-    return {
-      product: data.GetProduct,
-    }
+  asyncData({ app, route, error }) {
+    return app.apolloProvider.defaultClient
+      .query({
+        query: GetProduct,
+        variables: {
+          id: route.params.id,
+        },
+      })
+      .then((response) => {
+        return {
+          product: response.data.GetProduct,
+        }
+      })
+      .catch(() => {
+        error({ statusCode: 404, message: 'Product not found' })
+      })
   },
   data() {
     return {
