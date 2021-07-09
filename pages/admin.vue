@@ -16,7 +16,10 @@
 </template>
 
 <script>
-export default {}
+import AdminMiddleware from '../middleware/AdminMiddleware'
+export default {
+  middleware: [AdminMiddleware],
+}
 </script>
 
 <style></style>

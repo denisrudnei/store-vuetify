@@ -9,6 +9,7 @@ import {
   BeforeUpdate,
 } from 'typeorm'
 import bcrypt from 'bcryptjs'
+import { Role } from '../enums/Role'
 
 @Entity()
 @ObjectType()
@@ -30,6 +31,9 @@ export class User extends BaseEntity {
 
   @Column()
   public tempPassword!: string
+
+  @Column({ default: Role.USER, type: 'varchar' })
+  public role!: Role
 
   @AfterLoad()
   verifyPassword() {

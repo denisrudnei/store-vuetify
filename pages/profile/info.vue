@@ -7,7 +7,7 @@
           <v-row>
             <v-col cols="12" md="10">
               <v-text-field outlined label="Name"> </v-text-field>
-              <v-text-field outlined label="Email"> </v-text-field>
+              <v-text-field outlined label="Email" readonly> </v-text-field>
               <v-divider />
               <v-card flat>
                 <v-card-title class="red--text"> Danger area </v-card-title>

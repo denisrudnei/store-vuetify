@@ -14,6 +14,7 @@ AuthController.post('/auth/login', (req, res) => {
           id: user.id,
           name: user.name,
           email: user.email,
+          role: user.role,
         },
         process.env.JWT_KEY!,
         {

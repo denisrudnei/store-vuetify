@@ -100,7 +100,7 @@
           </v-card-text>
         </v-card>
       </v-menu>
-      <template v-if="logged">
+      <template v-if="isAdmin">
         <v-btn
           :class="{
             'white--text': isDark,
@@ -163,6 +163,9 @@ export default {
   computed: {
     logged() {
       return this.$auth.loggedIn
+    },
+    isAdmin() {
+      return this.logged && this.$auth.user.role === 'ADMIN'
     },
     drawer: {
       get() {
