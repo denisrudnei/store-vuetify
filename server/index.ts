@@ -8,6 +8,7 @@ import express from 'express'
 import { buildSchema } from 'type-graphql'
 
 import { app } from './app'
+import CustomAuthChecker from './CustomAuthChecker'
 import createConnection from './db/typeormConnection'
 
 const { loadNuxt, build } = require('nuxt')
@@ -27,6 +28,11 @@ async function start() {
     introspection: true,
     schema: await buildSchema({
       resolvers: [path.resolve(__dirname, 'resolvers/**/*Resolver*')],
+      authChecker: CustomAuthChecker,
+    }),
+    context: (context) => ({
+      req: context.req,
+      res: context.res,
     }),
     playground: {
       endpoint: '/graphql',

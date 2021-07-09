@@ -58,7 +58,7 @@ AuthController.post(
       req.session.authUser = user as User
       res.header('authorization', `Bearer ${token}`)
       return res.status(200).json({
-        user: token,
+        user,
       })
     }
     return res.sendStatus(401)

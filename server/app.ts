@@ -23,6 +23,7 @@ app.use(
   session({
     proxy: true,
     resave: true,
+    rolling: true,
     saveUninitialized: true,
     secret: process.env.SECRET!,
     cookie:

@@ -7,6 +7,7 @@ import { buildSchema } from 'type-graphql'
 
 import { app } from './app'
 import createConnection from './db/typeormConnection'
+import CustomAuthChecker from './CustomAuthChecker'
 
 const server = express()
 
@@ -21,6 +22,11 @@ async function start() {
     introspection: true,
     schema: await buildSchema({
       resolvers: [path.resolve(__dirname, 'resolvers/**/*Resolver*')],
+      authChecker: CustomAuthChecker,
+    }),
+    context: (context) => ({
+      req: context.req,
+      res: context.res,
     }),
     playground: {
       endpoint: '/graphql',
