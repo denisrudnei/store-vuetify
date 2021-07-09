@@ -66,7 +66,7 @@ export default {
   axios: {
     proxy: true,
     credentials: true,
-    prefix: process.env.API,
+    baseURL: process.env.API,
   },
 
   router: {
@@ -84,7 +84,6 @@ export default {
     redirect: {
       login: '/auth/login',
       logout: '/auth/login',
-      callback: '/',
     },
     strategies: {
       local: {
