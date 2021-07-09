@@ -59,17 +59,45 @@ export default {
     '@nuxtjs/google-gtag',
     '@nuxtjs/apollo',
     '@nuxtjs/toast',
+    '@nuxtjs/auth',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.API,
+    proxy: true,
+    credentials: true,
+    prefix: process.env.API,
+  },
+
+  router: {
+    middleware: ['auth'],
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
       lang: 'en',
+    },
+  },
+
+  auth: {
+    redirect: {
+      login: '/auth/login',
+      logout: '/auth/login',
+      callback: '/',
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/auth/login',
+            method: 'post',
+            propertyName: 'user',
+          },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/auth/user', method: 'post', propertyName: 'user' },
+        },
+      },
     },
   },
 

@@ -74,7 +74,7 @@
       >
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <notification-list />
+      <notification-list v-if="logged" />
       <v-menu
         v-model="cartMenu"
         nudge-width="450"
@@ -100,15 +100,21 @@
           </v-card-text>
         </v-card>
       </v-menu>
-      <v-btn
-        :class="{
-          'white--text': isDark,
-          'primary--text': !isDark,
-        }"
-        icon
-        to="/admin"
-      >
-        <v-icon>mdi-cog</v-icon>
+      <template v-if="logged">
+        <v-btn
+          :class="{
+            'white--text': isDark,
+            'primary--text': !isDark,
+          }"
+          icon
+          to="/admin"
+        >
+          <v-icon>mdi-cog</v-icon>
+        </v-btn>
+      </template>
+
+      <v-btn v-show="logged" icon @click="logout">
+        <v-icon>mdi-exit-to-app</v-icon>
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -155,6 +161,9 @@ export default {
     }
   },
   computed: {
+    logged() {
+      return this.$auth.loggedIn
+    },
     drawer: {
       get() {
         return this.$store.getters['menus/getMainDrawer']
@@ -202,6 +211,17 @@ export default {
   methods: {
     toggleTheme() {
       this.isDark = !this.$vuetify.theme.isDark
+    },
+    logout() {
+      this.$dialog('Logout?')
+        .then(() => {
+          this.$auth.logout()
+        })
+        .catch(() => {
+          this.$toast.show('Canceled', {
+            duration: 1000,
+          })
+        })
     },
   },
 }

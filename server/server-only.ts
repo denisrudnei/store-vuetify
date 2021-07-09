@@ -1,11 +1,10 @@
-import path from 'path'
 import http from 'http'
+import path from 'path'
 import { ApolloServer } from 'apollo-server-express'
 import consola from 'consola'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 
-import cors from 'cors'
 import { app } from './app'
 import createConnection from './db/typeormConnection'
 
@@ -31,8 +30,7 @@ async function start() {
     },
   })
 
-  server.use(cors())
-  server.use('/api', app)
+  server.use(app)
 
   const httpServer = http.createServer(server)
   apolloServer.applyMiddleware({ app: server, cors: false })

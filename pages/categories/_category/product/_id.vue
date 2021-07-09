@@ -57,6 +57,7 @@ import { TheMask } from 'vue-the-mask'
 import { GetProduct } from '../../../../graphql/query/product/GetProduct'
 import Rating from '~/components/rating.vue'
 export default {
+  auth: false,
   directives: {
     TheMask,
   },

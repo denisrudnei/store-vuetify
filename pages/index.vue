@@ -32,6 +32,7 @@
 <script>
 import { GetCategories } from '../graphql/query/category/GetCategories'
 export default {
+  auth: false,
   async asyncData({ store, app }) {
     const { data } = await app.apolloProvider.defaultClient.query({
       query: GetCategories,

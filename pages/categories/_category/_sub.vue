@@ -84,6 +84,7 @@
 <script>
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
 export default {
+  auth: false,
   data() {
     return {
       length: 0,
