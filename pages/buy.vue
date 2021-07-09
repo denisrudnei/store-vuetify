@@ -119,6 +119,7 @@ import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
 import cartInfo from '~/components/cartInfo.vue'
 export default {
+  auth: false,
   components: { cartInfo },
   directives: { TheMask },
   filters: {

@@ -38,6 +38,7 @@
 <script>
 import cartInfo from '@/components/cartInfo.vue'
 export default {
+  auth: false,
   components: {
     cartInfo,
   },
