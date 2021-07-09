@@ -14,7 +14,12 @@
               />
             </v-col>
             <v-col cols="12">
-              <v-text-field v-model="user.password" label="Password" outlined />
+              <v-text-field
+                v-model="user.password"
+                type="password"
+                label="Password"
+                outlined
+              />
             </v-col>
           </v-row>
         </v-card-text>
