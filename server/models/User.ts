@@ -35,8 +35,8 @@ export class User extends BaseEntity {
   @Column({ default: Role.USER, type: 'varchar' })
   public role!: Role
 
-  @Column({ nullable: true })
-  public darkTheme?: Boolean
+  @Column({ default: true })
+  public darkTheme!: Boolean
 
   @AfterLoad()
   verifyPassword() {
