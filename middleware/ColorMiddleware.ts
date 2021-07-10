@@ -1,6 +1,7 @@
 import { Middleware } from '@nuxt/types'
 import { GetSiteSettings } from '../graphql/query/site-settings/GetSiteSettings'
 
+// @ts-ignore
 const ColorMiddleware: Middleware = async ({ app, $vuetify }) => {
   const { data } = await app.apolloProvider.defaultClient.query({
     query: GetSiteSettings,
@@ -14,6 +15,7 @@ const ColorMiddleware: Middleware = async ({ app, $vuetify }) => {
     lightSecondary,
     lightAccent,
   } = data.GetSiteSettings
+
   $vuetify.theme.dark = isDark
 
   $vuetify.theme.themes.dark = {
