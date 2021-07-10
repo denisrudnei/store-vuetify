@@ -33,7 +33,7 @@
 
 <script>
 import { CreateCategory } from '../../../graphql/mutation/category/CreateCategory'
-import { GetCategories } from '~/graphql/query/category/GetCategories'
+import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 export default {
   data() {
     return {
@@ -48,10 +48,10 @@ export default {
   created() {
     this.$apollo
       .query({
-        query: GetCategories,
+        query: GetAllCategories,
       })
       .then((response) => {
-        this.categories = response.data.GetCategories.map((item) => ({
+        this.categories = response.data.GetAllCategories.map((item) => ({
           text: item.name,
           value: item.id,
         }))
