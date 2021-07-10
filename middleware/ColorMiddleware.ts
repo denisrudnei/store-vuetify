@@ -2,7 +2,7 @@ import { Middleware } from '@nuxt/types'
 import { GetSiteSettings } from '../graphql/query/site-settings/GetSiteSettings'
 
 // @ts-ignore
-const ColorMiddleware: Middleware = async ({ app, $vuetify }) => {
+const ColorMiddleware: Middleware = async ({ app, $vuetify, store }) => {
   const { data } = await app.apolloProvider.defaultClient.query({
     query: GetSiteSettings,
   })
@@ -30,6 +30,13 @@ const ColorMiddleware: Middleware = async ({ app, $vuetify }) => {
     primary: lightPrimary,
     secondary: lightSecondary,
     accent: lightAccent,
+  }
+
+  if (store.state.auth.loggedIn) {
+    const user = store.state.auth.user
+    if (user.darkTheme !== undefined) {
+      $vuetify.theme.dark = user.darkTheme
+    }
   }
 }
 

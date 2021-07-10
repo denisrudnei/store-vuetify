@@ -141,6 +141,7 @@
 
 <script>
 import ColorMiddleware from '../middleware/ColorMiddleware'
+import { UpdateTheme } from '../graphql/mutation/user/UpdateTheme'
 import cartMenu from '~/components/cartMenu.vue'
 import DialogBox from '~/components/dialog-box.vue'
 import NotificationList from '~/components/notification-list.vue'
@@ -220,6 +221,20 @@ export default {
   methods: {
     toggleTheme() {
       this.isDark = !this.$vuetify.theme.isDark
+      if (this.logged) {
+        // this.$auth.user.darkTheme = this.isDark
+
+        this.$apollo
+          .mutate({
+            mutation: UpdateTheme,
+            variables: {
+              isDark: this.isDark,
+            },
+          })
+          .then(() => {
+            this.$auth.fetchUser()
+          })
+      }
     },
     logout() {
       this.$dialog('Logout?')

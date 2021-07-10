@@ -68,6 +68,11 @@ export default {
       lightAccent,
     })
 
-    this.darkTheme = this.$vuetify.theme.dark
+    if (this.$auth.loggedIn) {
+      const user = this.$auth.user
+      if (user.darkTheme !== undefined) {
+        this.$vuetify.theme.dark = user.darkTheme
+      }
+    }
   },
 }

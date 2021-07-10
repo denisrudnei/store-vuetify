@@ -15,6 +15,7 @@ AuthController.post('/auth/login', (req, res) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          darkTheme: user.darkTheme,
         },
         process.env.JWT_KEY!,
         {
@@ -45,7 +46,7 @@ AuthController.post('/auth/register', (req, res) => {
 
 AuthController.post(
   '/auth/user',
-  (req: express.Request, res: express.Response) => {
+  async (req: express.Request, res: express.Response) => {
     if (req.session.authUser) {
       return res.status(200).json({
         user: req.session.authUser,
@@ -54,8 +55,9 @@ AuthController.post(
     if (req.headers.authorization) {
       const token = req.headers.authorization.split('Bearer ')[1]
 
-      const user = jwt.decode(token)
-      req.session.authUser = user as User
+      const data = jwt.decode(token)
+      const user = await User.findOne((data as User).id)
+      req.session.authUser = user
       res.header('authorization', `Bearer ${token}`)
       return res.status(200).json({
         user,

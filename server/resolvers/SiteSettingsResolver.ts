@@ -1,7 +1,8 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql'
+
+import { EditSiteSettingsInput } from '../../inputs/EditSiteSettingsInput'
 import { SiteSettings } from '../models/SiteSettings'
 import { SiteSettingsService } from '../services/SiteSettingsService'
-import { EditSiteSettingsInput } from '../../inputs/EditSiteSettingsInput'
 
 @Resolver()
 export class SiteSettingsResolver {
@@ -11,6 +12,7 @@ export class SiteSettingsResolver {
   }
 
   @Mutation(() => SiteSettings)
+  @Authorized()
   public EditSiteSettings(
     @Arg('settings', () => EditSiteSettingsInput)
     settings: EditSiteSettingsInput
