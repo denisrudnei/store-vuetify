@@ -49,6 +49,11 @@ export class CategoryResolver {
     return father
   }
 
+  @FieldResolver(() => String)
+  public fullName(@Root() root: Category) {
+    return CategoryService.getFullName(root.id)
+  }
+
   @FieldResolver()
   public async subCategories(@Root() root: Category) {
     const { subCategories } = (await Category.findOne(root.id, {

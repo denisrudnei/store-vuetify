@@ -1,6 +1,21 @@
 <template>
   <v-row>
     <v-col cols="12">
+      <v-card tile elevation="0">
+        <v-card-text>
+          <v-breadcrumbs :items="breadcrumbs">
+            <template #item="{ item }">
+              <v-breadcrumbs-item>
+                <v-btn :to="item.href" tile text>
+                  {{ item.text }}
+                </v-btn>
+              </v-breadcrumbs-item>
+            </template>
+          </v-breadcrumbs>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col cols="12">
       <span class="display-3">
         {{ product.name }}
       </span>
@@ -54,12 +69,16 @@
 
 <script>
 import { TheMask } from 'vue-the-mask'
+import slugify from 'slugify'
 import { GetProduct } from '../../../../graphql/query/product/GetProduct'
 import Rating from '~/components/rating.vue'
 export default {
   auth: false,
   directives: {
     TheMask,
+  },
+  components: {
+    Rating,
   },
   asyncData({ app, route, error }) {
     return app.apolloProvider.defaultClient
@@ -131,7 +150,19 @@ export default {
     }
   },
   computed: {
-    Rating,
+    breadcrumbs() {
+      if (!this.product.category) return []
+      return this.product.category.fullName.split('/').map((item) => {
+        const link = slugify(item, {
+          replacement: '-',
+          lower: true,
+        })
+        return {
+          text: item,
+          href: `/categories/${link}`,
+        }
+      })
+    },
   },
   watch: {
     quantity(value) {

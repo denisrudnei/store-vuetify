@@ -5,6 +5,10 @@ query GetProduct($id: ID!) {
   GetProduct (id: $id) {
     id
     name
+    category {
+      id
+      fullName
+    }
     description
     price
   }

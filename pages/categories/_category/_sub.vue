@@ -1,24 +1,37 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-tabs v-if="subCategories.length">
-        <v-tab
-          v-for="subCategory in subCategories"
-          :key="subCategory.id"
-          :to="`/categories/${subCategory.slug}`"
-        >
-          {{ subCategory.name }}
-        </v-tab>
-      </v-tabs>
-      <v-tabs v-if="!subCategories.length && category.father">
-        <v-tab
-          v-for="subCategory in category.father.subCategories"
-          :key="subCategory.id"
-          :to="`/categories/${subCategory.slug}`"
-        >
-          {{ subCategory.name }}
-        </v-tab>
-      </v-tabs>
+      <v-card elevation="0" tile>
+        <v-card-text>
+          <v-breadcrumbs :items="breadcrumbs">
+            <template #item="{ item }">
+              <v-breadcrumbs-item>
+                <v-btn :to="item.href" tile text>
+                  {{ item.text }}
+                </v-btn>
+              </v-breadcrumbs-item>
+            </template>
+          </v-breadcrumbs>
+          <v-tabs v-if="subCategories.length" class="mt-2">
+            <v-tab
+              v-for="subCategory in subCategories"
+              :key="subCategory.id"
+              :to="`/categories/${subCategory.slug}`"
+            >
+              {{ subCategory.name }}
+            </v-tab>
+          </v-tabs>
+          <v-tabs v-if="!subCategories.length && category.father">
+            <v-tab
+              v-for="subCategory in category.father.subCategories"
+              :key="subCategory.id"
+              :to="`/categories/${subCategory.slug}`"
+            >
+              {{ subCategory.name }}
+            </v-tab>
+          </v-tabs>
+        </v-card-text>
+      </v-card>
     </v-col>
     <v-col cols="12">
       <v-row justify="center" align="center">
@@ -82,6 +95,7 @@
 </template>
 
 <script>
+import slugify from 'slugify'
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
 export default {
   auth: false,
@@ -92,6 +106,7 @@ export default {
       category: {
         name: '',
         description: '',
+        fullName: '',
       },
       products: [],
     }
@@ -113,6 +128,19 @@ export default {
       get() {
         return this.$store.getters['products/getCart']
       },
+    },
+    breadcrumbs() {
+      if (!this.category) return []
+      return this.category.fullName.split('/').map((item) => {
+        const link = slugify(item, {
+          replacement: '-',
+          lower: true,
+        })
+        return {
+          text: item,
+          href: `/categories/${link}`,
+        }
+      })
     },
   },
   created() {

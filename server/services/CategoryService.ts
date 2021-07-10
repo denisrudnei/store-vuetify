@@ -35,4 +35,13 @@ export class CategoryService {
     if (father) category.father = father
     return category.save()
   }
+
+  public static async getFullName(id: Category['id']): Promise<String> {
+    const category = await Category.findOne(id, { relations: ['father'] })
+    if (!category) throw new Error('Category not found')
+    if (category.father) {
+      return `${await this.getFullName(category.father.id)}/${category.name}`
+    }
+    return category.name
+  }
 }
