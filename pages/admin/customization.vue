@@ -1,7 +1,16 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-text-field outlined label="Name" />
+      <v-card>
+        <v-card-text>
+          <v-text-field
+            :value="settings.name"
+            outlined
+            label="Name"
+            @change="updateName"
+          />
+        </v-card-text>
+      </v-card>
     </v-col>
     <v-col cols="12" md="8">
       <v-card>
@@ -36,8 +45,21 @@
                 </v-tab-item>
               </v-tabs-items>
             </v-col>
+            <v-col cols="12">
+              <v-checkbox
+                label="Dark as default?"
+                :input-value="settings.isDark"
+                @change="updateThemeType"
+              ></v-checkbox>
+            </v-col>
           </v-row>
         </v-card-text>
+        <v-card-actions>
+          <v-btn class="primary white--text" @click="save">
+            Save
+            <v-icon right>mdi-check-all</v-icon>
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
@@ -46,7 +68,6 @@
           :src="`https://picsum.photos/800/600/?${Math.random()}`"
           :aspect-ratio="16 / 9"
         />
-
         <v-card-text>
           <span class="primary--text title">Primary</span>
           <v-divider />
@@ -62,11 +83,12 @@
 <script>
 import faker from 'faker'
 import colorSelect from '~/components/color-select.vue'
+import { EditSiteSettings } from '~/graphql/mutation/site-settings/EditSiteSettings'
 export default {
   components: { colorSelect },
   data() {
     return {
-      tab: 0,
+      tab: undefined,
       description: faker.lorem.sentence(),
     }
   },
@@ -74,6 +96,22 @@ export default {
     title: 'Customization',
   },
   computed: {
+    darkTheme: {
+      get() {
+        return this.settings.isDark
+      },
+      set(value) {
+        this.$vuetify.theme.dark = value
+      },
+    },
+    settings: {
+      get() {
+        return this.$store.getters['site-settings/getSiteSettings']
+      },
+      set(value) {
+        this.$store.commit('site-settings/setSiteSettings', value)
+      },
+    },
     light: {
       get() {
         return this.$store.getters['themes/getLightTheme']
@@ -98,15 +136,31 @@ export default {
     tab(value) {
       this.$vuetify.theme.dark = value === 1
     },
-    darkTheme(value) {
-      this.$vuetify.theme.dark = value
-    },
   },
-  created() {
-    this.darkTheme = this.$vuetify.theme.dark
+  mounted() {
     this.tab = this.darkTheme ? 1 : 0
-    this.dark = this.$vuetify.theme.themes.dark
-    this.light = this.$vuetify.theme.themes.light
+  },
+  methods: {
+    save() {
+      this.$apollo
+        .mutate({
+          mutation: EditSiteSettings,
+          variables: {
+            settings: this.settings,
+          },
+        })
+        .then(() => {
+          this.$toast.show('Updated', {
+            duration: 1000,
+          })
+        })
+    },
+    updateName(name) {
+      this.$store.commit('site-settings/updateName', name)
+    },
+    updateThemeType(isDark) {
+      this.$store.commit('site-settings/updateThemeType', isDark)
+    },
   },
 }
 </script>

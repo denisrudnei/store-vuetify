@@ -50,6 +50,9 @@ export default {
       get() {
         return this.getColor()
       },
+      set(_) {
+        //
+      },
     },
   },
   methods: {
@@ -58,6 +61,10 @@ export default {
         theme,
         type,
         color: value,
+      })
+      this.$store.commit('site-settings/updateSettingsAttribute', {
+        name: `${theme}${type.charAt(0).toUpperCase()}${type.slice(1)}`,
+        value,
       })
       this.$vuetify.theme.themes[theme][type] = value
     },

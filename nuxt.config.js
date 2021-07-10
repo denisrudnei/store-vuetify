@@ -110,6 +110,8 @@ export default {
         },
       },
     },
+    tokenName: 'auth._token.local',
+    authenticationType: 'Bearer',
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

@@ -140,14 +140,18 @@
 </template>
 
 <script>
+import ColorMiddleware from '../middleware/ColorMiddleware'
 import cartMenu from '~/components/cartMenu.vue'
 import DialogBox from '~/components/dialog-box.vue'
 import NotificationList from '~/components/notification-list.vue'
 import { GetCategories } from '~/graphql/query/category/GetCategories'
 import theme from '~/mixins/theme'
+import color from '~/mixins/color'
+
 export default {
   components: { cartMenu, NotificationList, DialogBox },
-  mixins: [theme],
+  mixins: [theme, color],
+  middleware: [ColorMiddleware],
   data() {
     return {
       clipped: false,
