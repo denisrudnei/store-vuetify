@@ -6,13 +6,16 @@
           <v-breadcrumbs :items="breadcrumbs">
             <template #item="{ item }">
               <v-breadcrumbs-item>
-                <v-btn :to="item.href" tile text>
+                <v-btn v-if="!isMobile" :to="item.href" tile text>
                   {{ item.text }}
                 </v-btn>
+                <router-link v-if="isMobile" :to="item.href">
+                  {{ item.text }}
+                </router-link>
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
-          <v-tabs v-if="subCategories.length" class="mt-2">
+          <v-tabs v-if="subCategories.length" class="mt-2" show-arrows>
             <v-tab
               v-for="subCategory in subCategories"
               :key="subCategory.id"
@@ -97,8 +100,10 @@
 <script>
 import slugify from 'slugify'
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
+import theme from '~/mixins/theme'
 export default {
   auth: false,
+  mixins: [theme],
   data() {
     return {
       length: 0,
