@@ -66,7 +66,7 @@ export default {
             category: this.category,
           },
           awaitRefetchQueries: true,
-          refetchQueries: [{ query: GetCategories }],
+          refetchQueries: [{ query: GetAllCategories }],
         })
         .then(() => {
           this.$toast.show('Created', {
