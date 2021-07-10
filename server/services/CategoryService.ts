@@ -32,7 +32,9 @@ export class CategoryService {
     const category = Category.create()
     Object.assign(category, categoryToCreate)
     const father = await Category.findOne(categoryToCreate.father)
-    if (father) category.father = father
+    if (categoryToCreate.father && father) {
+      category.father = father
+    }
     return category.save()
   }
 
