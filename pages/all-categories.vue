@@ -1,14 +1,11 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" class="text-center">
-      <h2 class="text-h2">Categories</h2>
-    </v-col>
     <v-col
-      v-for="category in categories"
+      v-for="category in allCategories"
       :key="category.id"
       cols="12"
       sm="8"
-      md="4"
+      md="3"
     >
       <v-card :to="`/categories/${category.slug}`">
         <v-img
@@ -35,20 +32,20 @@
 </template>
 
 <script>
-import { GetCategories } from '../graphql/query/category/GetCategories'
+import { GetAllCategories } from '../graphql/query/category/GetAllCategories'
 export default {
   auth: false,
   async asyncData({ store, app }) {
     const { data } = await app.apolloProvider.defaultClient.query({
-      query: GetCategories,
+      query: GetAllCategories,
     })
-    store.commit('category/setCategories', data.GetCategories)
+    store.commit('category/setAllCategories', data.GetAllCategories)
     return {
-      categories: data.GetCategories,
+      allCategories: data.GetAllCategories,
     }
   },
   head: {
-    title: 'Home',
+    title: 'Categories',
   },
 }
 </script>

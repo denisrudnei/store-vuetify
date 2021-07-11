@@ -33,6 +33,19 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        <v-list-item to="/all-categories" router exact>
+          <v-list-item-action>
+            <v-icon color="primary">mdi-expand-all</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title
+              :class="{ 'primary--text': !$vuetify.theme.isDark }"
+            >
+              All categories
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider />
         <v-list-item
           v-for="item in categoriesItems"
           :key="item.title"
@@ -118,7 +131,6 @@
         <v-icon>mdi-exit-to-app</v-icon>
       </v-btn>
     </v-app-bar>
-
     <v-main>
       <v-container>
         <nuxt />
