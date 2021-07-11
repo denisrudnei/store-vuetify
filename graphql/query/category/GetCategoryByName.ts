@@ -7,6 +7,7 @@ query GetCategoryByName($name: String!) {
     name
     slug
     fullName
+    description
     father {
       name
       id

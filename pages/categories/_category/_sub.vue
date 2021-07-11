@@ -104,6 +104,28 @@ import theme from '~/mixins/theme'
 export default {
   auth: false,
   mixins: [theme],
+  asyncData({ app, error, route }) {
+    return app.apolloProvider.defaultClient
+      .query({
+        query: GetCategoryByName,
+        variables: {
+          name: route.params.category,
+        },
+      })
+      .then((response) => {
+        return {
+          category: response.data.GetCategoryByName,
+          subCategories: [
+            response.data.GetCategoryByName,
+            ...response.data.GetCategoryByName.subCategories,
+          ],
+          products: response.data.GetCategoryByName.products,
+        }
+      })
+      .catch(() => {
+        error({ statusCode: 404, message: 'Category not found' })
+      })
+  },
   data() {
     return {
       length: 0,
@@ -124,6 +146,16 @@ export default {
           hid: 'og:image',
           property: 'og:image',
           content: 'https://picsum.photos/800/600',
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.category.name,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.category.description,
         },
       ],
     }
@@ -147,23 +179,6 @@ export default {
         }
       })
     },
-  },
-  created() {
-    this.$apollo
-      .query({
-        query: GetCategoryByName,
-        variables: {
-          name: this.$route.params.category,
-        },
-      })
-      .then((response) => {
-        this.category = response.data.GetCategoryByName
-        this.subCategories = [
-          this.category,
-          ...response.data.GetCategoryByName.subCategories,
-        ]
-        this.products = response.data.GetCategoryByName.products
-      })
   },
   methods: {
     addToCart(product) {

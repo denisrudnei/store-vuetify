@@ -24,7 +24,7 @@ export class Category extends BaseEntity {
   public name!: string
 
   @Field()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   public description!: string
 
   @Field()
