@@ -69,18 +69,24 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn
-        icon
-        :class="{
-          'white--text': isDark,
-          'primary--text': !isDark,
-        }"
-        @click="toggleTheme"
-      >
-        <v-icon>
-          {{ isDark ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
-        </v-icon>
-      </v-btn>
+      <v-tooltip left>
+        <template #activator="{ on }">
+          <v-btn
+            icon
+            :class="{
+              'white--text': isDark,
+              'primary--text': !isDark,
+            }"
+            v-on="on"
+            @click="toggleTheme"
+          >
+            <v-icon>
+              {{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Change theme</span>
+      </v-tooltip>
       <v-btn
         icon
         :class="{ 'white--text': isDark, 'primary--text': !isDark }"
