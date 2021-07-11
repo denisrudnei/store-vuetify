@@ -35,20 +35,23 @@
 </template>
 
 <script>
-import { GetCategories } from '../graphql/query/category/GetCategories'
+import { GetIndexPage } from '../graphql/query/GetIndexPage'
 export default {
   auth: false,
   async asyncData({ store, app }) {
     const { data } = await app.apolloProvider.defaultClient.query({
-      query: GetCategories,
+      query: GetIndexPage,
     })
     store.commit('category/setCategories', data.GetCategories)
     return {
       categories: data.GetCategories,
+      title: data.GetSiteSettings.name,
     }
   },
-  head: {
-    title: 'Home',
+  head() {
+    return {
+      title: this.title,
+    }
   },
 }
 </script>
