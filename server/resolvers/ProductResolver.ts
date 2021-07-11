@@ -9,11 +9,11 @@ import {
   Authorized,
 } from 'type-graphql'
 
-import { CreateProductInput } from '../../inputs/CreateProductInput'
+import { CreateProductInput } from '../inputs/CreateProductInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { ProductService } from '../services/ProductService'
-import { EditProductInput } from '../../inputs/EditProductInput'
+import { EditProductInput } from '../inputs/EditProductInput'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 import { Role } from '../enums/Role'
 

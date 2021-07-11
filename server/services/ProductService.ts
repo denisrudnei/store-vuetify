@@ -1,8 +1,8 @@
 import { In, IsNull, Not } from 'typeorm'
 import { Product } from '../models/Product'
 import { Category } from '../models/Category'
-import { CreateProductInput } from '../../inputs/CreateProductInput'
-import { EditProductInput } from '../../inputs/EditProductInput'
+import { CreateProductInput } from '../inputs/CreateProductInput'
+import { EditProductInput } from '../inputs/EditProductInput'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 
 export class ProductService {

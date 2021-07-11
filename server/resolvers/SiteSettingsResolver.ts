@@ -1,6 +1,6 @@
 import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql'
 
-import { EditSiteSettingsInput } from '../../inputs/EditSiteSettingsInput'
+import { EditSiteSettingsInput } from '../inputs/EditSiteSettingsInput'
 import { SiteSettings } from '../models/SiteSettings'
 import { SiteSettingsService } from '../services/SiteSettingsService'
 import { Role } from '../enums/Role'

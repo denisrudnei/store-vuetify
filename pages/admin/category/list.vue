@@ -2,10 +2,15 @@
   <v-row>
     <v-col>
       <v-data-table :headers="headers" :items="categories">
-        <template #item.actions>
+        <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
-              <v-btn class="primary--text" icon v-on="on">
+              <v-btn
+                class="primary--text"
+                icon
+                :to="`/admin/category/edit/${item.slug}`"
+                v-on="on"
+              >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>

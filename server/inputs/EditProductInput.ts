@@ -1,5 +1,5 @@
 import { Field, InputType, ID, Float } from 'type-graphql'
-import { Category } from '../server/models/Category'
+import { Category } from '../models/Category'
 @InputType()
 export class EditProductInput {
   @Field()

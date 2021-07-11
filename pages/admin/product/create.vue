@@ -8,7 +8,6 @@ import { CreateProduct } from '../../../graphql/mutation/product/CreateProduct'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 export default {
   components: { create },
-
   methods: {
     save(product) {
       this.$apollo

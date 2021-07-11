@@ -1,5 +1,5 @@
 import { SiteSettings } from '../models/SiteSettings'
-import { EditSiteSettingsInput } from '../../inputs/EditSiteSettingsInput'
+import { EditSiteSettingsInput } from '../inputs/EditSiteSettingsInput'
 
 export class SiteSettingsService {
   public static async getSiteSettings() {

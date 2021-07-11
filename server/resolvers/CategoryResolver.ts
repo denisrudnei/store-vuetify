@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   FieldResolver,
   ID,
   Mutation,
@@ -10,7 +11,9 @@ import {
 
 import { Category } from '../models/Category'
 import { CategoryService } from '../services/CategoryService'
-import { CreateCategoryInput } from '../../inputs/CreateCategoryInput'
+import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
+import { Role } from '../enums/Role'
+import { EditCategoryInput } from '../inputs/EditCategoryInput'
 
 @Resolver(() => Category)
 export class CategoryResolver {
@@ -35,10 +38,20 @@ export class CategoryResolver {
   }
 
   @Mutation(() => Category)
+  @Authorized(Role.ADMIN)
   public CreateCategory(
     @Arg('category', () => CreateCategoryInput) category: CreateCategoryInput
   ) {
     return CategoryService.createCategory(category)
+  }
+
+  @Mutation(() => Category)
+  @Authorized(Role.ADMIN)
+  public EditCategory(
+    @Arg('id', () => ID) id: Category['id'],
+    @Arg('category', () => EditCategoryInput) category: EditCategoryInput
+  ) {
+    return CategoryService.edit(id, category)
   }
 
   @FieldResolver()

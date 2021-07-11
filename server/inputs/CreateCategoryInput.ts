@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from 'type-graphql'
-import { Category } from '../server/models/Category'
+import { Category } from '../models/Category'
 
 @InputType()
 export class CreateCategoryInput {
