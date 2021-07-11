@@ -139,8 +139,14 @@
       <v-footer :dark="isDark" padless class="text-center">
         <v-card flat tile width="100%">
           <v-card-text>
-            <v-btn v-for="icon in icons" :key="icon" icon>
-              <v-icon>{{ icon }}</v-icon>
+            <v-btn
+              v-for="network in socialNetworks"
+              :key="network.name"
+              icon
+              :href="network.url"
+              target="_blank"
+            >
+              <v-icon>{{ network.icon }}</v-icon>
             </v-btn>
             <v-spacer />
             <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -154,10 +160,10 @@
 <script>
 import ColorMiddleware from '../middleware/ColorMiddleware'
 import { UpdateTheme } from '../graphql/mutation/user/UpdateTheme'
+import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
 import cartMenu from '~/components/cartMenu.vue'
 import DialogBox from '~/components/dialog-box.vue'
 import NotificationList from '~/components/notification-list.vue'
-import { GetCategories } from '~/graphql/query/category/GetCategories'
 import theme from '~/mixins/theme'
 import color from '~/mixins/color'
 
@@ -168,6 +174,7 @@ export default {
   data() {
     return {
       clipped: false,
+      socialNetworks: [],
       items: [
         {
           icon: 'mdi-apps',
@@ -175,7 +182,6 @@ export default {
           to: '/',
         },
       ],
-      icons: ['mdi-facebook', 'mdi-youtube', 'mdi-twitter', 'mdi-discord'],
       title: 'Store',
     }
   },
@@ -221,21 +227,29 @@ export default {
   created() {
     this.$apollo
       .query({
-        query: GetCategories,
+        query: GetDefaultInfo,
       })
       .then((response) => {
         this.$store.commit(
           'category/setCategories',
           response.data.GetCategories
         )
+        Object.entries(response.data.GetSocialNetworks).forEach((entry) => {
+          const [name, value] = entry
+          if (name !== 'id' && value.length) {
+            this.socialNetworks.push({
+              name,
+              icon: `mdi-${name}`,
+              url: value,
+            })
+          }
+        })
       })
   },
   methods: {
     toggleTheme() {
       this.isDark = !this.$vuetify.theme.isDark
       if (this.logged) {
-        // this.$auth.user.darkTheme = this.isDark
-
         this.$apollo
           .mutate({
             mutation: UpdateTheme,
