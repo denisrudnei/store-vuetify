@@ -69,7 +69,7 @@ export default {
         this.categories = response.data.GetAllCategories.map((item) => ({
           text: item.name,
           value: item.id,
-        }))
+        })).filter((item) => item.value !== this.category.id)
       })
   },
   methods: {
