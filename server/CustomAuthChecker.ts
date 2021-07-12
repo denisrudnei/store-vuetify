@@ -2,6 +2,7 @@ import { AuthChecker } from 'type-graphql'
 import jwt from 'jsonwebtoken'
 import { CustomExpressContext } from './types/CustomExpressContext'
 import { User } from './models/User'
+import { Role } from './enums/Role'
 
 export const CustomAuthChecker: AuthChecker<CustomExpressContext> = async (
   { root, args, context, info },
@@ -20,6 +21,7 @@ export const CustomAuthChecker: AuthChecker<CustomExpressContext> = async (
 
   const user = await User.findOne((data as User).id)
   if (!user) return false
+  if (user.role === Role.ADMIN) return true
   return roles.includes(user.role)
 }
 

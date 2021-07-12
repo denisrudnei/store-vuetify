@@ -21,7 +21,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @Authorized(Role.USER, Role.ADMIN)
+  @Authorized(Role.USER)
   public UpdateTheme(
     @Arg('isDark', () => Boolean) isDark: boolean,
     @Ctx() { req }: CustomExpressContext

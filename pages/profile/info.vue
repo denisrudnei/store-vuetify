@@ -6,8 +6,13 @@
         <v-card-text>
           <v-row>
             <v-col cols="12" md="10">
-              <v-text-field outlined label="Name"> </v-text-field>
-              <v-text-field outlined label="Email" readonly> </v-text-field>
+              <v-text-field v-model="user.name" outlined label="Name" />
+              <v-text-field
+                v-model="user.email"
+                outlined
+                label="Email"
+                readonly
+              />
               <v-divider />
               <v-card flat>
                 <v-card-title class="red--text"> Danger area </v-card-title>
@@ -92,9 +97,14 @@
 </template>
 
 <script>
+import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 export default {
   data() {
     return {
+      user: {
+        name: '',
+        email: '',
+      },
       newPassword: '',
       repeatNewPassword: '',
       showNewPassword: false,
@@ -107,6 +117,15 @@ export default {
         this.newPassword !== '' && this.newPassword === this.repeatNewPassword
       )
     },
+  },
+  created() {
+    this.$apollo
+      .query({
+        query: GetActualUser,
+      })
+      .then((response) => {
+        this.user = response.data.GetActualUser
+      })
   },
   methods: {
     passwordIcon(field) {
