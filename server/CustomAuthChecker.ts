@@ -11,7 +11,11 @@ export const CustomAuthChecker: AuthChecker<CustomExpressContext> = async (
   const { req } = context
   const { session } = req
   if (!req.headers.authorization && !req.session!.authUser) return false
-  if (session && session.authUser) return roles.includes(session.authUser.role)
+  if (session && session.authUser) {
+    if (session.authUser.role === Role.ADMIN) return true
+    return roles.includes(session.authUser.role)
+  }
+
   const items = req.headers.authorization!.split(' ')
   const token = items[items.length - 1]
 

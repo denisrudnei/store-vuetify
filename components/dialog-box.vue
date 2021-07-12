@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="50%" persistent>
+  <v-dialog v-model="dialog" :width="isMobile ? '98%' : '50%'" persistent>
     <v-card tile class="pa-2">
       <v-card-title />
       <v-card-text>
@@ -34,7 +34,9 @@
 </template>
 
 <script>
+import theme from '~/mixins/theme'
 export default {
+  mixins: [theme],
   computed: {
     dialog: {
       get() {
