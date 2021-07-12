@@ -84,9 +84,9 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field
-                  v-mask="'##/##/####'"
+                  v-mask="'##/##'"
                   outlined
-                  label="Exp data"
+                  label="Exp date"
                   type="tel"
                 />
               </v-col>
