@@ -8,7 +8,7 @@ import { UserService } from '../services/UserService'
 @Resolver(() => User)
 export class UserResolver {
   @Query(() => User)
-  @Authorized()
+  @Authorized(Role.USER)
   public GetActualUser(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
     return User.findOne(id)
