@@ -32,6 +32,9 @@ export class User extends BaseEntity {
   @Column()
   public tempPassword!: string
 
+  @Column({ default: false })
+  public active!: boolean
+
   @Column({ default: Role.USER, type: 'varchar' })
   public role!: Role
 

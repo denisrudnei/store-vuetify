@@ -24,7 +24,11 @@
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="primary white--text" @click="login">
+          <v-btn
+            class="primary white--text"
+            :disabled="disabled"
+            @click="login"
+          >
             <v-icon left>mdi-account</v-icon>
             Login
           </v-btn>
@@ -44,6 +48,11 @@ export default {
       },
     }
   },
+  computed: {
+    disabled() {
+      return this.user.username === '' || this.user.password === ``
+    },
+  },
   methods: {
     login() {
       this.$auth
@@ -53,8 +62,8 @@ export default {
             duration: 1000,
           })
         })
-        .catch(() => {
-          this.$toast.error('Failed to login', {
+        .catch((e) => {
+          this.$toast.error(e.response.data.message, {
             duration: 10000,
           })
         })

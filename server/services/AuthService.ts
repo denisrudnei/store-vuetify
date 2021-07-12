@@ -31,6 +31,7 @@ export class AuthService {
       },
     })
     if (!user) throw new Error('Login failed')
+    if (!user.active) throw new Error('Not active')
     const logged = bcrypt.compareSync(password, user.password)
     if (logged) return user
     throw new Error('Incorrect password')

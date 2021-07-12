@@ -16,16 +16,19 @@
                 v-model="user.password"
                 label="Password"
                 outlined
-                type="password"
+                :type="getType()"
+                :append-icon="getIcon()"
+                @click:append="toggleIcon()"
               />
-            </v-col>
-            <v-col cols="12">
-              <v-text-field label="Password" outlined type="password" />
             </v-col>
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="primary white--text" @click="register">
+          <v-btn
+            class="primary white--text"
+            :disabled="inactive"
+            @click="register"
+          >
             <v-icon left>mdi-account</v-icon>
             Register
           </v-btn>
@@ -45,7 +48,19 @@ export default {
         email: '',
         password: '',
       },
+      repeatPassword: '',
+      showPassword: false,
+      showRepeatPassword: false,
     }
+  },
+  computed: {
+    inactive() {
+      return (
+        this.user.name === '' ||
+        this.user.email === '' ||
+        this.user.password === ''
+      )
+    },
   },
   methods: {
     register() {
@@ -62,6 +77,15 @@ export default {
             duration: 10000,
           })
         })
+    },
+    getIcon() {
+      return this.showPassword ? 'mdi-eye-off' : 'mdi-eye'
+    },
+    getType() {
+      return this.showPassword ? 'text' : 'password'
+    },
+    toggleIcon() {
+      return (this.showPassword = !this.showPassword)
     },
   },
 }
