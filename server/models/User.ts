@@ -32,6 +32,7 @@ export class User extends BaseEntity {
   @Column()
   public tempPassword!: string
 
+  @Field()
   @Column({ default: false })
   public active!: boolean
 

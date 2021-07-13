@@ -4,6 +4,7 @@ import { User } from '../models/User'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { Role } from '../enums/Role'
 import { UserService } from '../services/UserService'
+import { UpdateUserInfoInput } from '../inputs/UpdteUserInfoInput'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -29,5 +30,15 @@ export class UserResolver {
     const id = req.session.authUser!.id
     req.session.authUser!.darkTheme = isDark
     return UserService.updateTheme(id, isDark)
+  }
+
+  @Mutation(() => User)
+  @Authorized(Role.USER)
+  public UpdateUserInfo(
+    @Arg('user', () => UpdateUserInfoInput) user: UpdateUserInfoInput,
+    @Ctx() { req }: CustomExpressContext
+  ) {
+    const id = req.session.authUser!.id
+    return UserService.updateUserInfo(id, user)
   }
 }

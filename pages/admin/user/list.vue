@@ -1,7 +1,11 @@
 <template>
   <v-row>
     <v-col>
-      <v-data-table :headers="headers" :items="users"></v-data-table>
+      <v-data-table :headers="headers" :items="users">
+        <template #item.active="{ item }">
+          <v-checkbox :input-value="item.active" readonly />
+        </template>
+      </v-data-table>
     </v-col>
   </v-row>
 </template>
@@ -12,6 +16,10 @@ export default {
   data() {
     return {
       headers: [
+        {
+          text: 'Active',
+          value: 'active',
+        },
         {
           text: 'Name',
           value: 'name',

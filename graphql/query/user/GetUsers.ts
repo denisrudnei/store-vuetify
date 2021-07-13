@@ -6,6 +6,7 @@ query {
     id
     name
     email
+    active
   }
 }
 `

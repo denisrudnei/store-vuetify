@@ -1,4 +1,5 @@
 import { User } from '../models/User'
+import { UpdateUserInfoInput } from '../inputs/UpdteUserInfoInput'
 
 export class UserService {
   public static getOne(id: User['id']) {
@@ -13,6 +14,16 @@ export class UserService {
     const user = await User.findOne(id)
     if (!user) throw new Error('User not found')
     user.darkTheme = isDark
+    return user.save()
+  }
+
+  public static async updateUserInfo(
+    id: User['id'],
+    userToUpdate: UpdateUserInfoInput
+  ) {
+    const user = await User.findOne(id)
+    if (!user) throw new Error('User not found')
+    Object.assign(user, userToUpdate)
     return user.save()
   }
 }

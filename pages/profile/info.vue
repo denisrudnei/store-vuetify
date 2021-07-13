@@ -13,7 +13,10 @@
                 label="Email"
                 readonly
               />
-              <v-divider />
+              <v-btn class="primary white--text" @click="updateUser">
+                Update info
+              </v-btn>
+              <v-divider class="my-4" />
               <v-card flat>
                 <v-card-title class="red--text"> Danger area </v-card-title>
                 <v-card-text>
@@ -97,6 +100,7 @@
 </template>
 
 <script>
+import { UpdateUserInfo } from '../../graphql/mutation/user/UpdateUserInfo'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 export default {
   data() {
@@ -130,6 +134,22 @@ export default {
   methods: {
     passwordIcon(field) {
       return this[field] ? 'mdi-eye-off' : 'mdi-eye'
+    },
+    updateUser() {
+      this.$apollo
+        .mutate({
+          mutation: UpdateUserInfo,
+          variables: {
+            user: {
+              name: this.user.name,
+            },
+          },
+        })
+        .then(() => {
+          this.$toast.show('Updated', {
+            duration: 1000,
+          })
+        })
     },
   },
 }
