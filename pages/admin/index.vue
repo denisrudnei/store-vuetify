@@ -1,12 +1,12 @@
 <template>
-  <customization />
+  <dashboard />
 </template>
 
 <script>
-import customization from './customization.vue'
+import dashboard from './dashboard.vue'
 export default {
   components: {
-    customization,
+    dashboard,
   },
 }
 </script>
