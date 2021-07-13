@@ -7,9 +7,11 @@ import {
   AfterLoad,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm'
 import bcrypt from 'bcryptjs'
 import { Role } from '../enums/Role'
+import { Address } from './Adress'
 
 @Entity()
 @ObjectType()
@@ -35,6 +37,10 @@ export class User extends BaseEntity {
   @Field()
   @Column({ default: false })
   public active!: boolean
+
+  @Field(() => [Address], { nullable: true })
+  @OneToMany(() => Address, (address) => address.user)
+  public addresses!: Address[]
 
   @Column({ default: Role.USER, type: 'varchar' })
   public role!: Role
