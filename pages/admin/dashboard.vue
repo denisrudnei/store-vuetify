@@ -23,6 +23,37 @@
         </v-card-actions>
       </v-card>
     </v-col>
+    <v-navigation-drawer fixed right clipped app>
+      <v-text-field outlined class="mx-3 mt-4" label="Search" />
+      <v-list>
+        <v-list-group prepend-icon="mdi-label">
+          <template #activator>
+            <v-list-item-title> Categories </v-list-item-title>
+          </template>
+          <v-list-item to="/admin/dashboard">
+            <v-list-item-content>
+              <v-list-item-title> Top 10 categories</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-icon color="primary">mdi-label</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-group>
+        <v-list-group prepend-icon="mdi-tag-multiple">
+          <template #activator>
+            <v-list-item-title> Products </v-list-item-title>
+          </template>
+          <v-list-item to="/admin/dashboard">
+            <v-list-item-content>
+              <v-list-item-title> Top 10 products </v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-icon color="primary">mdi-tag-multiple</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-group>
+      </v-list>
+    </v-navigation-drawer>
   </v-row>
 </template>
 
