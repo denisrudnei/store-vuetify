@@ -49,7 +49,7 @@ AuthController.post(
   async (req: express.Request, res: express.Response) => {
     if (req.session.authUser) {
       return res.status(200).json({
-        user: req.session.authUser,
+        user: await User.findOne(req.session.authUser.id),
       })
     }
     if (req.headers.authorization) {
