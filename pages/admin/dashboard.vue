@@ -8,7 +8,8 @@
               :value="card.values"
               color="rgba(255, 255, 255, .7)"
               height="100"
-              padding="24"
+              line-width="2"
+              padding="10"
               smooth
             >
               <template #label="item"> ${{ item.value }} </template>
