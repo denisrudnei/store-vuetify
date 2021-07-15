@@ -37,7 +37,7 @@ export class Category extends BaseEntity {
 
   @Field(() => Category, { nullable: true })
   @ManyToOne(() => Category, (category) => category.subCategories)
-  public father!: Category
+  public father?: Category | null
 
   @Field(() => [Category])
   @OneToMany(() => Category, (category) => category.father)

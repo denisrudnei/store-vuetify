@@ -18,6 +18,7 @@
             :items="categories"
             outlined
             label="Father"
+            clearable
           />
         </v-col>
       </v-row>

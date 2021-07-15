@@ -11,5 +11,5 @@ export class EditCategoryInput {
   public description!: string
 
   @Field(() => ID, { nullable: true })
-  public father?: Category['father']['id']
+  public father?: Category['id']
 }

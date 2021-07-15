@@ -47,14 +47,20 @@ export class CategoryService {
       relations: ['subCategories'],
     })
     if (!category) throw new Error('Category not found')
-    const father = await Category.findOne(categoryToEdit.father)
+
     category.name = categoryToEdit.name
     category.description = categoryToEdit.description
-    if (father && father.id !== category.id) {
-      if (!category.subCategories.map((sub) => sub.id).includes(father.id)) {
-        category.father = father
+    if (!categoryToEdit.father) {
+      category.father = null
+    } else {
+      const father = await Category.findOne(categoryToEdit.father)
+      if (father && father.id !== category.id) {
+        if (!category.subCategories.map((sub) => sub.id).includes(father.id)) {
+          category.father = father
+        }
       }
     }
+
     return category.save()
   }
 
