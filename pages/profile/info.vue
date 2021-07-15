@@ -41,7 +41,11 @@
                   />
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn class="red white--text" :disabled="!validToReset">
+                  <v-btn
+                    class="red white--text"
+                    :disabled="!validToReset"
+                    @click="reset"
+                  >
                     Reset passwrod
                   </v-btn>
                 </v-card-actions>
@@ -101,6 +105,7 @@
 
 <script>
 import { UpdateUserInfo } from '../../graphql/mutation/user/UpdateUserInfo'
+import { ResetPassword } from '../../graphql/mutation/user/ResetPassword'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 export default {
   data() {
@@ -134,6 +139,21 @@ export default {
   methods: {
     passwordIcon(field) {
       return this[field] ? 'mdi-eye-off' : 'mdi-eye'
+    },
+    reset() {
+      this.$apollo
+        .mutate({
+          mutation: ResetPassword,
+          variables: {
+            newPassword: this.newPassword,
+          },
+        })
+        .then(() => {
+          this.$toast.show('Reseted', {
+            duration: 1000,
+          })
+          this.$auth.fetch()
+        })
     },
     updateUser() {
       this.$apollo

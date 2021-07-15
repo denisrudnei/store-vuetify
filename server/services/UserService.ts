@@ -26,4 +26,11 @@ export class UserService {
     Object.assign(user, userToUpdate)
     return user.save()
   }
+
+  public static async resetPassword(id: User['id'], newPassword: string) {
+    const user = await User.findOne(id)
+    if (!user) throw new Error('User not found')
+    user.password = newPassword
+    return user.save()
+  }
 }

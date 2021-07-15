@@ -41,4 +41,14 @@ export class UserResolver {
     const id = req.session.authUser!.id
     return UserService.updateUserInfo(id, user)
   }
+
+  @Mutation(() => User)
+  @Authorized(Role.USER)
+  public ResetPassword(
+    @Arg('newPassword', () => String) newPassword: string,
+    @Ctx() { req }: CustomExpressContext
+  ) {
+    const id = req.session.authUser!.id
+    return UserService.resetPassword(id, newPassword)
+  }
 }
