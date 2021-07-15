@@ -38,7 +38,7 @@
     </v-col>
     <v-col cols="12">
       <v-row justify="center" align="center">
-        <v-col cols="12">
+        <v-col v-if="products.length" cols="12">
           <v-card
             :dark="!$vuetify.theme.dark"
             :color="!$vuetify.theme.dark ? 'primary' : undefined"
@@ -47,6 +47,14 @@
             <v-card-text class="title">
               Items: {{ products.length }}
             </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col v-if="!products.length" align="center">
+          <v-card tile elevation="0">
+            <v-card-text>
+              <v-icon size="125" color="red"> mdi-tag-remove-outline </v-icon>
+            </v-card-text>
+            <v-card-text class="title">No products found</v-card-text>
           </v-card>
         </v-col>
         <v-col v-for="product in products" :key="product.id" cols="12" md="4">
