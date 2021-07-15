@@ -60,13 +60,13 @@ export class CategoryService {
 
   public static async getFullName(id: Category['id']): Promise<String> {
     const category = await Category.findOne(id, {
-      relations: ['father', 'father.subCategories'],
+      relations: ['father', 'father.subCategories', 'subCategories'],
     })
     if (!category) throw new Error('Category not found')
     if (category.father) {
       if (category.father.id === category.id) return ''
       if (
-        category.father.subCategories.map((sub) => sub.id).includes(category.id)
+        category.subCategories.map((sub) => sub.id).includes(category.father.id)
       )
         return `${category.father.name}/${category.name}`
       return `${await this.getFullName(category.father.id)}/${category.name}`
