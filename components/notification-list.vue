@@ -18,8 +18,10 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title>Notifications</v-card-title>
-      <v-divider />
+      <v-sheet class="fixed-title">
+        <v-card-title>Notifications</v-card-title>
+        <v-divider />
+      </v-sheet>
       <v-card-text>
         <v-list>
           <template v-for="notification in notifications">
@@ -88,6 +90,12 @@ export default {
 </script>
 
 <style scoped>
+.fixed-title {
+  top: 0 !important;
+  margin-bottom: auto !important;
+  position: sticky !important;
+  z-index: 999 !important;
+}
 .fixed-buttons {
   bottom: 0 !important;
   margin-top: auto !important;
