@@ -5,10 +5,12 @@
 <script>
 import { GetProduct } from '../../graphql/query/product/GetProduct'
 import ShowProduct from '~/components/product/show-product.vue'
+import productPage from '~/mixins/product-page'
 export default {
   components: {
     ShowProduct,
   },
+  mixins: [productPage],
   asyncData({ app, error, route }) {
     return app.apolloProvider.defaultClient
       .query({
