@@ -45,6 +45,18 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item to="/products" router exact>
+          <v-list-item-action>
+            <v-icon color="primary">mdi-tag-multiple</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title
+              :class="{ 'primary--text': !$vuetify.theme.isDark }"
+            >
+              All products
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-divider />
         <v-list-item
           v-for="item in categoriesItems"
@@ -131,7 +143,6 @@
           <v-icon>mdi-cog</v-icon>
         </v-btn>
       </template>
-
       <v-btn v-show="logged" icon @click="logout">
         <v-icon>mdi-exit-to-app</v-icon>
       </v-btn>
