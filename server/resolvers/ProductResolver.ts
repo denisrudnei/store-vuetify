@@ -95,6 +95,15 @@ export class ProductResolver {
     return ProductService.deleteProducts(ids)
   }
 
+  @Mutation(() => [ID])
+  @Authorized(Role.ADMIN)
+  public UpdateCategoryForProducts(
+    @Arg('products', () => [ID]) products: Product['id'][],
+    @Arg('category', () => ID) category: Category['id']
+  ) {
+    return ProductService.updateCategoryForProducts(products, category)
+  }
+
   @FieldResolver()
   public async category(@Root() root: Product) {
     const { category } = (await Product.findOne(root.id, {

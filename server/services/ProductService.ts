@@ -116,4 +116,25 @@ export class ProductService {
       }
     })
   }
+
+  public static async updateCategoryForProducts(
+    products: Product['id'][],
+    categoryId: Category['id']
+  ) {
+    const category = await Category.findOne({
+      where: {
+        id: categoryId,
+      },
+    })
+    if (!category) throw new Error('Category not found')
+    await Product.update(
+      {
+        id: In(products),
+      },
+      {
+        category,
+      }
+    )
+    return products
+  }
 }

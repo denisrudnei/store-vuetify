@@ -1,9 +1,26 @@
 <template>
   <v-row>
     <v-col v-if="selected.length" cols="12">
-      <v-btn class="red white--text" @click="inactivateMany">
-        Inactivate
-      </v-btn>
+      <v-row align="center">
+        <v-col cols="12" md="4">
+          <v-autocomplete
+            v-model="category"
+            :items="categories"
+            outlined
+            label="Update category"
+            hide-details
+            append-outer-icon="mdi-tag-outline"
+            clearable
+            @click:append-outer="updateCategoryForProducts"
+          />
+        </v-col>
+        <v-spacer />
+        <v-col cols="12" md="auto">
+          <v-btn class="red white--text" @click="inactivateMany">
+            Inactivate
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-col>
     <v-col cols="12">
       <v-data-table
@@ -12,6 +29,9 @@
         :headers="headers"
         show-select
       >
+        <template #item.category="{ item }">
+          {{ item.category.name }}
+        </template>
         <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
@@ -48,6 +68,8 @@
 <script>
 import { InactivateProduct } from '../../../graphql/mutation/product/InactivateProduct'
 import { InactivateProducts } from '../../../graphql/mutation/product/InactivateProducts'
+import { GetProductInfo } from '../../../graphql/query/GetProductListInfo'
+import { UpdateCategoryForProducts } from '../../../graphql/mutation/product/UpdateCategoryForProducts'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 import { GetInactivatedProducts } from '~/graphql/query/product/GetInactivatedProducts'
 export default {
@@ -63,21 +85,40 @@ export default {
           value: 'price',
         },
         {
+          text: 'Category',
+          value: 'category',
+        },
+        {
           text: 'Actions',
           value: 'actions',
         },
       ],
-      products: [],
       selected: [],
+      category: undefined,
+      categories: [],
     }
+  },
+  computed: {
+    products: {
+      get() {
+        return this.$store.getters['products/getProducts']
+      },
+      set(value) {
+        this.$store.commit('products/setProducts', value)
+      },
+    },
   },
   created() {
     this.$apollo
       .query({
-        query: GetProducts,
+        query: GetProductInfo,
       })
       .then((response) => {
         this.products = response.data.GetProducts
+        this.categories = response.data.GetAllCategories.map((category) => ({
+          text: category.name,
+          value: category,
+        }))
       })
   },
   methods: {
@@ -135,6 +176,55 @@ export default {
                 duration: 1000,
               })
               this.selected = []
+            })
+        })
+        .catch(() => {
+          this.$toast.show('Canceled', {
+            duration: 1000,
+          })
+        })
+    },
+    updateCategoryForProducts() {
+      if (!this.category) return
+
+      this.$dialog(
+        `Set category "${
+          this.categories.find(
+            (category) => category.value.id === this.category.id
+          ).text
+        }" for ${this.selected.length} products?`
+      )
+        .then(() => {
+          this.$apollo
+            .mutate({
+              mutation: UpdateCategoryForProducts,
+              variables: {
+                products: this.selected.map((product) => product.id),
+                category: this.category.id,
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: [{ query: GetProducts }],
+            })
+            .then((response) => {
+              response.data.UpdateCategoryForProducts.forEach((id) => {
+                const product = this.products.find(
+                  (product) => product.id === id
+                )
+                this.$store.commit('products/updateProduct', {
+                  ...product,
+                  category: this.categories.find(
+                    (category) => category.value.id === this.category.id
+                  ).value,
+                })
+              })
+              this.$toast.show('Updated', {
+                duration: 1000,
+              })
+            })
+            .catch(() => {
+              this.$toast.error('Failed to update', {
+                duration: 10000,
+              })
             })
         })
         .catch(() => {

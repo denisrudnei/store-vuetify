@@ -7,6 +7,9 @@ export const getters = {
   getCart(state) {
     return state.cart
   },
+  getProducts(state) {
+    return state.products
+  },
 }
 
 export const mutations = {
@@ -26,5 +29,14 @@ export const mutations = {
   },
   remove(state, id) {
     state.cart = state.cart.filter((item) => item.id !== id)
+  },
+  setProducts(state, products) {
+    state.products = products
+  },
+  updateProduct(state, product) {
+    const index = state.products.findIndex((item) => item.id === product.id)
+    if (index !== -1) {
+      Object.assign(state.products[index], product)
+    }
   },
 }
