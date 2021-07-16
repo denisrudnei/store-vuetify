@@ -7,6 +7,7 @@ import { GetProduct } from '../../../../graphql/query/product/GetProduct'
 import showProduct from '~/components/product/show-product.vue'
 export default {
   components: { showProduct },
+  auth: false,
   asyncData({ app, error, route }) {
     return app.apolloProvider.defaultClient
       .query({
