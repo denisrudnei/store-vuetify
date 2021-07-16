@@ -28,7 +28,7 @@
                 <v-card-title>
                   <router-link
                     :to="`/product/${product.id}`"
-                    class="white--text"
+                    :class="isDark ? 'white--text' : 'black--text'"
                   >
                     {{ product.name }}
                   </router-link>
@@ -74,7 +74,9 @@
 
 <script>
 import { AllProductsPage } from '~/graphql/query/product/AllProductsPage'
+import theme from '~/mixins/theme'
 export default {
+  mixins: [theme],
   data() {
     return {
       search: '',
