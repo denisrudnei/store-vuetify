@@ -6,6 +6,7 @@
 import { GetProduct } from '../../graphql/query/product/GetProduct'
 import ShowProduct from '~/components/product/show-product.vue'
 export default {
+  auth: false,
   components: {
     ShowProduct,
   },

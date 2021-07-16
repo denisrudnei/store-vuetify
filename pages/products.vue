@@ -76,6 +76,7 @@
 import { AllProductsPage } from '~/graphql/query/product/AllProductsPage'
 import theme from '~/mixins/theme'
 export default {
+  auth: false,
   mixins: [theme],
   data() {
     return {
