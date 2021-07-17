@@ -105,7 +105,9 @@
       >
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <notification-list v-if="logged" />
+      <client-only>
+        <notification-list v-if="logged" />
+      </client-only>
       <v-menu
         v-model="cartMenu"
         nudge-width="450"
@@ -131,18 +133,20 @@
           </v-card-text>
         </v-card>
       </v-menu>
-      <template v-if="isAdmin">
-        <v-btn
-          :class="{
-            'white--text': isDark,
-            'primary--text': !isDark,
-          }"
-          icon
-          to="/admin"
-        >
-          <v-icon>mdi-cog</v-icon>
-        </v-btn>
-      </template>
+      <client-only>
+        <template v-if="isAdmin">
+          <v-btn
+            :class="{
+              'white--text': isDark,
+              'primary--text': !isDark,
+            }"
+            icon
+            to="/admin"
+          >
+            <v-icon>mdi-cog</v-icon>
+          </v-btn>
+        </template>
+      </client-only>
       <v-btn v-show="logged" icon @click="logout">
         <v-icon>mdi-exit-to-app</v-icon>
       </v-btn>
