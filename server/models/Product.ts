@@ -8,6 +8,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import slugify from 'slugify'
 import { Category } from './Category'
@@ -47,6 +48,10 @@ export class Product extends BaseEntity {
       lower: true,
     })
   }
+
+  @Field()
+  @UpdateDateColumn()
+  public updatedAt?: Date
 
   @Field()
   @DeleteDateColumn()
