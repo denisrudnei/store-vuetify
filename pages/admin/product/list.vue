@@ -1,5 +1,34 @@
 <template>
   <v-row>
+    <v-col cols="12">
+      <v-row align="center">
+        <v-col>
+          <v-text-field
+            v-model="search"
+            label="Name"
+            outlined
+            append-icon="mdi-magnify"
+            hide-details
+          />
+        </v-col>
+        <v-col>
+          <v-autocomplete
+            v-model="selectedCategory"
+            outlined
+            label="Category"
+            hide-details
+            clearable
+            :items="categories"
+          />
+        </v-col>
+        <v-col cols="12" md="auto">
+          <v-btn class="primary white--text">
+            Search
+            <v-icon right>mdi-magnify</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-col>
     <v-col v-if="selected.length" cols="12">
       <v-row align="center">
         <v-col cols="12" md="4">
@@ -25,7 +54,7 @@
     <v-col cols="12">
       <v-data-table
         v-model="selected"
-        :items="products"
+        :items="searchedProducts"
         :headers="headers"
         show-select
       >
@@ -75,6 +104,7 @@ import { GetInactivatedProducts } from '~/graphql/query/product/GetInactivatedPr
 export default {
   data() {
     return {
+      search: '',
       headers: [
         {
           text: 'Name',
@@ -95,6 +125,7 @@ export default {
       ],
       selected: [],
       category: undefined,
+      selectedCategory: undefined,
       categories: [],
     }
   },
@@ -106,6 +137,16 @@ export default {
       set(value) {
         this.$store.commit('products/setProducts', value)
       },
+    },
+    searchedProducts() {
+      return this.products
+        .filter((product) =>
+          product.name.toLowerCase().includes(this.search.toLowerCase())
+        )
+        .filter((product) => {
+          if (!this.selectedCategory) return true
+          return product.category.id === this.selectedCategory.id
+        })
     },
   },
   created() {
