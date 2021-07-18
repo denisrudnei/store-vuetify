@@ -6,6 +6,9 @@ export class EditSiteSettingsInput {
   public name!: string
 
   @Field()
+  public logo!: string
+
+  @Field()
   public isDark!: boolean
 
   @Field()
