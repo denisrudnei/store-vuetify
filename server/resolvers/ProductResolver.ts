@@ -9,6 +9,7 @@ import {
   Authorized,
 } from 'type-graphql'
 
+import sanitize from 'sanitize-html'
 import { CreateProductInput } from '../inputs/CreateProductInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
@@ -110,5 +111,14 @@ export class ProductResolver {
       relations: ['category'],
     })) as Product
     return category
+  }
+
+  @FieldResolver(() => String)
+  public ogDescription(@Root() root: Product) {
+    return `${sanitize(root.description, {
+      allowedTags: ['br'],
+    })
+      .replaceAll('<br />', '\n')
+      .slice(0, 157)}...`
   }
 }

@@ -10,6 +10,7 @@ query GetProduct($id: ID!) {
       fullName
     }
     description
+    ogDescription
     price
   }
 }

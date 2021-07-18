@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import slugify from 'slugify'
+import sanitize from 'sanitize-html'
 import { Category } from './Category'
 
 @Entity()
@@ -46,6 +47,9 @@ export class Product extends BaseEntity {
     this.slug = slugify(this.name, {
       replacement: '-',
       lower: true,
+    })
+    this.description = sanitize(this.description, {
+      allowedTags: sanitize.defaults.allowedTags.concat(['img', 'a']),
     })
   }
 

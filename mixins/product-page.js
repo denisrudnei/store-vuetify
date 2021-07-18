@@ -21,7 +21,7 @@ export default {
         {
           hid: 'og:description',
           property: 'og:description',
-          content: this.product.description,
+          content: this.product.ogDescription,
         },
         {
           hid: 'product:price:amount',

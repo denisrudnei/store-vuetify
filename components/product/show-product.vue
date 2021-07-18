@@ -16,7 +16,7 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <span class="display-3">
+      <span :class="!isMobile ? 'display-3' : 'title'">
         {{ product.name }}
       </span>
     </v-col>
@@ -72,6 +72,7 @@ import { TheMask } from 'vue-the-mask'
 import slugify from 'slugify'
 import Rating from '~/components/rating.vue'
 import productPage from '~/mixins/product-page'
+import theme from '~/mixins/theme'
 export default {
   auth: false,
   directives: {
@@ -80,7 +81,7 @@ export default {
   components: {
     Rating,
   },
-  mixins: [productPage],
+  mixins: [productPage, theme],
   props: {
     product: {
       type: Object,
@@ -148,4 +149,26 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+figure {
+  display: flex;
+  width: 100%;
+}
+figure > img {
+  vertical-align: middle;
+  align-self: center;
+  margin: 5px auto;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 5px auto;
+}
+
+th,
+td,
+tr {
+  padding: 5px;
+  border: 2px solid #6b6b6b;
+}
+</style>
