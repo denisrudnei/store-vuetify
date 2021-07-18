@@ -15,7 +15,6 @@
     <v-color-picker
       v-model="color"
       mode="hexa"
-      hide-canvas
       hide-mode-switch
       show-swatches
       @input="updateColor(theme, type, $event)"

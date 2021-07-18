@@ -24,14 +24,14 @@
                 </v-card-title>
                 <v-divider />
                 <v-card-text>
-                  <v-menu :close-on-content-click="false">
+                  <v-menu :close-on-content-click="false" nudge-width="250">
                     <template #activator="{ on }">
                       <v-sheet :color="color" shaped height="100" v-on="on" />
                     </template>
                     <v-card>
                       <v-card-title> Update theme </v-card-title>
                       <v-card-text>
-                        <v-tabs v-model="tab">
+                        <v-tabs v-model="tab" grow>
                           <v-tab>Light</v-tab>
                           <v-tab>Dark</v-tab>
                           <v-tab-item>

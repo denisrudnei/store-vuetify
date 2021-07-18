@@ -14,7 +14,13 @@ export const state = () => ({
 
 export const mutations = {
   setSiteSettings(state, settings) {
-    state.settings = settings
+    state.settings = {
+      ...settings,
+      logo:
+        settings.logo !== undefined && settings.logo !== ''
+          ? settings.logo
+          : state.settings.logo,
+    }
   },
   updateSettingsAttribute(state, { name, value }) {
     state.settings[name] = value
