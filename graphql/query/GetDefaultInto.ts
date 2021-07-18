@@ -8,6 +8,11 @@ query {
     description
     slug
   }
+  GetSiteSettings {
+    id
+    name
+    logo
+  }
   GetSocialNetworks {
     id
     facebook

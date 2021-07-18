@@ -64,10 +64,7 @@
     </v-col>
     <v-col cols="12" md="4">
       <v-card :dark="$vuetify.theme.dark">
-        <v-img
-          :src="`https://picsum.photos/800/600/?${Math.random()}`"
-          :aspect-ratio="16 / 9"
-        />
+        <v-img :src="logo" />
         <v-card-text>
           <span class="primary--text title">Primary</span>
           <v-divider />
@@ -75,6 +72,24 @@
           <v-divider />
           <span class="accent--text title">Accent color</span>
         </v-card-text>
+        <v-card-actions>
+          <v-row>
+            <v-col cols="12">
+              <v-file-input
+                v-model="image"
+                outlined
+                label="Select logo"
+                @change="previewImage"
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-btn class="primary white--text" block @click="saveImage">
+                Save
+                <v-icon right>mdi-content-save</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
       </v-card>
     </v-col>
   </v-row>
@@ -84,10 +99,13 @@
 import faker from 'faker'
 import colorSelect from '~/components/color-select.vue'
 import { EditSiteSettings } from '~/graphql/mutation/site-settings/EditSiteSettings'
+import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
 export default {
   components: { colorSelect },
   data() {
     return {
+      logo: '',
+      image: undefined,
       tab: undefined,
       description: faker.lorem.sentence(),
     }
@@ -137,6 +155,15 @@ export default {
       this.$vuetify.theme.dark = value === 1
     },
   },
+  created() {
+    this.$apollo
+      .query({
+        query: GetSiteSettings,
+      })
+      .then((response) => {
+        this.logo = response.data.GetSiteSettings.logo
+      })
+  },
   mounted() {
     this.tab = this.darkTheme ? 1 : 0
   },
@@ -155,11 +182,39 @@ export default {
           })
         })
     },
+    saveImage() {
+      if (this.image) {
+        const formData = new FormData()
+        formData.append('image', this.image)
+        this.$axios
+          .post('/site-settings/image', formData)
+          .then(() => {
+            this.$toast.show('Saved', {
+              duration: 5000,
+            })
+          })
+          .catch(() => {
+            this.$toast.error('Failed to upload image', {
+              duration: 10000,
+            })
+          })
+      }
+    },
     updateName(name) {
       this.$store.commit('site-settings/updateName', name)
     },
     updateThemeType(isDark) {
       this.$store.commit('site-settings/updateThemeType', isDark)
+    },
+    previewImage() {
+      const vue = this
+      if (this.image) {
+        const fileReader = new FileReader()
+        fileReader.readAsDataURL(this.image)
+        fileReader.onloadend = () => {
+          vue.logo = fileReader.result
+        }
+      }
     },
   },
 }

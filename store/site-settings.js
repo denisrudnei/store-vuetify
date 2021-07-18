@@ -1,6 +1,7 @@
 export const state = () => ({
   settings: {
     name: '',
+    logo: '',
     isDark: true,
     darkPrimary: '#FFFFFF',
     darkSecondary: '#FFFFFF',
@@ -23,6 +24,9 @@ export const mutations = {
   },
   updateThemeType(state, isDark) {
     state.settings.isDark = isDark
+  },
+  setLogo(state, logo) {
+    state.logo = logo
   },
 }
 

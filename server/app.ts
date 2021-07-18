@@ -1,11 +1,12 @@
 import './types/CustomExpressContext'
 
+import compression from 'compression'
 import cors from 'cors'
 import express, { Router } from 'express'
 import session from 'express-session'
 
-import compression from 'compression'
 import { AuthController } from './controllers/AuthController'
+import { SiteSettingsController } from './controllers/SiteSettingsController'
 
 const app = Router()
 
@@ -43,5 +44,6 @@ app.use(
 )
 
 app.use('/api', AuthController)
+app.use('/api', SiteSettingsController)
 
 export { app }

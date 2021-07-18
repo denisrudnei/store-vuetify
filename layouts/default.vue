@@ -10,11 +10,7 @@
       <v-list>
         <v-list-item>
           <v-list-item-content>
-            <v-img
-              :src="`https://picsum.photos/800/600/?${Math.random()}`"
-              :aspect-ratio="1"
-              class="rounded-circle"
-            />
+            <v-img :src="logo" :aspect-ratio="1" class="rounded-circle" />
           </v-list-item-content>
         </v-list-item>
         <v-list-item
@@ -195,6 +191,7 @@ export default {
     return {
       clipped: false,
       socialNetworks: [],
+      logo: '',
       items: [
         {
           icon: 'mdi-apps',
@@ -250,6 +247,7 @@ export default {
         query: GetDefaultInfo,
       })
       .then((response) => {
+        this.logo = response.data.GetSiteSettings.logo
         this.$store.commit(
           'category/setCategories',
           response.data.GetCategories

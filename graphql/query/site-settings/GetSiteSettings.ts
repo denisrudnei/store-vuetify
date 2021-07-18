@@ -5,6 +5,7 @@ query {
   GetSiteSettings {
     id
     name
+    logo
     isDark
     darkPrimary
     darkSecondary
