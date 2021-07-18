@@ -11,6 +11,9 @@ SiteSettingsController.post(
   '/site-settings/image',
   upload.single('image'),
   async (req, res) => {
+    if (!req.session.authUser || req.session.authUser.role !== 'ADMIN')
+      return res.sendStatus(401)
+
     const params = {
       Bucket: process.env.AWS_S3_BUCKET!,
       Body: req.file!.buffer,
