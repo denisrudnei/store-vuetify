@@ -59,7 +59,7 @@
     </v-col>
     <v-col cols="12" md="8">
       <v-row>
-        <v-col cols="12">
+        <v-col id="description" cols="12">
           <span v-html="product.description" />
         </v-col>
       </v-row>
@@ -94,8 +94,15 @@ export default {
   data() {
     return {
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
-
       quantity: 1,
+    }
+  },
+  jsonld() {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: this.product.name,
+      description: this.product.ogDescription,
     }
   },
   computed: {
@@ -149,25 +156,26 @@ export default {
 }
 </script>
 
-<style scoped>
-figure {
+<style>
+#description figure {
   display: flex;
   width: 100%;
 }
-figure > img {
+
+#description figure > img {
   vertical-align: middle;
   align-self: center;
   margin: 5px auto;
 }
 
-table {
+#description table {
   border-collapse: collapse;
   margin: 5px auto;
 }
 
-th,
-td,
-tr {
+#description th,
+#description td,
+#description tr {
   padding: 5px;
   border: 2px solid #6b6b6b;
 }

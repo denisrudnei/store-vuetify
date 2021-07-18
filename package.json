@@ -44,6 +44,7 @@
     "graphql-tag": "^2.12.5",
     "jsonwebtoken": "^8.5.1",
     "nuxt": "^2.15.7",
+    "nuxt-jsonld": "^1.5.1",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^2.4.0",

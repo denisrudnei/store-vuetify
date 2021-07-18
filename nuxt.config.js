@@ -33,6 +33,7 @@ export default {
     '~/plugins/mask',
     { src: '@/plugins/ckeditor', ssr: false },
     '~/plugins/dialog',
+    '~/plugins/jsonld',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
