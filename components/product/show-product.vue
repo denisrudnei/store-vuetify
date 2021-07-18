@@ -103,6 +103,9 @@ export default {
       '@type': 'Product',
       name: this.product.name,
       description: this.product.ogDescription,
+      image: Array.from({ length: 5 }, (_, i) => (i += 1)).map(
+        () => `https://picsum.photos/800/600/?${Math.random()}`
+      ),
       offers: {
         '@type': 'Offer',
         price: this.product.price,
