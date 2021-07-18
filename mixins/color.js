@@ -75,4 +75,9 @@ export default {
       }
     }
   },
+  beforeUpdate() {
+    if (localStorage.getItem('isDark') === 'false' && !this.$auth.loggedIn) {
+      this.$vuetify.theme.dark = false
+    }
+  },
 }

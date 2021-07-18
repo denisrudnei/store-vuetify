@@ -281,6 +281,7 @@ export default {
             this.$auth.fetchUser()
           })
       }
+      localStorage.setItem('isDark', this.isDark)
     },
     logout() {
       this.$dialog('Logout?')

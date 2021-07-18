@@ -149,7 +149,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 figure {
   display: flex;
   width: 100%;
