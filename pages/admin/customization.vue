@@ -83,8 +83,13 @@
               />
             </v-col>
             <v-col cols="12">
-              <v-btn class="primary white--text" block @click="saveImage">
-                Save
+              <v-btn
+                class="primary white--text"
+                block
+                :disabled="!image"
+                @click="saveImage"
+              >
+                Update image
                 <v-icon right>mdi-content-save</v-icon>
               </v-btn>
             </v-col>
