@@ -17,6 +17,104 @@
         <v-card-title> Themes </v-card-title>
         <v-card-text>
           <v-row>
+            <v-col v-for="color in palette" :key="color" cols="12" md="4">
+              <v-card elevation="0">
+                <v-card-title>
+                  <span>{{ color }}</span>
+                </v-card-title>
+                <v-divider />
+                <v-card-text>
+                  <v-menu :close-on-content-click="false">
+                    <template #activator="{ on }">
+                      <v-sheet :color="color" shaped height="100" v-on="on" />
+                    </template>
+                    <v-card>
+                      <v-card-title> Update theme </v-card-title>
+                      <v-card-text>
+                        <v-tabs v-model="tab">
+                          <v-tab>Light</v-tab>
+                          <v-tab>Dark</v-tab>
+                          <v-tab-item>
+                            <v-list>
+                              <v-list-item
+                                @click="updateColor('light', 'primary', color)"
+                              >
+                                <v-list-item-action>
+                                  <v-icon>mdi-palette</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  Set as primary
+                                </v-list-item-content>
+                              </v-list-item>
+                              <v-list-item
+                                @click="
+                                  updateColor('light', 'secondary', color)
+                                "
+                              >
+                                <v-list-item-action>
+                                  <v-icon>mdi-palette</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  Set as secondary
+                                </v-list-item-content>
+                              </v-list-item>
+                              <v-list-item
+                                @click="updateColor('light', 'accent', color)"
+                              >
+                                <v-list-item-action>
+                                  <v-icon>mdi-palette</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  Set as accent
+                                </v-list-item-content>
+                              </v-list-item>
+                            </v-list>
+                          </v-tab-item>
+                          <v-tab-item>
+                            <v-list>
+                              <v-list-item
+                                @click="updateColor('dark', 'primary', color)"
+                              >
+                                <v-list-item-action>
+                                  <v-icon>mdi-palette</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  Set as primary
+                                </v-list-item-content>
+                              </v-list-item>
+                              <v-list-item
+                                @click="updateColor('dark', 'secondary', color)"
+                              >
+                                <v-list-item-action>
+                                  <v-icon>mdi-palette</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  Set as secondary
+                                </v-list-item-content>
+                              </v-list-item>
+                              <v-list-item
+                                @click="updateColor('dark', 'accent', color)"
+                              >
+                                <v-list-item-action>
+                                  <v-icon>mdi-palette</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                  Set as accent
+                                </v-list-item-content>
+                              </v-list-item>
+                            </v-list>
+                          </v-tab-item>
+                        </v-tabs>
+                      </v-card-text>
+                    </v-card>
+                  </v-menu>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-text>
+          <v-row>
             <v-col cols="12">
               <v-tabs v-model="tab">
                 <v-tab>Light</v-tab>
@@ -64,7 +162,7 @@
     </v-col>
     <v-col cols="12" md="4">
       <v-card :dark="$vuetify.theme.dark">
-        <v-img :src="logo" />
+        <img id="img" :src="logo" style="width: 100%" />
         <v-card-text>
           <span class="primary--text title">Primary</span>
           <v-divider />
@@ -93,6 +191,17 @@
                 <v-icon right>mdi-content-save</v-icon>
               </v-btn>
             </v-col>
+            <v-col cols="12">
+              <v-btn
+                class="primary white--text"
+                block
+                :disabled="!image"
+                @click="getPalette"
+              >
+                Get palette
+                <v-icon> mdi-palette </v-icon>
+              </v-btn>
+            </v-col>
           </v-row>
         </v-card-actions>
       </v-card>
@@ -102,14 +211,18 @@
 
 <script>
 import faker from 'faker'
+import ColorThief from 'colorthief'
 import colorSelect from '~/components/color-select.vue'
 import { EditSiteSettings } from '~/graphql/mutation/site-settings/EditSiteSettings'
 import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
+import color from '~/mixins/color'
 export default {
   components: { colorSelect },
+  mixins: [color],
   data() {
     return {
       logo: '',
+      palette: [],
       image: undefined,
       tab: undefined,
       description: faker.lorem.sentence(),
@@ -225,6 +338,21 @@ export default {
           vue.logo = fileReader.result
         }
       }
+    },
+    getPalette() {
+      const rgbToHex = (r, g, b) =>
+        '#' +
+        [r, g, b]
+          .map((x) => {
+            const hex = x.toString(16)
+            return hex.length === 1 ? '0' + hex : hex
+          })
+          .join('')
+      const colorThief = new ColorThief()
+
+      this.palette = colorThief
+        .getPalette(document.querySelector('#img'), 6)
+        .map((color) => rgbToHex(...color))
     },
   },
 }

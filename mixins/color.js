@@ -80,4 +80,21 @@ export default {
       this.$vuetify.theme.dark = false
     }
   },
+  methods: {
+    updateColor(theme, type, value) {
+      this.$store.commit('themes/updateColor', {
+        theme,
+        type,
+        color: value,
+      })
+      this.$store.commit('site-settings/updateSettingsAttribute', {
+        name: `${theme}${type.charAt(0).toUpperCase()}${type.slice(1)}`,
+        value,
+      })
+      this.$vuetify.theme.themes[theme][type] = value
+    },
+    getColor() {
+      return this.$store.getters['themes/getThemes'][this.theme][this.type]
+    },
+  },
 }
