@@ -4,9 +4,12 @@ import cors from 'cors'
 import express, { Router } from 'express'
 import session from 'express-session'
 
+import compression from 'compression'
 import { AuthController } from './controllers/AuthController'
 
 const app = Router()
+
+app.use(compression())
 
 app.use(
   cors({
