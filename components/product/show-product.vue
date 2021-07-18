@@ -103,6 +103,11 @@ export default {
       '@type': 'Product',
       name: this.product.name,
       description: this.product.ogDescription,
+      offers: {
+        '@type': 'Offer',
+        price: this.product.price,
+        priceCurrency: 'BRL',
+      },
     }
   },
   computed: {
