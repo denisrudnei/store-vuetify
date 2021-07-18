@@ -188,10 +188,15 @@ export default {
         formData.append('image', this.image)
         this.$axios
           .post('/site-settings/image', formData)
-          .then(() => {
+          .then((response) => {
             this.$toast.show('Saved', {
               duration: 5000,
             })
+
+            this.$store.commit(
+              'site-settings/setLogo',
+              `${response.data.location}?${new Date()}`
+            )
           })
           .catch(() => {
             this.$toast.error('Failed to upload image', {

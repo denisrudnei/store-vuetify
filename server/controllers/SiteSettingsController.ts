@@ -16,7 +16,7 @@ SiteSettingsController.post(
       Body: req.file!.buffer,
       ContentType: req.file!.mimetype,
       ACL: 'public-read',
-      Key: '/site-settings/logo',
+      Key: 'site-settings/logo',
     }
 
     const { Location } = await S3.upload(params).promise()

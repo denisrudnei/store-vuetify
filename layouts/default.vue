@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ColorMiddleware from '../middleware/ColorMiddleware'
 import { UpdateTheme } from '../graphql/mutation/user/UpdateTheme'
 import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
@@ -182,7 +183,6 @@ import DialogBox from '~/components/dialog-box.vue'
 import NotificationList from '~/components/notification-list.vue'
 import theme from '~/mixins/theme'
 import color from '~/mixins/color'
-
 export default {
   components: { cartMenu, NotificationList, DialogBox },
   mixins: [theme, color],
@@ -191,7 +191,6 @@ export default {
     return {
       clipped: false,
       socialNetworks: [],
-      logo: '',
       items: [
         {
           icon: 'mdi-apps',
@@ -203,6 +202,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      logo: 'site-settings/getLogo',
+    }),
     logged() {
       return this.$auth.loggedIn
     },
@@ -247,7 +249,11 @@ export default {
         query: GetDefaultInfo,
       })
       .then((response) => {
-        this.logo = response.data.GetSiteSettings.logo
+        this.$store.commit(
+          'site-settings/setLogo',
+          response.data.GetSiteSettings.logo
+        )
+
         this.$store.commit(
           'category/setCategories',
           response.data.GetCategories

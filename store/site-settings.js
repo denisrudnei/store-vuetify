@@ -26,12 +26,18 @@ export const mutations = {
     state.settings.isDark = isDark
   },
   setLogo(state, logo) {
-    state.logo = logo
+    state.settings = {
+      ...state.settings,
+      logo,
+    }
   },
 }
 
 export const getters = {
   getSiteSettings(state) {
     return state.settings
+  },
+  getLogo(state) {
+    return state.settings.logo
   },
 }
