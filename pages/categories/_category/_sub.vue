@@ -176,7 +176,7 @@ export default {
     },
     breadcrumbs() {
       if (!this.category) return []
-      return this.category.fullName.split('/').map((item) => {
+      return this.category.fullName.split('|slash|').map((item) => {
         const link = slugify(item, {
           replacement: '-',
           lower: true,

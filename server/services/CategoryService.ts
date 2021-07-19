@@ -73,9 +73,11 @@ export class CategoryService {
       if (category.father.id === category.id) return ''
       if (
         category.subCategories.map((sub) => sub.id).includes(category.father.id)
-      )
-        return `${category.father.name}/${category.name}`
-      return `${await this.getFullName(category.father.id)}/${category.name}`
+      ) {
+        return `${category.father.name}|slash|${category.name}`
+      }
+      const fullName = await this.getFullName(category.father.id)
+      return `${fullName}|slash|${category.name}`
     }
     return category.name
   }
