@@ -125,7 +125,7 @@ export default {
         },
       },
       aggregateRating: {
-        '@type': 'AggreateRating',
+        '@type': 'AggregateRating',
         ratingValue: '4.5',
         reviewCount: Math.round(Math.random() * 300),
       },
