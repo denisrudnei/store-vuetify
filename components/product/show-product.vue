@@ -134,7 +134,7 @@ export default {
   computed: {
     breadcrumbs() {
       if (!this.product.category) return []
-      return this.product.category.fullName.split('/').map((item) => {
+      return this.product.category.fullName.split('|slash|').map((item) => {
         const link = slugify(item, {
           replacement: '-',
           lower: true,
