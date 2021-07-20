@@ -109,7 +109,7 @@ export default {
       ),
       offers: {
         '@type': 'Offer',
-        price: this.product.price,
+        price: this.product.price.toFixed(2),
         priceCurrency: 'BRL',
       },
       review: {
