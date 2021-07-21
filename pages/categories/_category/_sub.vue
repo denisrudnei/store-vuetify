@@ -58,47 +58,10 @@
           </v-card>
         </v-col>
         <v-col v-for="product in products" :key="product.id" cols="12" md="4">
-          <v-card>
-            <nuxt-link
-              :to="`/categories/${category.slug}/product/${product.id}`"
-            >
-              <v-img
-                :src="`https://picsum.photos/800/600/?${Math.random()}`"
-                :aspect-ratio="16 / 9"
-              >
-                <template #placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="grey lighten-5"
-                    ></v-progress-circular>
-                  </v-row>
-                </template>
-              </v-img>
-            </nuxt-link>
-            <v-card-text style="position: relative">
-              <v-btn
-                absolute
-                :color="inCart(product) ? 'red' : 'primary'"
-                fab
-                large
-                right
-                top
-                class="white--text"
-                @click="addToCart(product)"
-              >
-                <v-icon>mdi-cart</v-icon>
-              </v-btn>
-              <h3 class="text-h4 font-weight-light primary--text mb-2">
-                {{ product.name }}
-              </h3>
-              <span>$ {{ product.price }}</span>
-            </v-card-text>
-          </v-card>
+          <product-card
+            :product="{ ...product, category: category }"
+            :hide-category="true"
+          />
         </v-col>
       </v-row>
     </v-col>
@@ -107,10 +70,14 @@
 
 <script>
 import slugify from 'slugify'
+import productCard from '@/components/product/product-card'
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
 import theme from '~/mixins/theme'
 export default {
   auth: false,
+  components: {
+    productCard,
+  },
   mixins: [theme],
   asyncData({ app, error, route }) {
     return app.apolloProvider.defaultClient
@@ -169,11 +136,6 @@ export default {
     }
   },
   computed: {
-    cart: {
-      get() {
-        return this.$store.getters['products/getCart']
-      },
-    },
     breadcrumbs() {
       if (!this.category) return []
       return this.category.fullName.split('|slash|').map((item) => {
@@ -202,14 +164,6 @@ export default {
       '@type': 'BreadcrumbList',
       itemListElement: items,
     }
-  },
-  methods: {
-    addToCart(product) {
-      this.$store.commit('products/addToCart', product)
-    },
-    inCart(item) {
-      return this.cart.map((item) => item.id).includes(item.id)
-    },
   },
 }
 </script>

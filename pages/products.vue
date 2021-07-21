@@ -18,33 +18,7 @@
               cols="12"
               md="4"
             >
-              <v-card>
-                <router-link :to="`/product/${product.id}`">
-                  <v-img
-                    :src="`https://picsum.photos/800/600/?${Math.random()}`"
-                    :aspect-ratio="16 / 9"
-                  />
-                </router-link>
-                <v-card-title>
-                  <router-link
-                    :to="`/product/${product.id}`"
-                    :class="isDark ? 'white--text' : 'black--text'"
-                  >
-                    {{ product.name }}
-                  </router-link>
-                </v-card-title>
-                <v-card-text>
-                  <span>$ {{ product.price }}</span>
-                  <v-divider class="pt-2 pb-4" />
-                  <v-chip
-                    :to="`/categories/${product.category.slug}`"
-                    label
-                    class="primary white--text"
-                  >
-                    {{ product.category.name }}
-                  </v-chip>
-                </v-card-text>
-              </v-card>
+              <product-card :product="product" />
             </v-col>
           </v-row>
         </v-col>
@@ -73,10 +47,14 @@
 </template>
 
 <script>
+import ProductCard from '~/components/product/product-card.vue'
 import { AllProductsPage } from '~/graphql/query/product/AllProductsPage'
 import theme from '~/mixins/theme'
 export default {
   auth: false,
+  components: {
+    ProductCard,
+  },
   mixins: [theme],
   data() {
     return {

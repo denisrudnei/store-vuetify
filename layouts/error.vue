@@ -1,24 +1,26 @@
 <template>
   <v-app dark>
     <v-container>
-      <v-card v-if="error.statusCode === 404" tile elevation="0">
+      <v-card tile elevation="0">
         <v-card-text>
           <v-row align="center" justify="center">
             <v-col cols="12" align="center">
-              <v-icon size="200">mdi-link-variant-off</v-icon>
+              <v-icon size="200">{{
+                error.statusCode === 404
+                  ? 'mdi-link-variant-off'
+                  : 'mdi-alert-circle-outline'
+              }}</v-icon>
             </v-col>
             <v-col cols="12" align="center">
-              <span class="text-h1">{{ pageNotFound }}</span>
+              <span class="text-h1">{{
+                error.statusCode === 404 ? pageNotFound : otherError
+              }}</span>
               <v-divider class="pb-3" />
               <NuxtLink to="/" class="text-h2"> Home page </NuxtLink>
             </v-col>
           </v-row>
         </v-card-text>
       </v-card>
-      <h1 v-else>
-        {{ otherError }}
-        <NuxtLink to="/" class="text-h2"> Home page </NuxtLink>
-      </h1>
     </v-container>
   </v-app>
 </template>
