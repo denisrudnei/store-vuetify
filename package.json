@@ -52,6 +52,7 @@
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^2.4.0",
+    "sitemap": "^7.0.0",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.2.34",
     "vue-the-mask": "^0.11.1",

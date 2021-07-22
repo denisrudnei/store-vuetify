@@ -7,6 +7,7 @@ import session from 'express-session'
 
 import { AuthController } from './controllers/AuthController'
 import { SiteSettingsController } from './controllers/SiteSettingsController'
+import { SitemapController } from './controllers/SitemapController'
 
 const app = Router()
 
@@ -45,5 +46,6 @@ app.use(
 
 app.use('/api', AuthController)
 app.use('/api', SiteSettingsController)
+app.use(SitemapController)
 
 export { app }
