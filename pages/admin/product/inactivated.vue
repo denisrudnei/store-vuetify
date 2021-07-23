@@ -17,7 +17,7 @@
           <v-tooltip left>
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="reactivate(item.id)">
-                <v-icon>mdi-restart</v-icon>
+                <v-icon>{{ icons.mdiRestart }}</v-icon>
               </v-btn>
             </template>
             <span>Activate</span>
@@ -25,7 +25,7 @@
           <v-tooltip right>
             <template #activator="{ on }">
               <v-btn icon class="red--text" v-on="on" @click="remove(item.id)">
-                <v-icon>mdi-tag-off</v-icon>
+                <v-icon>{{ icons.mdiTagOff }}</v-icon>
               </v-btn>
             </template>
             <span>Delete</span>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mdiRestart, mdiTagOff } from '@mdi/js'
 import { GetInactivatedProducts } from '../../../graphql/query/product/GetInactivatedProducts'
 import { ReactivateProduct } from '../../../graphql/mutation/product/ReactivateProduct'
 import { ReactivateProducts } from '../../../graphql/mutation/product/ReactivateProducts'
@@ -46,6 +47,10 @@ import { GetProducts } from '~/graphql/query/product/GetProducts'
 export default {
   data() {
     return {
+      icons: {
+        mdiRestart,
+        mdiTagOff,
+      },
       headers: [
         {
           text: 'Name',

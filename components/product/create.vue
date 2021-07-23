@@ -30,13 +30,14 @@
     </v-card-text>
     <v-card-actions>
       <v-btn class="primary white--text" :disabled="disabled" @click="save">
-        Save <v-icon right>mdi-check-all</v-icon>
+        Save <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import { mdiCheckAll } from '@mdi/js'
 import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 export default {
   props: {
@@ -52,6 +53,9 @@ export default {
   },
   data() {
     return {
+      icons: {
+        mdiCheckAll,
+      },
       editor: undefined,
       productData: {
         name: '',

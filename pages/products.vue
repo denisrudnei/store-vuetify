@@ -5,7 +5,7 @@
         v-model="search"
         outlined
         label="Search"
-        append-icon="mdi-magnify"
+        :append-icon="icons.mdiMagnify"
       />
     </v-col>
     <v-col cols="12">
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { mdiMagnify } from '@mdi/js'
 import ProductCard from '~/components/product/product-card.vue'
 import { AllProductsPage } from '~/graphql/query/product/AllProductsPage'
 import theme from '~/mixins/theme'
@@ -58,6 +59,9 @@ export default {
   mixins: [theme],
   data() {
     return {
+      icons: {
+        mdiMagnify,
+      },
       search: '',
       productsData: [],
       categories: [],

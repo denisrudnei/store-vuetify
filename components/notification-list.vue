@@ -14,7 +14,7 @@
         }"
         v-on="on"
       >
-        <v-icon>mdi-bell</v-icon>
+        <v-icon>{{ icons.mdiBell }}</v-icon>
       </v-btn>
     </template>
     <v-card>
@@ -33,7 +33,7 @@
               </v-list-item-content>
               <v-list-item-action>
                 <v-btn icon>
-                  <v-icon>mdi-plus</v-icon>
+                  <v-icon>{{ icons.mdiPlus }}</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
@@ -49,7 +49,7 @@
           <v-col cols="12">
             <v-btn block class="primary white--text">
               Read all
-              <v-icon right>mdi-check-all</v-icon>
+              <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
             </v-btn>
           </v-col>
           <v-col cols="12">
@@ -63,7 +63,7 @@
               @click="menu = false"
             >
               Close
-              <v-icon right> mdi-close </v-icon>
+              <v-icon right> {{ icons.mdiClose }} </v-icon>
             </v-btn>
           </v-col>
         </v-row>
@@ -74,9 +74,16 @@
 
 <script>
 import faker from 'faker'
+import { mdiBell, mdiClose, mdiCheckAll, mdiPlus } from '@mdi/js'
 export default {
   data() {
     return {
+      icons: {
+        mdiBell,
+        mdiClose,
+        mdiCheckAll,
+        mdiPlus,
+      },
       menu: false,
       notifications: Array.from({ length: 15 }, (_, i) => (i += 1)).map(
         (item) => ({

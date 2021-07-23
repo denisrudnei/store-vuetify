@@ -25,7 +25,7 @@
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-btn icon class="red--text" @click="remove(product.id)">
-                    <v-icon>mdi-delete</v-icon>
+                    <v-icon>{{ icons.mdiDelete }}</v-icon>
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
@@ -56,6 +56,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { mdiDelete } from '@mdi/js'
 import cartInfo from './cartInfo.vue'
 export default {
   filters: {
@@ -65,6 +66,11 @@ export default {
   },
   components: { cartInfo },
   computed: {
+    icons() {
+      return {
+        mdiDelete,
+      }
+    },
     cartMenu: {
       get() {
         return this.$store.getters['menus/getCartMenu']

@@ -10,14 +10,23 @@
     <v-card-actions>
       <v-btn class="primary white--text">
         Save
-        <v-icon right>mdi-check-all</v-icon>
+        <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-export default {}
+import { mdiCheckAll } from '@mdi/js'
+export default {
+  data() {
+    return {
+      icons: {
+        mdiCheckAll,
+      },
+    }
+  },
+}
 </script>
 
 <style></style>

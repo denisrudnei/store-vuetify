@@ -7,7 +7,7 @@
             v-model="search"
             label="Name"
             outlined
-            append-icon="mdi-magnify"
+            :append-icon="icons.mdiMagnify"
             hide-details
           />
         </v-col>
@@ -24,7 +24,7 @@
         <v-col cols="12" md="auto">
           <v-btn class="primary white--text">
             Search
-            <v-icon right>mdi-magnify</v-icon>
+            <v-icon right>{{ icons.mdiMagnify }}</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -38,7 +38,7 @@
             outlined
             label="Update category"
             hide-details
-            append-outer-icon="mdi-tag-outline"
+            :append-outer-icon="icons.mdiTagOutline"
             clearable
             @click:append-outer="updateCategoryForProducts"
           />
@@ -70,7 +70,7 @@
                 :to="`/admin/product/edit/${item.id}`"
                 v-on="on"
               >
-                <v-icon>mdi-pencil</v-icon>
+                <v-icon>{{ icons.mdiPencil }}</v-icon>
               </v-btn>
             </template>
             <span>Edit</span>
@@ -83,7 +83,7 @@
                 v-on="on"
                 @click="inactivate(item.id)"
               >
-                <v-icon>mdi-tag-off</v-icon>
+                <v-icon>{{ icons.mdiTagOff }}</v-icon>
               </v-btn>
             </template>
             <span>Inactivate</span>
@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import { mdiMagnify, mdiTagOutline, mdiPencil, mdiTagOff } from '@mdi/js'
 import { InactivateProduct } from '../../../graphql/mutation/product/InactivateProduct'
 import { InactivateProducts } from '../../../graphql/mutation/product/InactivateProducts'
 import { GetProductInfo } from '../../../graphql/query/GetProductListInfo'
@@ -104,6 +105,12 @@ import { GetInactivatedProducts } from '~/graphql/query/product/GetInactivatedPr
 export default {
   data() {
     return {
+      icons: {
+        mdiMagnify,
+        mdiTagOutline,
+        mdiPencil,
+        mdiTagOff,
+      },
       search: '',
       headers: [
         {

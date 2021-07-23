@@ -40,7 +40,7 @@
                                 @click="updateColor('light', 'primary', color)"
                               >
                                 <v-list-item-action>
-                                  <v-icon>mdi-palette</v-icon>
+                                  <v-icon>{{ icons.mdiPalette }}</v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                   Set as primary
@@ -52,7 +52,7 @@
                                 "
                               >
                                 <v-list-item-action>
-                                  <v-icon>mdi-palette</v-icon>
+                                  <v-icon>{{ icons.mdiPalette }}</v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                   Set as secondary
@@ -62,7 +62,7 @@
                                 @click="updateColor('light', 'accent', color)"
                               >
                                 <v-list-item-action>
-                                  <v-icon>mdi-palette</v-icon>
+                                  <v-icon>{{ icons.mdiPalette }}</v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                   Set as accent
@@ -76,7 +76,7 @@
                                 @click="updateColor('dark', 'primary', color)"
                               >
                                 <v-list-item-action>
-                                  <v-icon>mdi-palette</v-icon>
+                                  <v-icon>{{ icons.mdiPalette }}</v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                   Set as primary
@@ -86,7 +86,7 @@
                                 @click="updateColor('dark', 'secondary', color)"
                               >
                                 <v-list-item-action>
-                                  <v-icon>mdi-palette</v-icon>
+                                  <v-icon>{{ icons.mdiPalette }}</v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                   Set as secondary
@@ -96,7 +96,7 @@
                                 @click="updateColor('dark', 'accent', color)"
                               >
                                 <v-list-item-action>
-                                  <v-icon>mdi-palette</v-icon>
+                                  <v-icon>{{ icons.mdiPalette }}</v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                   Set as accent
@@ -155,7 +155,7 @@
         <v-card-actions>
           <v-btn class="primary white--text" @click="save">
             Save
-            <v-icon right>mdi-check-all</v-icon>
+            <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -188,7 +188,7 @@
                 @click="saveImage"
               >
                 Update image
-                <v-icon right>mdi-content-save</v-icon>
+                <v-icon right>{{ icons.mdiContentSave }}</v-icon>
               </v-btn>
             </v-col>
             <v-col cols="12">
@@ -199,7 +199,7 @@
                 @click="getPalette"
               >
                 Get palette
-                <v-icon> mdi-palette </v-icon>
+                <v-icon> {{ icons.mdiPalette }} </v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -212,6 +212,7 @@
 <script>
 import faker from 'faker'
 import ColorThief from 'colorthief'
+import { mdiPalette, mdiCheckAll, mdiContentSave } from '@mdi/js'
 import colorSelect from '~/components/color-select.vue'
 import { EditSiteSettings } from '~/graphql/mutation/site-settings/EditSiteSettings'
 import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
@@ -221,6 +222,11 @@ export default {
   mixins: [color],
   data() {
     return {
+      icons: {
+        mdiPalette,
+        mdiCheckAll,
+        mdiContentSave,
+      },
       logo: '',
       palette: [],
       image: undefined,

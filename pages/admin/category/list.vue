@@ -11,7 +11,7 @@
                 :to="`/admin/category/edit/${item.slug}`"
                 v-on="on"
               >
-                <v-icon>mdi-pencil</v-icon>
+                <v-icon>{{ icons.mdiPencil }}</v-icon>
               </v-btn>
             </template>
             <span>Edit</span>
@@ -19,7 +19,7 @@
           <v-tooltip right>
             <template #activator="{ on }">
               <v-btn class="primary--text" icon v-on="on">
-                <v-icon>mdi-tag-off</v-icon>
+                <v-icon>{{ icons.mdiTagOff }}</v-icon>
               </v-btn>
             </template>
             <span>Inactivate</span>
@@ -31,10 +31,15 @@
 </template>
 
 <script>
+import { mdiPencil, mdiTagOff } from '@mdi/js'
 import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 export default {
   data() {
     return {
+      icons: {
+        mdiPencil,
+        mdiTagOff,
+      },
       headers: [
         {
           text: 'Name',

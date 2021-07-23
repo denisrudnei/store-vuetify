@@ -29,7 +29,7 @@
               </v-col>
               <v-col cols="12">
                 <v-btn class="primary white--text" @click="step = 2">
-                  Confirm <v-icon right>mdi-check-all</v-icon>
+                  Confirm <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -48,7 +48,7 @@
                   </template>
                   <template #item.actions="{ item }">
                     <v-btn icon class="red--text" @click="remove(item.id)">
-                      <v-icon>mdi-delete</v-icon>
+                      <v-icon>{{ icons.mdiDelete }}</v-icon>
                     </v-btn>
                   </template>
                   <template #item.unitary="{ item }">
@@ -67,7 +67,7 @@
                   Back
                 </v-btn>
                 <v-btn class="primary white--text" @click="step = 3">
-                  Confirm <v-icon right>mdi-check-all</v-icon>
+                  Confirm <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -103,7 +103,7 @@
                   Back
                 </v-btn>
                 <v-btn class="primary white--text">
-                  Buy <v-icon right>mdi-credit-card-outline</v-icon>
+                  Buy <v-icon right>{{ icons.mdiCreditCardOutline }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -117,6 +117,7 @@
 <script>
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
+import { mdiCheckAll, mdiDelete, mdiCreditCardOutline } from '@mdi/js'
 import cartInfo from '~/components/cartInfo.vue'
 export default {
   auth: false,
@@ -129,6 +130,11 @@ export default {
   },
   data() {
     return {
+      icons: {
+        mdiCheckAll,
+        mdiDelete,
+        mdiCreditCardOutline,
+      },
       step: 1,
       headers: [
         {

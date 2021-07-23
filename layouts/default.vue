@@ -31,7 +31,7 @@
         </v-list-item>
         <v-list-item to="/all-categories" router exact>
           <v-list-item-action>
-            <v-icon color="primary">mdi-expand-all</v-icon>
+            <v-icon color="primary">{{ icons.mdiExpandAll }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title
@@ -43,7 +43,7 @@
         </v-list-item>
         <v-list-item to="/products" router exact>
           <v-list-item-action>
-            <v-icon color="primary">mdi-tag-multiple</v-icon>
+            <v-icon color="primary">{{ icons.mdiTagMultiple }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title
@@ -88,7 +88,7 @@
             @click="toggleTheme"
           >
             <v-icon>
-              {{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
+              {{ isDark ? icons.mdiWhiteBalanceSunny : icons.mdiWeatherNight }}
             </v-icon>
           </v-btn>
         </template>
@@ -99,7 +99,7 @@
         :class="{ 'white--text': isDark, 'primary--text': !isDark }"
         to="/profile"
       >
-        <v-icon>mdi-account</v-icon>
+        <v-icon>{{ icons.mdiAccount }}</v-icon>
       </v-btn>
       <client-only>
         <notification-list v-if="logged" />
@@ -112,7 +112,7 @@
         <template #activator="{ on }">
           <v-btn icon class="primary--text" v-on="on">
             <v-badge left bottom overlap bordered color="accent">
-              <v-icon>mdi-cart</v-icon>
+              <v-icon>{{ icons.mdiCart }}</v-icon>
               <template #badge>
                 {{ products.length }}
               </template>
@@ -124,7 +124,7 @@
           <v-card-text>
             <v-btn class="primary white--text" block @click="cartMenu = false">
               Close
-              <v-icon>mdi-close</v-icon>
+              <v-icon>{{ icons.mdiClose }}</v-icon>
             </v-btn>
           </v-card-text>
         </v-card>
@@ -139,12 +139,12 @@
             icon
             to="/admin"
           >
-            <v-icon>mdi-cog</v-icon>
+            <v-icon>{{ icons.mdiCog }}</v-icon>
           </v-btn>
         </template>
       </client-only>
       <v-btn v-show="logged" icon @click="logout">
-        <v-icon>mdi-exit-to-app</v-icon>
+        <v-icon>{{ icons.mdiExitToApp }}</v-icon>
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -175,6 +175,23 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import {
+  mdiApps,
+  mdiWhiteBalanceSunny,
+  mdiWeatherNight,
+  mdiAccount,
+  mdiCart,
+  mdiTagMultiple,
+  mdiExpandAll,
+  mdiLabel,
+  mdiFacebook,
+  mdiYoutube,
+  mdiTwitter,
+  mdiDiscord,
+  mdiClose,
+  mdiCog,
+  mdiExitToApp,
+} from '@mdi/js'
 import ColorMiddleware from '../middleware/ColorMiddleware'
 import { UpdateTheme } from '../graphql/mutation/user/UpdateTheme'
 import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
@@ -191,9 +208,25 @@ export default {
     return {
       clipped: false,
       socialNetworks: [],
+      icons: {
+        mdiApps,
+        mdiWhiteBalanceSunny,
+        mdiWeatherNight,
+        mdiAccount,
+        mdiCart,
+        mdiTagMultiple,
+        mdiExpandAll,
+        mdiFacebook,
+        mdiYoutube,
+        mdiTwitter,
+        mdiDiscord,
+        mdiClose,
+        mdiCog,
+        mdiExitToApp,
+      },
       items: [
         {
-          icon: 'mdi-apps',
+          icon: mdiApps,
           title: 'Home',
           to: '/',
         },
@@ -237,7 +270,7 @@ export default {
     },
     categoriesItems() {
       return this.categories.map((category) => ({
-        icon: 'mdi-label',
+        icon: mdiLabel,
         title: `${category.name}`,
         to: `/categories/${category.slug}`,
       }))
@@ -263,7 +296,9 @@ export default {
           if (name !== 'id' && value.length) {
             this.socialNetworks.push({
               name,
-              icon: `mdi-${name}`,
+              icon: this.icons[
+                `mdi${name.charAt(0).toUpperCase()}${name.slice(1)}`
+              ],
               url: value,
             })
           }

@@ -7,7 +7,7 @@
           <v-text-field
             v-model="socialNetworks.facebook"
             label="Facebook"
-            append-icon="mdi-facebook"
+            :append-icon="icons.mdiFacebook"
             outlined
           />
         </v-col>
@@ -15,7 +15,7 @@
           <v-text-field
             v-model="socialNetworks.youtube"
             label="Youtube"
-            append-icon="mdi-youtube"
+            :append-icon="icons.mdiYoutube"
             outlined
           />
         </v-col>
@@ -23,7 +23,7 @@
           <v-text-field
             v-model="socialNetworks.twitter"
             label="Twitter"
-            append-icon="mdi-twitter"
+            :append-icon="icons.mdiTwitter"
             outlined
           />
         </v-col>
@@ -31,14 +31,14 @@
           <v-text-field
             v-model="socialNetworks.discord"
             label="Discord"
-            append-icon="mdi-discord"
+            :append-icon="icons.mdiDiscord"
             outlined
           />
         </v-col>
         <v-col cols="12">
           <v-btn class="primary white--text" @click="save">
             Save
-            <v-icon right>mdi-check-all</v-icon>
+            <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -47,11 +47,25 @@
 </template>
 
 <script>
+import {
+  mdiFacebook,
+  mdiYoutube,
+  mdiTwitter,
+  mdiDiscord,
+  mdiCheckAll,
+} from '@mdi/js'
 import { GetSocialNetworks } from '../../graphql/query/social-networks/GetSocialNetworks'
 import { EditSocialNetworks } from '../../graphql/mutation/social-networks/EditSocialNetworkds'
 export default {
   data() {
     return {
+      icons: {
+        mdiFacebook,
+        mdiYoutube,
+        mdiTwitter,
+        mdiDiscord,
+        mdiCheckAll,
+      },
       socialNetworks: {
         facebook: '',
         youtube: '',

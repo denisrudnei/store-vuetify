@@ -12,7 +12,7 @@
         </template>
         <template #item.actions="{ item }">
           <v-btn icon class="red--text" @click="remove(item.id)">
-            <v-icon>mdi-delete</v-icon>
+            <v-icon>{{ icons.mdiDelete }}</v-icon>
           </v-btn>
         </template>
         <template #item.unitary="{ item }">
@@ -29,7 +29,7 @@
     <v-col cols="12">
       <v-btn class="primary white--text" :disabled="!cart.length" to="/buy">
         Buy
-        <v-icon right> mdi-cash-multiple </v-icon>
+        <v-icon right> {{ icons.mdiCashMultiple }}</v-icon>
       </v-btn>
     </v-col>
   </v-row>
@@ -37,6 +37,7 @@
 
 <script>
 import cartInfo from '@/components/cartInfo.vue'
+import { mdiDelete, mdiCashMultiple } from '@mdi/js'
 export default {
   auth: false,
   components: {
@@ -49,6 +50,10 @@ export default {
   },
   data() {
     return {
+      icons: {
+        mdiDelete,
+        mdiCashMultiple,
+      },
       headers: [
         {
           text: 'Image',

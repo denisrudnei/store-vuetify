@@ -8,7 +8,7 @@
         readonly
         dark
         :background-color="getColor()"
-        append-icon="mdi-palette"
+        :append-icon="icons.mdiPalette"
         v-on="on"
       />
     </template>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { mdiPalette } from '@mdi/js'
 import color from '~/mixins/color'
 export default {
   mixins: [color],
@@ -47,6 +48,11 @@ export default {
     },
   },
   computed: {
+    icons() {
+      return {
+        mdiPalette,
+      }
+    },
     color: {
       get() {
         return this.getColor()

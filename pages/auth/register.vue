@@ -29,7 +29,7 @@
             :disabled="inactive"
             @click="register"
           >
-            <v-icon left>mdi-account</v-icon>
+            <v-icon left>{{ icons.mdiAccount }}</v-icon>
             Register
           </v-btn>
         </v-card-actions>
@@ -39,10 +39,14 @@
 </template>
 
 <script>
+import { mdiAccount, mdiEye, mdiEyeOff } from '@mdi/js'
 export default {
   auth: false,
   data() {
     return {
+      icons: {
+        mdiAccount,
+      },
       user: {
         name: '',
         email: '',
@@ -79,7 +83,7 @@ export default {
         })
     },
     getIcon() {
-      return this.showPassword ? 'mdi-eye-off' : 'mdi-eye'
+      return this.showPassword ? mdiEyeOff : mdiEye
     },
     getType() {
       return this.showPassword ? 'text' : 'password'

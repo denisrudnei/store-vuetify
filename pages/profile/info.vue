@@ -97,19 +97,23 @@
     <v-col cols="12">
       <v-btn class="primary white--text">
         Save
-        <v-icon right>mdi-check-all</v-icon>
+        <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
       </v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { mdiCheckAll, mdiEye, mdiEyeOff } from '@mdi/js'
 import { UpdateUserInfo } from '../../graphql/mutation/user/UpdateUserInfo'
 import { ResetPassword } from '../../graphql/mutation/user/ResetPassword'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 export default {
   data() {
     return {
+      icons: {
+        mdiCheckAll,
+      },
       user: {
         name: '',
         email: '',
@@ -138,7 +142,7 @@ export default {
   },
   methods: {
     passwordIcon(field) {
-      return this[field] ? 'mdi-eye-off' : 'mdi-eye'
+      return this[field] ? mdiEyeOff : mdiEye
     },
     reset() {
       this.$apollo

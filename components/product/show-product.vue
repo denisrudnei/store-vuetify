@@ -35,8 +35,8 @@
           <v-text-field
             v-model="quantity"
             v-mask="['##', '#,###']"
-            prepend-icon="mdi-minus"
-            append-outer-icon="mdi-plus"
+            :prepend-icon="icons.mdiMinus"
+            :append-outer-icon="icons.mdiPlus"
             outlined
             type="tel"
             @click:prepend="remove"
@@ -48,7 +48,7 @@
         </v-col>
         <v-col cols="12">
           <v-btn block tile @click="addToCart(product)">
-            <v-icon left>mdi-cart</v-icon>
+            <v-icon left>{{ icons.mdiCart }}</v-icon>
             Add to cart
           </v-btn>
         </v-col>
@@ -71,6 +71,7 @@
 import { TheMask } from 'vue-the-mask'
 import slugify from 'slugify'
 import faker from 'faker'
+import { mdiCart, mdiPlus, mdiMinus } from '@mdi/js'
 import Rating from '~/components/rating.vue'
 import productPage from '~/mixins/product-page'
 import theme from '~/mixins/theme'
@@ -94,6 +95,11 @@ export default {
   },
   data() {
     return {
+      icons: {
+        mdiCart,
+        mdiPlus,
+        mdiMinus,
+      },
       images: Array.from({ length: 5 }, (_, x) => (x += 1)),
       quantity: 1,
     }

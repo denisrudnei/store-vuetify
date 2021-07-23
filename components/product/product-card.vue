@@ -28,7 +28,7 @@
         class="white--text"
         @click="addToCart(product)"
       >
-        <v-icon>mdi-cart</v-icon>
+        <v-icon>{{ icons.mdiCart }}</v-icon>
       </v-btn>
       <h3 class="text-h4 font-weight-light primary--text mb-2">
         {{ product.name }}
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { mdiCart } from '@mdi/js'
 export default {
   props: {
     hideCart: {
@@ -69,6 +70,11 @@ export default {
     },
   },
   computed: {
+    icons() {
+      return {
+        mdiCart,
+      }
+    },
     cart: {
       get() {
         return this.$store.getters['products/getCart']

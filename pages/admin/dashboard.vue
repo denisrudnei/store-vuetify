@@ -26,7 +26,7 @@
     <v-navigation-drawer fixed right clipped app>
       <v-text-field outlined class="mx-3 mt-4" label="Search" />
       <v-list>
-        <v-list-group prepend-icon="mdi-label">
+        <v-list-group :prepend-icon="icons.mdiLabel">
           <template #activator>
             <v-list-item-title> Categories </v-list-item-title>
           </template>
@@ -35,11 +35,11 @@
               <v-list-item-title> Top 10 categories</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
-              <v-icon color="primary">mdi-label</v-icon>
+              <v-icon color="primary">{{ icons.mdiLabel }}</v-icon>
             </v-list-item-action>
           </v-list-item>
         </v-list-group>
-        <v-list-group prepend-icon="mdi-tag-multiple">
+        <v-list-group :prepend-icon="icons.mdiTagMultiple">
           <template #activator>
             <v-list-item-title> Products </v-list-item-title>
           </template>
@@ -48,7 +48,7 @@
               <v-list-item-title> Top 10 products </v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
-              <v-icon color="primary">mdi-tag-multiple</v-icon>
+              <v-icon color="primary">{{ icons.mdiTagMultiple }}</v-icon>
             </v-list-item-action>
           </v-list-item>
         </v-list-group>
@@ -59,9 +59,14 @@
 
 <script>
 import faker from 'faker'
+import { mdiLabel, mdiTagMultiple } from '@mdi/js'
 export default {
   data() {
     return {
+      icons: {
+        mdiLabel,
+        mdiTagMultiple,
+      },
       items: Array.from({ length: 12 }, (_, i) => (i += 1)).map((item) => ({
         id: item,
         name: faker.commerce.productName(),

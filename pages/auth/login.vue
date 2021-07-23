@@ -29,7 +29,7 @@
             :disabled="disabled"
             @click="login"
           >
-            <v-icon left>mdi-account</v-icon>
+            <v-icon left>{{ icons.mdiAccount }}</v-icon>
             Login
           </v-btn>
         </v-card-actions>
@@ -39,9 +39,13 @@
 </template>
 
 <script>
+import { mdiAccount } from '@mdi/js'
 export default {
   data() {
     return {
+      icons: {
+        mdiAccount,
+      },
       user: {
         username: '',
         password: '',

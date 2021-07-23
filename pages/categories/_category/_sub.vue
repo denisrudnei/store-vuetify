@@ -52,7 +52,9 @@
         <v-col v-if="!products.length" align="center">
           <v-card tile elevation="0">
             <v-card-text>
-              <v-icon size="125" color="red"> mdi-tag-remove-outline </v-icon>
+              <v-icon size="125" color="red">
+                {{ icons.mdiTagRemoveOutline }}
+              </v-icon>
             </v-card-text>
             <v-card-text class="title">No products found</v-card-text>
           </v-card>
@@ -71,6 +73,7 @@
 <script>
 import slugify from 'slugify'
 import productCard from '@/components/product/product-card'
+import { mdiTagRemoveOutline } from '@mdi/js'
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
 import theme from '~/mixins/theme'
 export default {
@@ -103,6 +106,9 @@ export default {
   },
   data() {
     return {
+      icons: {
+        mdiTagRemoveOutline,
+      },
       length: 0,
       subCategories: [],
       category: {

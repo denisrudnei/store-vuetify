@@ -7,8 +7,8 @@
             <v-col cols="12" align="center">
               <v-icon size="200">{{
                 error.statusCode === 404
-                  ? 'mdi-link-variant-off'
-                  : 'mdi-alert-circle-outline'
+                  ? icons.mdiLinkVariantOff
+                  : icons.mdiAlertCircleOutline
               }}</v-icon>
             </v-col>
             <v-col cols="12" align="center">
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mdiLinkVariantOff } from '@mdi/js'
 export default {
   layout: 'empty',
   props: {
@@ -36,6 +37,10 @@ export default {
   },
   data() {
     return {
+      icons: {
+        mdiLinkVariantOff,
+        mdiAlertCircleOutline,
+      },
       pageNotFound: '404 Not Found',
       otherError: 'An error occurred',
     }
