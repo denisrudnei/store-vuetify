@@ -32,7 +32,7 @@ SitemapController.get('/sitemap.xml', async (_, res) => {
       sitemapStream.write({
         url: `${hostname}product/${product.id}`,
         changefreq: 'daily',
-        priority: 0.9,
+        priority: 0.8,
       })
     }
 
