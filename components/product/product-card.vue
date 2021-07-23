@@ -7,10 +7,7 @@
         <v-img :src="'/images/not-set.svg'" :aspect-ratio="16 / 9">
           <template #placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular
-                indeterminate
-                color="grey lighten-5"
-              ></v-progress-circular>
+              <v-progress-circular indeterminate color="grey lighten-5" />
             </v-row>
           </template>
         </v-img>
@@ -32,7 +29,7 @@
         <h3 class="text-h4 font-weight-light primary--text mb-2">
           {{ product.name }}
         </h3>
-        <span>$ {{ product.price }}</span>
+        <span class="text-h6">$ {{ product.price }}</span>
         <template v-if="!hideCategory">
           <v-divider class="pt-2 pb-4" />
           <v-chip

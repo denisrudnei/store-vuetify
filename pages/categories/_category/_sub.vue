@@ -50,14 +50,24 @@
           </v-card>
         </v-col>
         <v-col v-if="!products.length" align="center">
-          <v-card tile elevation="0">
-            <v-card-text>
-              <v-icon size="125" color="red">
-                {{ icons.mdiTagRemoveOutline }}
-              </v-icon>
-            </v-card-text>
-            <v-card-text class="title">No products found</v-card-text>
-          </v-card>
+          <v-row>
+            <v-col cols="12">
+              <v-card tile elevation="0">
+                <v-card-text>
+                  <v-icon size="125" color="red">
+                    {{ icons.mdiTagRemoveOutline }}
+                  </v-icon>
+                </v-card-text>
+                <v-card-text class="title">
+                  No products found for this category
+                </v-card-text>
+                <v-divider />
+                <v-card-text>
+                  <other-products />
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col v-for="product in products" :key="product.id" cols="12" md="4">
           <product-card
@@ -76,10 +86,12 @@ import productCard from '@/components/product/product-card'
 import { mdiTagRemoveOutline } from '@mdi/js'
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
 import theme from '~/mixins/theme'
+import OtherProducts from '~/components/other-products.vue'
 export default {
   auth: false,
   components: {
     productCard,
+    OtherProducts,
   },
   mixins: [theme],
   asyncData({ app, error, route }) {
