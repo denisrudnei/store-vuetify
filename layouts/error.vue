@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mdiLinkVariantOff } from '@mdi/js'
+import { mdiLinkVariantOff, mdiAlertCircleOutline } from '@mdi/js'
 export default {
   layout: 'empty',
   props: {

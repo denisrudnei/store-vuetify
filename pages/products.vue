@@ -16,7 +16,8 @@
               v-for="product in products"
               :key="product.id"
               cols="12"
-              md="4"
+              md="6"
+              lg="4"
             >
               <product-card :product="product" />
             </v-col>
