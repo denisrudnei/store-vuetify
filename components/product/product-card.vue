@@ -3,10 +3,7 @@
     <nuxt-link
       :to="`/categories/${product.category.slug}/product/${product.id}`"
     >
-      <v-img
-        :src="`https://picsum.photos/800/600/?${Math.random()}`"
-        :aspect-ratio="16 / 9"
-      >
+      <v-img :src="'/images/not-set.svg'" :aspect-ratio="16 / 9">
         <template #placeholder>
           <v-row class="fill-height ma-0" align="center" justify="center">
             <v-progress-circular

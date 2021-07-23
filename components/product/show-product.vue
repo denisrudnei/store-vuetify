@@ -27,7 +27,7 @@
             <v-carousel-item
               v-for="image in images"
               :key="image"
-              :src="`https://picsum.photos/800/600/?${Math.random()}`"
+              :src="'/images/not-set.svg'"
             />
           </v-carousel>
         </v-col>
@@ -111,7 +111,7 @@ export default {
       name: this.product.name,
       description: this.product.ogDescription,
       image: Array.from({ length: 5 }, (_, i) => (i += 1)).map(
-        () => `https://picsum.photos/800/600/?${Math.random()}`
+        () => '/images/not-set.svg'
       ),
       offers: {
         '@type': 'Offer',
