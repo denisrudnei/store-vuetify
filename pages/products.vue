@@ -76,26 +76,20 @@
                 </v-col>
                 <v-col cols="12">
                   <h5 class="text-h5">Categories</h5>
-                  <v-list>
-                    <v-list-item @click="setCategory()">
-                      <v-list-item-action>
-                        <v-icon>{{ icons.mdiTag }}</v-icon>
-                      </v-list-item-action>
-                      <v-list-item-content> All </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item
-                      v-for="item in categories"
-                      :key="item.id"
-                      @click="setCategory(item.id)"
-                    >
-                      <v-list-item-action>
-                        <v-icon>{{ icons.mdiTag }}</v-icon>
-                      </v-list-item-action>
-                      <v-list-item-content>
-                        {{ item.name }}
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
+                  <v-chip label class="ma-2" @click="setCategory()">
+                    <v-icon left>{{ icons.mdiTag }}</v-icon>
+                    All
+                  </v-chip>
+                  <v-chip
+                    v-for="item in categories"
+                    :key="item.id"
+                    label
+                    class="ma-2"
+                    @click="setCategory(item.id)"
+                  >
+                    <v-icon left>{{ icons.mdiTag }}</v-icon>
+                    {{ item.name }}
+                  </v-chip>
                 </v-col>
               </v-row>
             </v-card-text>
