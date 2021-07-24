@@ -26,7 +26,7 @@ export class ProductResolver {
     return ProductService.getProducts()
   }
 
-  @Query(() => Product)
+  @Query(() => Product, { nullable: true })
   GetProduct(@Arg('id', () => ID) id: Product['id']) {
     return ProductService.getProduct(id)
   }
