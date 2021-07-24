@@ -11,6 +11,7 @@ export default {
     API: process.env.API,
     GRAPHQL: process.env.GRAPHQL,
     SUBSCRIPTIONS: process.env.SUBSCRIPTIONS,
+    ADSENSE: process.env.ADSENSE,
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
