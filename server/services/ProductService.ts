@@ -1,8 +1,17 @@
-import { In, IsNull, Not } from 'typeorm'
-import { Product } from '../models/Product'
-import { Category } from '../models/Category'
+import {
+  getConnection,
+  ILike,
+  In,
+  IsNull,
+  Not,
+  SelectQueryBuilder,
+} from 'typeorm'
+
 import { CreateProductInput } from '../inputs/CreateProductInput'
 import { EditProductInput } from '../inputs/EditProductInput'
+import { SearchProductInput } from '../inputs/SearchProductInput'
+import { Category } from '../models/Category'
+import { Product } from '../models/Product'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 
 export class ProductService {
@@ -12,6 +21,32 @@ export class ProductService {
 
   public static getProduct(id: Product['id']) {
     return Product.findOne(id)
+  }
+
+  public static async searchProduct(search: SearchProductInput) {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .select('*')
+      .from(Product, 'product')
+      .where((qb: SelectQueryBuilder<Product>) => {
+        qb.where({
+          name: ILike(`%${search.name ? search.name : ''}%`),
+        })
+          .andWhere(
+            search.category ? 'product.categoryId = :category' : '1 = 1',
+            {
+              category: search.category,
+            }
+          )
+          .andWhere(search.minPrice ? 'product.price >= :minPrice' : '1 = 1', {
+            minPrice: search.minPrice,
+          })
+          .andWhere(search.maxPrice ? 'product.price <= :maxPrice' : '1 = 1', {
+            maxPrice: search.maxPrice,
+          })
+      })
+      .getRawMany()
+    return result
   }
 
   public static async getProductsForCategory(name: Category['name']) {

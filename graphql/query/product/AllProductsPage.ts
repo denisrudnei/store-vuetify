@@ -1,12 +1,8 @@
 import ggl from 'graphql-tag'
 
 export const AllProductsPage = ggl`
-query {
-  GetAllCategories {
-    id
-    name
-  }
-  GetProducts {
+query AllProductsPage($search: SearchProductInput!) {
+  SearchProducts(search: $search) {
     id
     name
     description

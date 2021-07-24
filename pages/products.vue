@@ -2,16 +2,38 @@
   <v-row>
     <v-col cols="12">
       <v-text-field
-        v-model="search"
+        v-model="search.name"
         outlined
         label="Search"
-        :append-icon="icons.mdiMagnify"
+        clearable
+        :prepend-inner-icon="icons.mdiMagnify"
       />
+    </v-col>
+    <v-col v-if="category">
+      <v-card>
+        <v-card-text> Category: {{ category.name }} </v-card-text>
+      </v-card>
     </v-col>
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="8">
           <v-row>
+            <v-col v-if="state === 'ERROR'" cols="12">
+              <v-alert> Failed to load </v-alert>
+            </v-col>
+            <v-col v-if="state === 'LOADING'" cols="12">
+              <v-card>
+                <v-card-title>Loading</v-card-title>
+                <v-card-text>
+                  <v-progress-linear indeterminate color="primary" />
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col v-if="state === 'LOADED' && !products.length" cols="12">
+              <v-alert :icon="icons.mdiTagOff" outlined prominent color="error">
+                No products found
+              </v-alert>
+            </v-col>
             <v-col
               v-for="product in products"
               :key="product.id"
@@ -27,19 +49,56 @@
           <v-card elevation="0">
             <v-card-text>
               <v-row>
-                <v-col cols="12">
-                  <v-autocomplete
-                    v-model="category"
-                    label="Category"
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="minPrice"
+                    label="Min price"
                     outlined
-                    :items="categories"
+                    type="tel"
                   />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="maxPrice"
+                    label="Max price"
+                    outlined
+                    type="tel"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-btn
+                    class="primary white--text"
+                    block
+                    @click="searchProducts"
+                  >
+                    Search
+                  </v-btn>
+                </v-col>
+                <v-col cols="12">
+                  <h5 class="text-h5">Categories</h5>
+                  <v-list>
+                    <v-list-item @click="setCategory()">
+                      <v-list-item-action>
+                        <v-icon>{{ icons.mdiTag }}</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-content> All </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                      v-for="category in categories"
+                      :key="category.id"
+                      @click="setCategory(category.id)"
+                    >
+                      <v-list-item-action>
+                        <v-icon>{{ icons.mdiTag }}</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-content>
+                        {{ category.name }}
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
                 </v-col>
               </v-row>
             </v-card-text>
-            <v-card-actions>
-              <v-btn class="primary white--text" block> Search </v-btn>
-            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -48,10 +107,11 @@
 </template>
 
 <script>
-import { mdiMagnify } from '@mdi/js'
+import { mdiMagnify, mdiTag, mdiTagOff } from '@mdi/js'
 import ProductCard from '~/components/product/product-card.vue'
 import { AllProductsPage } from '~/graphql/query/product/AllProductsPage'
 import theme from '~/mixins/theme'
+import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 export default {
   auth: false,
   components: {
@@ -60,34 +120,110 @@ export default {
   mixins: [theme],
   data() {
     return {
+      state: 'ERROR',
       icons: {
         mdiMagnify,
+        mdiTag,
+        mdiTagOff,
       },
-      search: '',
-      productsData: [],
+      search: {
+        name: '',
+        category: undefined,
+        'min-price': undefined,
+        'max-price': undefined,
+      },
+      minPrice: undefined,
+      maxPrice: undefined,
+      products: [],
       categories: [],
-      category: undefined,
     }
   },
   computed: {
-    products() {
-      return this.productsData.filter((product) =>
-        product.name.toLowerCase().includes(this.search.toLowerCase())
+    category() {
+      return this.categories.find(
+        (category) => category.id === this.search.category
       )
     },
   },
+  watch: {
+    search: {
+      deep: true,
+      handler() {
+        this.$router.push({
+          query: {
+            ...this.search,
+          },
+        })
+        this.getData()
+      },
+    },
+  },
   created() {
+    const {
+      name,
+      category,
+      'min-price': minPrice,
+      'max-price': maxPrice,
+    } = this.$router.currentRoute.query
+
+    this.search = {
+      name: name || '',
+      category,
+      'min-price': minPrice ? Number(minPrice) : undefined,
+      'max-price': maxPrice ? Number(maxPrice) : undefined,
+    }
     this.$apollo
       .query({
-        query: AllProductsPage,
+        query: GetAllCategories,
       })
       .then((response) => {
-        this.categories = response.data.GetAllCategories.map((category) => ({
-          text: category.name,
-          value: category,
-        }))
-        this.productsData = response.data.GetProducts
+        this.categories = response.data.GetAllCategories
       })
+    this.getData()
+  },
+  methods: {
+    setCategory(id) {
+      if (!id) this.search.category = undefined
+      this.search.category = id
+      if (!this.category) return
+
+      this.$router.push({
+        query: {
+          category: this.category.slug,
+        },
+      })
+    },
+    getData() {
+      this.state = 'LOADING'
+      this.products = []
+      this.$apollo
+        .query({
+          query: AllProductsPage,
+          variables: {
+            search: {
+              name: this.search.name,
+              minPrice: this.search['min-price'],
+              maxPrice: this.search['max-price'],
+              category: this.search.category,
+            },
+          },
+        })
+        .then((response) => {
+          this.products = response.data.SearchProducts
+          this.state = 'LOADED'
+        })
+        .catch(() => {
+          this.state = 'ERROR'
+        })
+    },
+    searchProducts() {
+      if (this.minPrice) {
+        this.search['min-price'] = Number(this.minPrice)
+      }
+      if (this.maxPrice) {
+        this.search['max-price'] = Number(this.maxPrice)
+      }
+    },
   },
 }
 </script>

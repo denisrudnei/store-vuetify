@@ -17,6 +17,7 @@ import { ProductService } from '../services/ProductService'
 import { EditProductInput } from '../inputs/EditProductInput'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 import { Role } from '../enums/Role'
+import { SearchProductInput } from '../inputs/SearchProductInput'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -28,6 +29,13 @@ export class ProductResolver {
   @Query(() => Product)
   GetProduct(@Arg('id', () => ID) id: Product['id']) {
     return ProductService.getProduct(id)
+  }
+
+  @Query(() => [Product])
+  SearchProducts(
+    @Arg('search', () => SearchProductInput) search: SearchProductInput
+  ) {
+    return ProductService.searchProduct(search)
   }
 
   @Query(() => [Product])
