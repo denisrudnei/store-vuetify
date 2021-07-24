@@ -6,6 +6,7 @@ import express, { Router } from 'express'
 import session from 'express-session'
 
 import { AuthController } from './controllers/AuthController'
+import { ProductController } from './controllers/ProductController'
 import { SitemapController } from './controllers/SitemapController'
 import { SiteSettingsController } from './controllers/SiteSettingsController'
 import { UserController } from './controllers/UserController'
@@ -48,6 +49,7 @@ app.use(
 app.use('/api', AuthController)
 app.use('/api', SiteSettingsController)
 app.use('/api', UserController)
+app.use('/api/', ProductController)
 app.use(SitemapController)
 
 export { app }

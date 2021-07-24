@@ -12,6 +12,7 @@ import { EditProductInput } from '../inputs/EditProductInput'
 import { SearchProductInput } from '../inputs/SearchProductInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
+import { S3 } from '../S3'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 
 export class ProductService {
@@ -46,7 +47,11 @@ export class ProductService {
           })
       })
       .getRawMany()
-    return result
+    return result.map((item) => ({
+      ...item,
+      // @ts-ignore
+      images: item.images.split(',').filter((image) => image.length),
+    }))
   }
 
   public static async getProductsForCategory(name: Category['name']) {
@@ -171,5 +176,22 @@ export class ProductService {
       }
     )
     return products
+  }
+
+  public static async removeImage(productId: Product['id'], image: string) {
+    const product = await Product.findOne(productId)
+    if (!product) throw new Error('Product not found')
+    const items = image.split('/')
+    const name = items[items.length - 1]
+
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET!,
+      Key: `product/${product.id}/${name}`,
+    }
+
+    await S3.deleteObject(params).promise()
+    product.images = product.images.filter((item) => item !== image)
+    await product.save()
+    return true
   }
 }

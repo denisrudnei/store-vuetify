@@ -1,23 +1,23 @@
+import sanitize from 'sanitize-html'
 import {
   Arg,
+  Authorized,
+  FieldResolver,
+  ID,
   Mutation,
   Query,
   Resolver,
-  ID,
-  FieldResolver,
   Root,
-  Authorized,
 } from 'type-graphql'
 
-import sanitize from 'sanitize-html'
+import { Role } from '../enums/Role'
 import { CreateProductInput } from '../inputs/CreateProductInput'
+import { EditProductInput } from '../inputs/EditProductInput'
+import { SearchProductInput } from '../inputs/SearchProductInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { ProductService } from '../services/ProductService'
-import { EditProductInput } from '../inputs/EditProductInput'
 import { DeletedProductResult } from '../types/DeletedProductResult'
-import { Role } from '../enums/Role'
-import { SearchProductInput } from '../inputs/SearchProductInput'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -90,6 +90,15 @@ export class ProductResolver {
   @Authorized(Role.ADMIN)
   public ReactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
     return ProductService.reactivateMany(ids)
+  }
+
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public RemoveImage(
+    @Arg('product', () => ID) product: Product['id'],
+    @Arg('image', () => String) image: string
+  ) {
+    return ProductService.removeImage(product, image)
   }
 
   @Mutation(() => Boolean)

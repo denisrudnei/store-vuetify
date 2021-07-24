@@ -1,9 +1,16 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  computed: mapGetters({
-    settings: 'site-settings/getSiteSettings',
-  }),
+  computed: {
+    ...mapGetters({
+      settings: 'site-settings/getSiteSettings',
+    }),
+    image() {
+      if (this.product.images && this.product.images.length)
+        return this.product.images[0]
+      return '/images/not-set.svg'
+    },
+  },
   head() {
     return {
       title: `${this.product.name} - ${this.settings.name}`,
@@ -11,7 +18,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: 'https://picsum.photos/800/600/',
+          content: this.image,
         },
         {
           hid: 'og:type',

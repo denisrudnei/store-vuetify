@@ -23,11 +23,12 @@
     <v-col cols="12" md="4">
       <v-row>
         <v-col cols="12">
-          <v-carousel>
+          <v-img v-if="!product.images.length" :src="image" />
+          <v-carousel v-if="product.images.length">
             <v-carousel-item
-              v-for="image in images"
-              :key="image"
-              :src="'/images/not-set.svg'"
+              v-for="item in product.images"
+              :key="item"
+              :src="item"
             />
           </v-carousel>
         </v-col>
@@ -99,7 +100,6 @@ export default {
         mdiPlus,
         mdiMinus,
       },
-      images: Array.from({ length: 5 }, (_, x) => (x += 1)),
       quantity: 1,
     }
   },
@@ -109,9 +109,7 @@ export default {
       '@type': 'Product',
       name: this.product.name,
       description: this.product.ogDescription,
-      image: Array.from({ length: 5 }, (_, i) => (i += 1)).map(
-        () => '/images/not-set.svg'
-      ),
+      image: this.image,
       offers: {
         '@type': 'Offer',
         price: this.product.price.toFixed(2),

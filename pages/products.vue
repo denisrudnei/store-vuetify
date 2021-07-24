@@ -19,7 +19,7 @@
         <v-col cols="12" md="8" :order="isMobile ? 'last' : 'first'">
           <v-row>
             <v-col v-if="state === 'ERROR'" cols="12">
-              <v-alert prominent outline color="error">
+              <v-alert prominent outlined color="error">
                 Failed to load
               </v-alert>
             </v-col>

@@ -27,6 +27,7 @@ query GetCategoryByName($name: String!) {
       id
       name
       price
+      images
     }
   }
 }

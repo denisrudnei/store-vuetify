@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType, Float } from 'type-graphql'
 import {
   BaseEntity,
   BeforeInsert,
@@ -28,6 +28,14 @@ export class Product extends BaseEntity {
   @Field()
   @Column({ type: 'text' })
   public description!: string
+
+  @Field(() => Float)
+  @Column({ type: 'decimal', default: 0 })
+  public amount!: number
+
+  @Field(() => [String])
+  @Column({ type: 'simple-array' })
+  public images: string[] = []
 
   @Field(() => Category)
   @ManyToOne(() => Category)
