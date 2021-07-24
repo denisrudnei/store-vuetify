@@ -71,6 +71,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <adsbygoogle />
     </v-navigation-drawer>
     <v-app-bar clipped-left clipped-right fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />

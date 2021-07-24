@@ -61,6 +61,7 @@ export default {
     '@nuxtjs/apollo',
     '@nuxtjs/toast',
     '@nuxtjs/auth',
+    '@nuxtjs/google-adsense',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -78,6 +79,10 @@ export default {
     manifest: {
       lang: 'en',
     },
+  },
+
+  'google-adsense': {
+    id: process.env.ADSENSE,
   },
 
   auth: {
