@@ -10,7 +10,7 @@
         :small="!isMobile"
         class="text-center"
       />
-      <p class="text-center">Total: 0 }}</p>
+      <p class="text-center">Total: 0</p>
     </v-col>
     <v-col cols="12" xl="8">
       <v-row dense>
