@@ -8,6 +8,7 @@
         <v-tab to="/admin/user"> Users</v-tab>
         <v-tab to="/admin/customization">Customization</v-tab>
         <v-tab to="/admin/social-networks">Social networks</v-tab>
+        <v-tab to="/admin/management">Management</v-tab>
       </v-tabs>
     </v-col>
     <v-col cols="12">

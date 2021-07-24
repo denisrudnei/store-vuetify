@@ -54,6 +54,12 @@ export class CategoryResolver {
     return CategoryService.edit(id, category)
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public FixCategoriesSlug() {
+    return CategoryService.fixCategoriesSlug()
+  }
+
   @FieldResolver()
   public async father(@Root() root: Category) {
     const { father } = (await Category.findOne(root.id, {

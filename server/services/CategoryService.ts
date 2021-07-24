@@ -81,4 +81,15 @@ export class CategoryService {
     }
     return category.name
   }
+
+  public static async fixCategoriesSlug() {
+    const categories = await Category.find()
+    await Promise.all(
+      categories.map((category) => {
+        category.update()
+        return category.save()
+      })
+    )
+    return true
+  }
 }
