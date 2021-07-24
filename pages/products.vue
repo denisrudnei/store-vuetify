@@ -51,7 +51,7 @@
               <v-row>
                 <v-col cols="6">
                   <v-text-field
-                    v-model="minPrice"
+                    v-model="search['min-price']"
                     label="Min price"
                     outlined
                     type="tel"
@@ -59,7 +59,7 @@
                 </v-col>
                 <v-col cols="6">
                   <v-text-field
-                    v-model="maxPrice"
+                    v-model="search['max-price']"
                     label="Max price"
                     outlined
                     type="tel"
@@ -148,7 +148,6 @@ export default {
             ...this.search,
           },
         })
-        this.getData()
       },
     },
   },
@@ -186,6 +185,7 @@ export default {
           category: this.category.slug,
         },
       })
+      this.getData()
     },
     getData() {
       this.state = 'LOADING'
@@ -196,8 +196,12 @@ export default {
           variables: {
             search: {
               name: this.search.name,
-              minPrice: this.search['min-price'],
-              maxPrice: this.search['max-price'],
+              minPrice: this.search['min-price']
+                ? Number(this.search['min-price'])
+                : undefined,
+              maxPrice: this.search['max-price']
+                ? Number(this.search['max-price'])
+                : undefined,
               category: this.search.category,
             },
           },
@@ -211,12 +215,7 @@ export default {
         })
     },
     searchProducts() {
-      if (this.minPrice) {
-        this.search['min-price'] = Number(this.minPrice)
-      }
-      if (this.maxPrice) {
-        this.search['max-price'] = Number(this.maxPrice)
-      }
+      this.getData()
     },
   },
 }
