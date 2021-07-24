@@ -34,7 +34,7 @@ export class Product extends BaseEntity {
   public amount!: number
 
   @Field(() => [String])
-  @Column({ type: 'simple-array' })
+  @Column({ type: 'simple-array', default: '' })
   public images: string[] = []
 
   @Field(() => Category)
