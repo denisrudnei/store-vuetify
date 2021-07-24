@@ -117,23 +117,27 @@ export default {
         price: this.product.price.toFixed(2),
         priceCurrency: 'BRL',
       },
-      review: {
-        '@type': 'Review',
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '0',
-          bestRating: '5',
-        },
-        author: {
-          '@type': 'Person',
-          name: '',
-        },
-      },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '0',
-        reviewCount: 0,
-      },
+      review: this.product.rating
+        ? {
+            '@type': 'Review',
+            reviewRating: {
+              '@type': 'Rating',
+              ratingValue: '0',
+              bestRating: '5',
+            },
+            author: {
+              '@type': 'Person',
+              name: '',
+            },
+          }
+        : undefined,
+      aggregateRating: this.product.rating
+        ? {
+            '@type': 'AggregateRating',
+            ratingValue: '0',
+            reviewCount: 0,
+          }
+        : undefined,
     }
   },
   computed: {
