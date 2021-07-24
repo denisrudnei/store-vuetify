@@ -53,12 +53,33 @@
             </v-col>
             <v-divider vertical />
             <v-col cols="12" md="2" class="pl-5">
-              <v-img
-                src="https://picsum.photos/800/600"
-                class="rounded-circle"
-                :aspect-ratio="1"
-              />
-              <v-btn class="primary white--text mt-2" block>Update image</v-btn>
+              <v-row>
+                <v-col cols="12">
+                  <v-img
+                    :src="user.image"
+                    class="rounded-circle"
+                    :aspect-ratio="1"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-file-input
+                    v-model="image"
+                    outlined
+                    label="Select profile image"
+                    @change="previewImage"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-btn
+                    class="primary white--text mt-2"
+                    block
+                    :disabled="!image"
+                    @click="updateImage"
+                  >
+                    Update image
+                  </v-btn>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-card-text>
@@ -114,6 +135,7 @@ export default {
       icons: {
         mdiCheckAll,
       },
+      image: undefined,
       user: {
         name: '',
         email: '',
@@ -172,6 +194,31 @@ export default {
         .then(() => {
           this.$toast.show('Updated', {
             duration: 1000,
+          })
+        })
+    },
+    previewImage() {
+      const vue = this
+      if (!this.image) return
+      const fileReader = new FileReader()
+      fileReader.readAsDataURL(this.image)
+      fileReader.onloadend = function () {
+        vue.user.image = fileReader.result
+      }
+    },
+    updateImage() {
+      const formData = new FormData()
+      formData.append('image', this.image)
+      this.$axios
+        .post('/user/image', formData)
+        .then(() => {
+          this.$toast.show('Image updated', {
+            duration: 1000,
+          })
+        })
+        .catch(() => {
+          this.$toast.error('Failed to upload image', {
+            duration: 10000,
           })
         })
     },

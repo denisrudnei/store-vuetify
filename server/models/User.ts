@@ -28,6 +28,10 @@ export class User extends BaseEntity {
   @Column()
   public name!: string
 
+  @Field()
+  @Column({ default: '/images/not-set.svg' })
+  public image!: string
+
   @Column()
   public password!: string
 

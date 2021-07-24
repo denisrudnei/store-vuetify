@@ -7,6 +7,7 @@ query {
     name
     email
     active
+    image
   }
 }
 `
