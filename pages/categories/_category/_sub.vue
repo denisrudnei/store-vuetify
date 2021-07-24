@@ -50,7 +50,7 @@
           </v-card>
         </v-col>
         <v-col v-if="!products.length" align="center">
-          <v-row>
+          <v-row no-gutters>
             <v-col cols="12">
               <v-card tile elevation="0">
                 <v-card-text>
@@ -61,11 +61,11 @@
                 <v-card-text class="title">
                   No products found for this category
                 </v-card-text>
-                <v-divider />
-                <v-card-text>
-                  <other-products />
-                </v-card-text>
               </v-card>
+            </v-col>
+            <v-col cols="12">
+              <v-divider />
+              <other-products />
             </v-col>
           </v-row>
         </v-col>

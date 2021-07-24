@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="!isMobile">
+    <v-card v-if="!isMobile" :elevation="elevation">
       <nuxt-link
         :to="`/categories/${product.category.slug}/product/${product.id}`"
       >
@@ -59,6 +59,10 @@ export default {
     hideCategory: {
       type: Boolean,
       default: false,
+    },
+    elevation: {
+      type: Number,
+      default: 2,
     },
     product: {
       type: Object,

@@ -1,11 +1,14 @@
 <template>
   <div>
-    <h4 class="text-h4">Other products</h4>
-    <v-sheet elevation="0" class="mx-auto">
-      <v-slide-group class="pa-1" show-arrows>
+    <v-sheet elevation="0">
+      <h4 class="text-h4">Other products</h4>
+      <v-slide-group show-arrows>
         <v-slide-item v-for="product in products" :key="product.id">
-          <v-card :width="isMobile ? 250 : 400" class="ma-2">
-            <product-card :product="product" hide-cart />
+          <v-card
+            :width="isMobile ? 250 : 400"
+            :class="isMobile ? 'pa-1' : 'ma-2'"
+          >
+            <product-card :product="product" hide-cart :elevation="0" />
           </v-card>
         </v-slide-item>
       </v-slide-group>
