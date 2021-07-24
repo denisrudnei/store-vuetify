@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center" class="pr-3">
     <v-col cols="12" xl="4">
-      <h2 class="display-4 text-center">4,5</h2>
+      <h2 class="display-4 text-center">0</h2>
       <v-rating
         length="5"
         :value="4.5"
@@ -10,7 +10,7 @@
         :small="!isMobile"
         class="text-center"
       />
-      <p class="text-center">Total: {{ Math.round(Math.random() * 300) }}</p>
+      <p class="text-center">Total: 0 }}</p>
     </v-col>
     <v-col cols="12" xl="8">
       <v-row dense>

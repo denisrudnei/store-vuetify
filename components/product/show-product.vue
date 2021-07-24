@@ -70,7 +70,6 @@
 <script>
 import { TheMask } from 'vue-the-mask'
 import slugify from 'slugify'
-import faker from 'faker'
 import { mdiCart, mdiPlus, mdiMinus } from '@mdi/js'
 import Rating from '~/components/rating.vue'
 import productPage from '~/mixins/product-page'
@@ -122,18 +121,18 @@ export default {
         '@type': 'Review',
         reviewRating: {
           '@type': 'Rating',
-          ratingValue: '4.5',
+          ratingValue: '0',
           bestRating: '5',
         },
         author: {
           '@type': 'Person',
-          name: faker.name.findName(),
+          name: '',
         },
       },
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: '4.5',
-        reviewCount: Math.round(Math.random() * 300),
+        ratingValue: '0',
+        reviewCount: 0,
       },
     }
   },
