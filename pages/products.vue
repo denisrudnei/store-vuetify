@@ -16,7 +16,7 @@
     </v-col>
     <v-col cols="12">
       <v-row>
-        <v-col cols="12" md="8">
+        <v-col cols="12" md="8" :order="isMobile ? 'last' : 'first'">
           <v-row>
             <v-col v-if="state === 'ERROR'" cols="12">
               <v-alert> Failed to load </v-alert>
@@ -45,7 +45,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" :order="isMobile ? 'first' : 'last'">
           <v-card elevation="0">
             <v-card-text>
               <v-row>
@@ -84,15 +84,15 @@
                       <v-list-item-content> All </v-list-item-content>
                     </v-list-item>
                     <v-list-item
-                      v-for="category in categories"
-                      :key="category.id"
-                      @click="setCategory(category.id)"
+                      v-for="item in categories"
+                      :key="item.id"
+                      @click="setCategory(item.id)"
                     >
                       <v-list-item-action>
                         <v-icon>{{ icons.mdiTag }}</v-icon>
                       </v-list-item-action>
                       <v-list-item-content>
-                        {{ category.name }}
+                        {{ item.name }}
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
