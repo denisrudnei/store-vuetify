@@ -1,7 +1,12 @@
+import { mapGetters } from 'vuex'
+
 export default {
+  computed: mapGetters({
+    settings: 'site-settings/getSiteSettings',
+  }),
   head() {
     return {
-      title: this.product.name,
+      title: `${this.product.name} - ${this.settings.name}`,
       meta: [
         {
           hid: 'og:image',
@@ -26,7 +31,7 @@ export default {
         {
           hid: 'product:price:amount',
           property: 'product:price:amount',
-          content: this.product.price,
+          content: this.product.price.toFixed(2),
         },
         {
           hid: 'product:price:currency',
