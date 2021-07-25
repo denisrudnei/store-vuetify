@@ -16,6 +16,11 @@ export default {
       title: `${this.product.name} - ${this.settings.name}`,
       meta: [
         {
+          hid: 'description',
+          property: 'description',
+          content: this.product.ogDescription,
+        },
+        {
           hid: 'og:image',
           property: 'og:image',
           content: this.image,
