@@ -60,6 +60,12 @@ export class CategoryResolver {
     return CategoryService.fixCategoriesSlug()
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public RemoveCategoryImage(@Arg('id', () => ID) id: Category['id']) {
+    return CategoryService.removeImage(id)
+  }
+
   @FieldResolver()
   public async father(@Root() root: Category) {
     const { father } = (await Category.findOne(root.id, {

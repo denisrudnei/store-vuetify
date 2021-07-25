@@ -7,6 +7,7 @@ query {
     name
     description
     slug
+    image
   }
   GetSiteSettings {
     id

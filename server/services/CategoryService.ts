@@ -1,6 +1,7 @@
 import { Category } from '../models/Category'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
+import { S3 } from '../S3'
 
 export class CategoryService {
   public static getRootCategories() {
@@ -9,6 +10,12 @@ export class CategoryService {
         father: null,
       },
     })
+  }
+
+  public static async getCategory(id: Category['id']) {
+    const category = await Category.findOne(id)
+    if (!category) throw new Error('Category not found')
+    return category
   }
 
   public static async getCategoryByName(name: Category['name']) {
@@ -90,6 +97,28 @@ export class CategoryService {
         return category.save()
       })
     )
+    return true
+  }
+
+  public static async removeImage(id: Category['id']) {
+    const category = await Category.findOne(id)
+    if (!category) throw new Error('Category not found')
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET!,
+      Key: `category/${category.id}`,
+    }
+
+    await S3.deleteObject(params).promise()
+
+    await Category.update(
+      {
+        id,
+      },
+      {
+        image: '/images/not-set.svg',
+      }
+    )
+
     return true
   }
 }

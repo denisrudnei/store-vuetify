@@ -8,7 +8,7 @@
       md="3"
     >
       <v-card :to="`/categories/${category.slug}`">
-        <v-img :src="'/images/not-set.svg'" :aspect-ratio="16 / 9">
+        <v-img :src="category.image" :aspect-ratio="16 / 9">
           <template #placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular indeterminate color="primary lighten-5" />

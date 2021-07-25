@@ -31,6 +31,10 @@ export class Category extends BaseEntity {
   @Column()
   public slug: string = ''
 
+  @Field()
+  @Column({ default: '/images/not-set.svg' })
+  public image!: string
+
   @Field(() => [Product])
   @OneToMany(() => Product, (product) => product.category)
   public products!: Product[]
