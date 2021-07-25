@@ -135,7 +135,7 @@ export class ProductResolver {
     return `${sanitize(root.description, {
       allowedTags: ['br'],
     })
-      .replaceAll('<br />', '\n')
+      .replace('<br />', '\n')
       .slice(0, 157)}...`
   }
 }
