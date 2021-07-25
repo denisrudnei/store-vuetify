@@ -11,7 +11,9 @@ import {
 } from 'typeorm'
 import bcrypt from 'bcryptjs'
 import { Role } from '../enums/Role'
-import { Address } from './Adress'
+import { Address } from './Address'
+import { Purchase } from './Purchase'
+import { Order } from './Order'
 
 @Entity()
 @ObjectType()
@@ -45,6 +47,14 @@ export class User extends BaseEntity {
   @Field(() => [Address], { nullable: true })
   @OneToMany(() => Address, (address) => address.user)
   public addresses!: Address[]
+
+  @Field(() => [Purchase])
+  @OneToMany(() => Purchase, (purchase) => purchase.user)
+  public purchases!: Purchase[]
+
+  @Field(() => [Order])
+  @OneToMany(() => Order, (order) => order.user)
+  public orders!: Order[]
 
   @Column({ default: Role.USER, type: 'varchar' })
   public role!: Role

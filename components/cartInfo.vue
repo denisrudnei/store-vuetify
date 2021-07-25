@@ -3,7 +3,7 @@
     <v-card-text>
       Total: {{ total | price }}
       <v-divider />
-      Items: {{ quantity }}
+      Items: {{ amount }}
     </v-card-text>
   </v-card>
 </template>
@@ -21,8 +21,8 @@ export default {
         return this.$store.getters['products/getCart']
       },
     },
-    quantity() {
-      return this.cart.reduce((previous, item) => previous + item.quantity, 0)
+    amount() {
+      return this.cart.reduce((previous, item) => previous + item.amount, 0)
     },
     total() {
       return this.cart.reduce(

@@ -17,11 +17,11 @@ export const mutations = {
     const existing = state.cart.findIndex((item) => item.id === product.id)
     if (existing !== -1) {
       state.cart[existing].unitary = product.price
-      state.cart[existing].quantity += 1
-      state.cart[existing].price = product.price * state.cart[existing].quantity
+      state.cart[existing].amount += 1
+      state.cart[existing].price = product.price * state.cart[existing].amount
     } else {
       state.cart.push({
-        quantity: 1,
+        amount: 1,
         unitary: product.price,
         ...product,
       })

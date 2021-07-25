@@ -14,7 +14,12 @@ export default {
         .mutate({
           mutation: CreateProduct,
           variables: {
-            product,
+            product: {
+              name: product.name,
+              price: product.price,
+              description: product.description,
+              category: product.category,
+            },
           },
           awaitRefetchQueries: true,
           refetchQueries: [{ query: GetProducts }],

@@ -102,7 +102,7 @@
                 <v-btn class="primary white--text" @click="step = 2">
                   Back
                 </v-btn>
-                <v-btn class="primary white--text">
+                <v-btn class="primary white--text" @click="buy">
                   Buy <v-icon right>{{ icons.mdiCreditCardOutline }}</v-icon>
                 </v-btn>
               </v-col>
@@ -118,6 +118,7 @@
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
 import { mdiCheckAll, mdiDelete, mdiCreditCardOutline } from '@mdi/js'
+import { Buy } from '../graphql/mutation/buy/Buy'
 import cartInfo from '~/components/cartInfo.vue'
 export default {
   auth: false,
@@ -151,8 +152,8 @@ export default {
           value: 'unitary',
         },
         {
-          text: 'Quantity',
-          value: 'quantity',
+          text: 'Amount',
+          value: 'amount',
         },
         {
           text: 'Price',
@@ -171,6 +172,23 @@ export default {
   computed: mapGetters({
     products: 'products/getCart',
   }),
+  methods: {
+    buy() {
+      this.$apollo
+        .mutate({
+          mutation: Buy,
+          variables: {
+            products: this.products.map((product) => ({
+              id: product.id,
+              amount: product.amount,
+            })),
+          },
+        })
+        .then(() => {
+          this.$toast.show('sucess')
+        })
+    },
+  },
 }
 </script>
 

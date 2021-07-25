@@ -69,8 +69,8 @@ export default {
           value: 'unitary',
         },
         {
-          text: 'Quantity',
-          value: 'quantity',
+          text: 'Amount',
+          value: 'amount',
         },
         {
           text: 'Price',

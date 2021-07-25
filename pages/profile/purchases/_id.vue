@@ -1,11 +1,16 @@
 <template>
   <v-row>
     <v-col cols="12" md="8">
-      <v-card :flat="isDark">
+      <v-card
+        v-for="product in purchase.products"
+        :key="product.data.id"
+        :flat="isDark"
+        class="mb-3"
+      >
         <v-card-title>
           <v-row>
             <v-col cols="12" md="11">
-              {{ productName }}
+              {{ product.data.name }}
             </v-col>
             <v-divider vertical />
             <v-col cols="12" md="1">
@@ -21,7 +26,7 @@
         <v-card-title> Details of purchase </v-card-title>
         <v-card-text>
           <v-row>
-            <v-col cols="12">Date 06/29/2021</v-col>
+            <v-col cols="12">Date {{ purchase.createdAt }}</v-col>
             <v-col cols="12">
               <v-divider class="mb-3" />
               <span> Payment: $ {{ price }}</span>
@@ -35,6 +40,7 @@
 
 <script>
 import faker from 'faker'
+import { GetPurchase } from '../../../graphql/query/purchase/GetPurchase'
 import theme from '~/mixins/theme'
 export default {
   mixins: [theme],
@@ -42,12 +48,25 @@ export default {
     return {
       productName: faker.commerce.productName(),
       price: faker.commerce.price(),
+      purchase: {},
     }
   },
   head() {
     return {
       title: `Purchase - ${this.productName}`,
     }
+  },
+  created() {
+    this.$apollo
+      .query({
+        query: GetPurchase,
+        variables: {
+          id: this.$route.params.id,
+        },
+      })
+      .then((response) => {
+        this.purchase = response.data.GetPurchase
+      })
   },
 }
 </script>

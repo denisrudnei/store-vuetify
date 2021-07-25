@@ -28,7 +28,7 @@
               <v-btn
                 block
                 class="primary white--text"
-                to="/profile/purchases/1"
+                :to="`/profile/purchases/${purchase.id}`"
               >
                 See purchase
               </v-btn>
@@ -61,6 +61,15 @@ import faker from 'faker'
 import theme from '~/mixins/theme'
 export default {
   mixins: [theme],
+  props: {
+    purchase: {
+      type: Object,
+      default: () => ({
+        id: 0,
+        products: [],
+      }),
+    },
+  },
   data() {
     return {
       productName: faker.commerce.productName(),
