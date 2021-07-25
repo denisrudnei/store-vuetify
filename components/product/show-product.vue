@@ -155,12 +155,9 @@ export default {
   },
   watch: {
     quantity(value) {
-      const parsed =
-        typeof value === 'number'
-          ? value
-          : parseFloat(value.replaceAll(',', '.'), 10)
+      const parsed = typeof value === 'number' ? value : Number(value)
       if (value === '' || parsed <= 0) {
-        this.quantity = '0,000'
+        this.quantity = 0
       }
     },
   },
@@ -169,21 +166,11 @@ export default {
       this.$store.commit('products/addToCart', product)
     },
     add() {
-      this.quantity = (
-        parseFloat(this.quantity.toString().replaceAll(',', '.'), 10) + 0.1
-      )
-        .toFixed(3)
-        .toString()
-        .replaceAll('.', ',')
+      this.quantity += 1
     },
     remove() {
       if (this.quantity === 0) return
-      this.quantity = (
-        parseFloat(this.quantity.toString().replaceAll(',', '.')) - 0.1
-      )
-        .toFixed(3)
-        .toString()
-        .replaceAll('.', ',')
+      this.quantity -= 1
     },
   },
 }
