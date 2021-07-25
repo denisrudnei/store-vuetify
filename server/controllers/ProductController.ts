@@ -38,6 +38,7 @@ ProductController.post(
       product.images = Array.from(new Set([...product.images, Location]))
       await product.save()
     }
+    res.sendStatus(200)
   }
 )
 
