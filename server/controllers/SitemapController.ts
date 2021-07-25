@@ -25,14 +25,19 @@ SitemapController.get('/sitemap.xml', async (_, res) => {
     })
 
     const pipeline = sitemapStream.pipe(createGzip())
-    const products = await Product.find()
+    const products = await Product.find({ relations: ['category'] })
     const categories = await Category.find()
 
     for (const product of products) {
       sitemapStream.write({
-        url: `${hostname}product/${product.id}`,
+        url: `${hostname}categories/${product.category?.slug}/product/${product.id}`,
         changefreq: 'daily',
         priority: 0.8,
+      })
+      sitemapStream.write({
+        url: `${hostname}product/${product.id}`,
+        changefreq: 'daily',
+        priority: 0.6,
       })
     }
 

@@ -14,6 +14,12 @@ export default {
   head() {
     return {
       title: `${this.product.name} - ${this.settings.name}`,
+      link: [
+        {
+          rel: 'canonical',
+          href: `${process.env.SITEMAP_BASE}product/${this.product.id}`,
+        },
+      ],
       meta: [
         {
           hid: 'description',
