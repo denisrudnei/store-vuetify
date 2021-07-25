@@ -11,6 +11,7 @@ query {
     name
     description
     price
+    amount
     category {
       id
       name

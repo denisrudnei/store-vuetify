@@ -122,6 +122,10 @@ export default {
           value: 'price',
         },
         {
+          text: 'Amount',
+          value: 'amount',
+        },
+        {
           text: 'Category',
           value: 'category',
         },

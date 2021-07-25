@@ -7,6 +7,7 @@ import create from '@/components/product/create.vue'
 import { EditProduct } from '../../../../graphql/mutation/product/EditProduct'
 import { GetProductForEdit } from '~/graphql/query/product/GetProductForEdit'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
+import { GetProductInfo } from '~/graphql/query/GetProductListInfo'
 export default {
   components: { create },
   data() {
@@ -41,11 +42,12 @@ export default {
               category: product.category,
               name: product.name,
               price: product.price,
+              amount: Number(product.amount),
               description: product.description,
             },
           },
           awaitRefetchQueries: true,
-          refetchQueries: [{ query: GetProducts }],
+          refetchQueries: [{ query: GetProducts }, { query: GetProductInfo }],
         })
         .then(() => {
           this.$toast.show('Updated', {

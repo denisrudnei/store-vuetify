@@ -19,6 +19,14 @@
           />
         </v-col>
         <v-col cols="12">
+          <v-text-field
+            v-model="product.amount"
+            type="number"
+            label="Amount"
+            outlined
+          />
+        </v-col>
+        <v-col cols="12">
           <v-autocomplete
             v-model="product.category"
             label="Category"
@@ -116,6 +124,7 @@ export default {
         name: '',
         description: '',
         price: '0',
+        amount: 0,
         images: [],
         category: undefined,
       }),
@@ -185,6 +194,7 @@ export default {
       this.product.name = ''
       this.product.description = ''
       this.product.price = '0'
+      this.product.amount = 0
       this.product.category = undefined
     },
     isNewImage(image) {

@@ -13,4 +13,7 @@ export class EditProductInput {
 
   @Field(() => Float)
   public price!: number
+
+  @Field(() => Float)
+  public amount!: number
 }

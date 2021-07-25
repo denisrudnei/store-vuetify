@@ -6,6 +6,7 @@ query GetProduct($id: ID!) {
     id
     name
     images
+    amount
     category {
       id
       name
