@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col md="1" cols="12" class="pa-5">
           <v-img
-            :src="`https://picsum.photos/800/800/?${Math.random()}`"
+            :src="purchase.products[0].data.primaryImage"
             :aspect-ratio="1"
           />
         </v-col>
@@ -12,12 +12,12 @@
         <v-col md="7" cols="12">
           <v-card flat>
             <v-card-title>
-              {{ productName }}
+              {{ purchase.products[0].data.name }}
             </v-card-title>
             <v-card-text>
-              <p>{{ description }}</p>
+              <p v-html="purchase.products[0].data.description" />
               <v-divider />
-              <p class="pt-2">{{ Math.round(Math.random() * 15) }} UN</p>
+              <p class="pt-2">{{ purchase.totalAmount }} items</p>
             </v-card-text>
           </v-card>
         </v-col>

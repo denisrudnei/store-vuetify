@@ -35,6 +35,7 @@ export default {
     { src: '@/plugins/ckeditor', ssr: false },
     '~/plugins/dialog',
     '~/plugins/jsonld',
+    '~/plugins/filters',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

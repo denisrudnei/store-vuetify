@@ -10,8 +10,11 @@ query GetPurchase ($id: ID!) {
         name
         price
         amount
+        primaryImage
       }
     }
+    totalPrice
+    totalAmount
     createdAt
   }
 }

@@ -3,6 +3,7 @@
     <v-col cols="12">
       <v-tabs>
         <v-tab to="/admin/dashboard"> Dashboard </v-tab>
+        <v-tab to="/admin/purchase">Purchases</v-tab>
         <v-tab to="/admin/product">Products</v-tab>
         <v-tab to="/admin/category">Categories</v-tab>
         <v-tab to="/admin/user"> Users</v-tab>

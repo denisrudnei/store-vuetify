@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, Int, ObjectType, Float } from 'type-graphql'
 import {
   BaseEntity,
   CreateDateColumn,
@@ -29,4 +29,31 @@ export class Purchase extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.purchases)
   public user!: User
+
+  @Field(() => Int)
+  public async totalAmount() {
+    if (!this.products) {
+      const purchase = (await Purchase.findOne(this.id, {
+        relations: ['products'],
+      })) as Purchase
+      this.products = purchase.products
+    }
+
+    return this.products.reduce((acc, actual) => {
+      return (acc += Number(actual.data.amount))
+    }, 0)
+  }
+
+  @Field(() => Float)
+  public async totalPrice() {
+    if (!this.products) {
+      const purchase = (await Purchase.findOne(this.id, {
+        relations: ['products'],
+      })) as Purchase
+      this.products = purchase.products
+    }
+    return this.products.reduce((acc, actual) => {
+      return (acc += Number(actual.data.amount) * Number(actual.data.price))
+    }, 0)
+  }
 }

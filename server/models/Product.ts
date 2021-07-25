@@ -49,6 +49,12 @@ export class Product extends BaseEntity {
   @Column({ default: '' })
   public slug!: string
 
+  @Field(() => String)
+  public primaryImage() {
+    if (this.images.length) return this.images[0]
+    return '/images/not-set.svg'
+  }
+
   @BeforeInsert()
   @BeforeUpdate()
   update() {

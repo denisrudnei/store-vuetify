@@ -8,16 +8,32 @@
         class="mb-3"
       >
         <v-card-title>
+          <p>Product {{ product.data.name }}</p>
+        </v-card-title>
+        <v-divider />
+        <v-card-text>
           <v-row>
             <v-col cols="12" md="11">
-              {{ product.data.name }}
+              <p>Amount: {{ product.data.amount }}</p>
+              <p>Item price: {{ product.data.price }}</p>
             </v-col>
             <v-divider vertical />
             <v-col cols="12" md="1">
-              <v-img src="https://picsum.photos/800/800" :aspect-ratio="1" />
+              <v-menu open-on-hover max-width="450">
+                <template #activator="{ on }">
+                  <v-img
+                    :src="product.data.primaryImage"
+                    :aspect-ratio="1"
+                    v-on="on"
+                  />
+                </template>
+                <v-card>
+                  <v-img :src="product.data.primaryImage" />
+                </v-card>
+              </v-menu>
             </v-col>
           </v-row>
-        </v-card-title>
+        </v-card-text>
       </v-card>
     </v-col>
     <v-divider vertical></v-divider>
@@ -26,10 +42,12 @@
         <v-card-title> Details of purchase </v-card-title>
         <v-card-text>
           <v-row>
-            <v-col cols="12">Date {{ purchase.createdAt }}</v-col>
+            <v-col v-if="purchase.createdAt" cols="12">
+              Date {{ purchase.createdAt | dateAndHour }}
+            </v-col>
             <v-col cols="12">
               <v-divider class="mb-3" />
-              <span> Payment: $ {{ price }}</span>
+              <span> Payment: $ {{ purchase.totalPrice }}</span>
             </v-col>
           </v-row>
         </v-card-text>
@@ -39,15 +57,12 @@
 </template>
 
 <script>
-import faker from 'faker'
 import { GetPurchase } from '../../../graphql/query/purchase/GetPurchase'
 import theme from '~/mixins/theme'
 export default {
   mixins: [theme],
   data() {
     return {
-      productName: faker.commerce.productName(),
-      price: faker.commerce.price(),
       purchase: {},
     }
   },

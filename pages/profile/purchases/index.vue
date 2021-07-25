@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col v-for="purchase in purchases" :key="purchase" cols="12">
+    <v-col v-for="purchase in purchases" :key="purchase.id" cols="12">
       <purchase-card :purchase="purchase" />
     </v-col>
   </v-row>

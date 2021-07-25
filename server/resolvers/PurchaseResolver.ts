@@ -2,18 +2,18 @@ import {
   Arg,
   Authorized,
   Ctx,
+  FieldResolver,
+  ID,
   Mutation,
   Query,
   Resolver,
-  ID,
-  FieldResolver,
   Root,
 } from 'type-graphql'
 
 import { Role } from '../enums/Role'
+import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { Purchase } from '../models/Purchase'
 import { PurchaseService } from '../services/PurchaseService'
-import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 
 @Resolver(() => Purchase)
@@ -58,5 +58,13 @@ export class PurchaseResolver {
       relations: ['products'],
     })) as Purchase
     return products
+  }
+
+  @FieldResolver()
+  public async user(@Root() root: Purchase) {
+    const { user } = (await Purchase.findOne(root.id, {
+      relations: ['user'],
+    })) as Purchase
+    return user
   }
 }
