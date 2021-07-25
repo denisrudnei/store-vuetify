@@ -7,8 +7,10 @@ import { Product } from '../models/Product'
 export class HistoryProductResolver {
   @FieldResolver()
   public async data(@Root() root: HistoryProduct) {
-    const { images } = (await Product.findOne(root.productId)) as Product
-    root.data.images = images
+    const realProduct = await Product.findOne(root.productId)
+    if (realProduct) {
+      root.data.images = realProduct.images
+    }
     return root.data
   }
 }
