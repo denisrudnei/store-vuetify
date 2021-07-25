@@ -178,7 +178,11 @@ export default {
   },
   methods: {
     setCategory(id) {
-      if (!id) this.search.category = undefined
+      if (!id) {
+        this.search.category = undefined
+        this.getData()
+        return
+      }
       this.search.category = id
       if (!this.category) return
 
