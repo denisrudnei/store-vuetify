@@ -123,7 +123,6 @@ import { Buy } from '../graphql/mutation/buy/Buy'
 import cartInfo from '~/components/cartInfo.vue'
 import { GetMyPurchases } from '~/graphql/query/purchase/GetMyPurchases'
 export default {
-  auth: false,
   components: { cartInfo },
   directives: { TheMask },
   filters: {

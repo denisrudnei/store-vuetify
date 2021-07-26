@@ -34,7 +34,7 @@
           </nuxt-link>
         </v-col>
         <v-divider vertical />
-        <v-col sm="4" cols="6" align="center">
+        <v-col sum="4" cols="6" align="center">
           <v-btn
             elevation="0"
             fab
