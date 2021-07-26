@@ -68,7 +68,7 @@ export default {
   },
   head() {
     return {
-      title: `Purchase - ${this.productName}`,
+      title: 'Purchase',
     }
   },
   created() {
