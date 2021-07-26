@@ -7,7 +7,7 @@ query {
     name
     description
     price
-    images
+    primaryImage
     category {
       id
       slug

@@ -24,7 +24,7 @@
           <nuxt-link
             :to="`/categories/${product.category.slug}/product/${product.id}`"
           >
-            <v-img :src="'/images/not-set.svg'" height="150">
+            <v-img :src="product.primaryImage" height="150">
               <template #placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
                   <v-progress-circular indeterminate color="grey lighten-5" />

@@ -7,7 +7,7 @@ query AllProductsPage($search: SearchProductInput!) {
     name
     description
     price
-    images
+    primaryImage
     category {
       id
       name
