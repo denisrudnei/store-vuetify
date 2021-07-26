@@ -34,8 +34,8 @@
         </v-col>
         <v-col cols="12">
           <v-text-field
-            v-model="quantity"
-            v-mask="['##', '#,###']"
+            v-model="amount"
+            v-mask="['####']"
             :prepend-icon="icons.mdiMinus"
             :append-outer-icon="icons.mdiPlus"
             outlined
@@ -100,7 +100,7 @@ export default {
         mdiPlus,
         mdiMinus,
       },
-      quantity: 1,
+      amount: 1,
     }
   },
   jsonld() {
@@ -154,10 +154,10 @@ export default {
     },
   },
   watch: {
-    quantity(value) {
-      const parsed = typeof value === 'number' ? value : Number(value)
+    amount(value) {
+      const parsed = typeof value === 'number' ? value : parseInt(value)
       if (value === '' || parsed <= 0) {
-        this.quantity = 0
+        this.amount = 0
       }
     },
   },
@@ -166,11 +166,11 @@ export default {
       this.$store.commit('products/addToCart', product)
     },
     add() {
-      this.quantity += 1
+      this.amount = parseInt(this.amount) + 1
     },
     remove() {
-      if (this.quantity === 0) return
-      this.quantity -= 1
+      if (this.amount === 0) return
+      this.amount = parseInt(this.amount) - 1
     },
   },
 }
