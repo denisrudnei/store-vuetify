@@ -7,6 +7,7 @@
         label="Search"
         clearable
         :prepend-inner-icon="icons.mdiMagnify"
+        @keypress.enter="getData"
       />
     </v-col>
     <v-col v-if="category">
