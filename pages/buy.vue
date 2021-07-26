@@ -17,7 +17,7 @@
           <v-stepper-content step="1">
             <v-row>
               <v-col cols="12">
-                <v-text-field outlined label="Name" />
+                <v-select outlined label="Address" :items="addresses" />
               </v-col>
               <v-col cols="12">
                 <v-text-field
@@ -118,8 +118,10 @@
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
 import { mdiCheckAll, mdiDelete, mdiCreditCardOutline } from '@mdi/js'
+import faker from 'faker'
 import { Buy } from '../graphql/mutation/buy/Buy'
 import cartInfo from '~/components/cartInfo.vue'
+import { GetMyPurchases } from '~/graphql/query/purchase/GetMyPurchases'
 export default {
   auth: false,
   components: { cartInfo },
@@ -136,6 +138,7 @@ export default {
         mdiDelete,
         mdiCreditCardOutline,
       },
+      addresses: `${faker.address.streetName()} - ${faker.address.city()}, ${faker.address.stateAbbr()} (${faker.address.zipCode()})`,
       step: 1,
       headers: [
         {
@@ -182,6 +185,8 @@ export default {
               id: product.id,
               amount: product.amount,
             })),
+            awaitRefetchQueries: true,
+            refetchQueries: [{ query: GetMyPurchases }],
           },
         })
         .then(() => {

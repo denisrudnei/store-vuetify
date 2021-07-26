@@ -9,7 +9,7 @@ query {
       data {
         id
         name
-        description
+        ogDescription
         primaryImage
       }
     }

@@ -15,7 +15,7 @@
               {{ purchase.products[0].data.name }}
             </v-card-title>
             <v-card-text>
-              <p v-html="purchase.products[0].data.description" />
+              <p v-html="purchase.products[0].data.ogDescription" />
               <v-divider />
               <p class="pt-2">{{ purchase.totalAmount }} items</p>
             </v-card-text>
@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import faker from 'faker'
 import theme from '~/mixins/theme'
 export default {
   mixins: [theme],
@@ -69,12 +68,6 @@ export default {
         products: [],
       }),
     },
-  },
-  data() {
-    return {
-      productName: faker.commerce.productName(),
-      description: faker.lorem.sentence(),
-    }
   },
 }
 </script>
