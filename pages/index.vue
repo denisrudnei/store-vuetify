@@ -44,7 +44,7 @@ export default {
       categories: data.GetCategories,
       title: data.GetSiteSettings.name,
       description: data.GetSiteSettings.name,
-      image: data.GetSiteSettings.image,
+      image: data.GetSiteSettings.logo,
     }
   },
   head() {
