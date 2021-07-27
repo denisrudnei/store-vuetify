@@ -2,9 +2,9 @@
   <v-row>
     <v-col cols="12" md="10">
       <v-data-table :items="cart" :headers="headers">
-        <template #item.image>
+        <template #item.image="{ item }">
           <v-img
-            :src="`https://picsum.photos/800/600/?${Math.random()}`"
+            :src="item.primaryImage"
             :aspect-ratio="21 / 9"
             :width="250"
             class="pa-2 ma-1"

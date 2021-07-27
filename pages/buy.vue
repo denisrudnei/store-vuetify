@@ -38,9 +38,9 @@
             <v-row>
               <v-col cols="12">
                 <v-data-table :items="products" :headers="headers">
-                  <template #item.image>
+                  <template #item.image="{ item }">
                     <v-img
-                      :src="`https://picsum.photos/800/600/?${Math.random()}`"
+                      :src="item.primaryImage"
                       :aspect-ratio="21 / 9"
                       :width="250"
                       class="pa-2 ma-1"
@@ -137,7 +137,9 @@ export default {
         mdiDelete,
         mdiCreditCardOutline,
       },
-      addresses: `${faker.address.streetName()} - ${faker.address.city()}, ${faker.address.stateAbbr()} (${faker.address.zipCode()})`,
+      addresses: [
+        `${faker.address.streetName()} - ${faker.address.city()}, ${faker.address.stateAbbr()} (${faker.address.zipCode()})`,
+      ],
       step: 1,
       headers: [
         {

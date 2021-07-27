@@ -10,10 +10,7 @@
             <template v-for="product in products">
               <v-list-item :key="`list${product.id}`">
                 <v-list-item-avatar>
-                  <v-img
-                    :src="`https://picsum.photos/800/600/?${Math.random()}`"
-                    :aspect-ratio="16 / 9"
-                  />
+                  <v-img :src="product.primaryImage" :aspect-ratio="16 / 9" />
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
