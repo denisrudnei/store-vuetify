@@ -50,8 +50,12 @@ export default {
   head() {
     return {
       title: this.title,
-      description: this.title,
       meta: [
+        {
+          hid: 'description',
+          property: 'description',
+          content: this.title,
+        },
         {
           hid: 'og:image',
           property: 'og:image',
