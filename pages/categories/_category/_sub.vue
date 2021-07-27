@@ -136,9 +136,14 @@ export default {
       title: this.category.name,
       meta: [
         {
+          hid: 'description',
+          property: 'description',
+          content: this.category.description,
+        },
+        {
           hid: 'og:image',
           property: 'og:image',
-          content: 'https://picsum.photos/800/600',
+          content: this.category.image,
         },
         {
           hid: 'og:title',
