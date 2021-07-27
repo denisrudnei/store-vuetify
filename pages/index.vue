@@ -43,11 +43,30 @@ export default {
     return {
       categories: data.GetCategories,
       title: data.GetSiteSettings.name,
+      description: data.GetSiteSettings.name,
+      image: data.GetSiteSettings.image,
     }
   },
   head() {
     return {
       title: this.title,
+      meta: [
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.image,
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.title,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.name,
+        },
+      ],
     }
   },
 }
