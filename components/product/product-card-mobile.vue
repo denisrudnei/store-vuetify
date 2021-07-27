@@ -117,6 +117,9 @@ export default {
   methods: {
     addToCart(product) {
       this.$store.commit('products/addToCart', product)
+      this.$toast.show('Added in cart', {
+        duration: 1000,
+      })
     },
     inCart(item) {
       return this.cart.map((item) => item.id).includes(item.id)

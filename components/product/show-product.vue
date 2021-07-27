@@ -164,6 +164,9 @@ export default {
   methods: {
     addToCart(product) {
       this.$store.commit('products/addToCart', product)
+      this.$toast.show('Added in cart', {
+        duration: 1000,
+      })
     },
     add() {
       this.amount = parseInt(this.amount) + 1
