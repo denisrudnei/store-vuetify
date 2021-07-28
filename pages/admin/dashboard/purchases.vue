@@ -28,7 +28,7 @@ export default {
       vue: undefined,
       purchases: [],
       options: {
-        type: 'line',
+        type: 'bar',
         stroke: {
           curve: 'smooth',
         },
