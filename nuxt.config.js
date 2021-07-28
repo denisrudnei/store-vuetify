@@ -36,6 +36,10 @@ export default {
     '~/plugins/dialog',
     '~/plugins/jsonld',
     '~/plugins/filters',
+    {
+      src: '~/plugins/apexcharts',
+      ssr: false,
+    },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
