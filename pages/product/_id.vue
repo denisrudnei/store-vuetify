@@ -21,12 +21,15 @@ export default {
         },
       })
       .then((response) => {
+        if (!response.data.GetProduct) {
+          return error({ statusCode: 404, message: 'Product not found' })
+        }
         return {
           product: response.data.GetProduct,
         }
       })
       .catch(() => {
-        error({ statusCode: 404, message: 'Product not found' })
+        error({ statusCode: 500, message: 'Failed to load product' })
       })
   },
 }
