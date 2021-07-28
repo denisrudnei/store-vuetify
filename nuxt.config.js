@@ -12,6 +12,7 @@ export default {
     GRAPHQL: process.env.GRAPHQL,
     SUBSCRIPTIONS: process.env.SUBSCRIPTIONS,
     ADSENSE: process.env.ADSENSE,
+    SENTRY_DSN: process.env.SENTRY_DSN,
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -68,6 +69,7 @@ export default {
     '@nuxtjs/toast',
     '@nuxtjs/auth',
     '@nuxtjs/google-adsense',
+    '@nuxtjs/sentry',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -89,6 +91,11 @@ export default {
 
   'google-adsense': {
     id: process.env.ADSENSE,
+  },
+
+  sentry: {
+    dsn: process.env.SENTRY_DSN || '',
+    config: {},
   },
 
   auth: {

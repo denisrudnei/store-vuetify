@@ -193,6 +193,9 @@ export default {
         .then(() => {
           this.$toast.show('sucess')
         })
+        .catch((e) => {
+          this.$sentry.captureException(e)
+        })
     },
   },
 }
