@@ -42,7 +42,7 @@ export class PurchaseResolver {
   }
 
   @Mutation(() => Purchase)
-  @Authorized()
+  @Authorized(Role.USER)
   public Buy(
     @Arg('products', () => [ProductForPurchaseInput])
     products: ProductForPurchaseInput[],

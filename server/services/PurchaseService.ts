@@ -10,7 +10,9 @@ export class PurchaseService {
     return Purchase.find()
   }
 
-  public static async getPurchase(user: User['id'], id: Purchase['id']) {
+  public static async getPurchase(userId: User['id'], id: Purchase['id']) {
+    const user = await User.findOne(userId)
+    if (!user) throw new Error('User not found')
     const result = await getConnection()
       .createQueryBuilder()
       .select('*')
@@ -18,9 +20,12 @@ export class PurchaseService {
       .where((qb: SelectQueryBuilder<Purchase>) => {
         qb.where({
           id,
-        }).andWhere('purchase."userId" = :user', {
-          user,
-        })
+        }).andWhere(
+          user.role === 'ADMIN' ? '1 = 1' : 'purchase."userId" = :user',
+          {
+            user: user.id,
+          }
+        )
       })
       .getRawOne()
 
