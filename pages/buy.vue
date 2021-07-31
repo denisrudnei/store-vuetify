@@ -197,6 +197,9 @@ export default {
           this.$sentry.captureException(e)
         })
     },
+    remove(id) {
+      this.$store.commit('products/remove', id)
+    },
   },
 }
 </script>
