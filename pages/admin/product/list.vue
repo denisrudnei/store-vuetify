@@ -58,6 +58,9 @@
         :headers="headers"
         show-select
       >
+        <template #item.price="{ item }">
+          {{ item.price | dinero }}
+        </template>
         <template #item.category="{ item }">
           {{ item.category.name }}
         </template>

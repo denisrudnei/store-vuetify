@@ -17,7 +17,7 @@
                     {{ product.name }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    {{ product.price | price }}
+                    {{ product.price | dinero }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
@@ -56,11 +56,6 @@ import { mapGetters } from 'vuex'
 import { mdiDelete } from '@mdi/js'
 import cartInfo from './cartInfo.vue'
 export default {
-  filters: {
-    price(value) {
-      return `$ ${value}`
-    },
-  },
   components: { cartInfo },
   computed: {
     icons() {

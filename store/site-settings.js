@@ -9,6 +9,8 @@ export const state = () => ({
     lightPrimary: '#FFFFFF',
     lightSecondary: '#FFFFFF',
     lightAccent: '#FFFFFF',
+    currency: '',
+    locale: '',
   },
 })
 
@@ -37,6 +39,12 @@ export const mutations = {
       logo,
     }
   },
+  setCurrency(state, currency) {
+    state.currency = currency
+  },
+  setLocale(state, locale) {
+    state.locale = locale
+  },
 }
 
 export const getters = {
@@ -45,5 +53,11 @@ export const getters = {
   },
   getLogo(state) {
     return state.settings.logo
+  },
+  getCurrency(state) {
+    return state.currency
+  },
+  getLocale(state) {
+    return state.locale
   },
 }

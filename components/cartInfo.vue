@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="0">
     <v-card-text>
-      Total: {{ total | price }}
+      Total: {{ total | dinero }}
       <v-divider />
       Items: {{ amount }}
     </v-card-text>
@@ -10,11 +10,6 @@
 
 <script>
 export default {
-  filters: {
-    price(value) {
-      return `$ ${value}`
-    },
-  },
   computed: {
     cart: {
       get() {

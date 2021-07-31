@@ -52,10 +52,10 @@
                     </v-btn>
                   </template>
                   <template #item.unitary="{ item }">
-                    <span>{{ item.unitary | price }}</span>
+                    <span>{{ item.unitary | dinero }}</span>
                   </template>
                   <template #item.price="{ item }">
-                    <span>{{ item.price | price }}</span>
+                    <span>{{ item.price | dinero }}</span>
                   </template>
                 </v-data-table>
               </v-col>
@@ -125,11 +125,6 @@ import { GetMyPurchases } from '~/graphql/query/purchase/GetMyPurchases'
 export default {
   components: { cartInfo },
   directives: { TheMask },
-  filters: {
-    price(value) {
-      return `$ ${value}`
-    },
-  },
   data() {
     return {
       icons: {

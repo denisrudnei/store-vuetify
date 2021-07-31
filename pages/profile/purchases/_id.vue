@@ -15,7 +15,7 @@
           <v-row>
             <v-col cols="12" md="11">
               <p>Amount: {{ product.data.amount }}</p>
-              <p>Item price: {{ product.data.price }}</p>
+              <p>Item price: {{ product.data.price | dinero }}</p>
             </v-col>
             <v-divider vertical />
             <v-col cols="12" md="1">
@@ -47,7 +47,7 @@
             </v-col>
             <v-col cols="12">
               <v-divider class="mb-3" />
-              <span> Payment: $ {{ purchase.totalPrice }}</span>
+              <span> Payment: {{ purchase.totalPrice | dinero }}</span>
             </v-col>
           </v-row>
         </v-card-text>

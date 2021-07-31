@@ -45,7 +45,7 @@
           />
         </v-col>
         <v-col cols="12">
-          <span class="title">Price: $ {{ product.price }}</span>
+          <span class="title">Price: {{ product.price | dinero }}</span>
         </v-col>
         <v-col cols="12">
           <v-btn block tile @click="addToCart(product)">

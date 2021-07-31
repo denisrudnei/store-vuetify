@@ -5,6 +5,7 @@ query {
   GetSummary {
     name
     value
+    type
   }
 }
 `

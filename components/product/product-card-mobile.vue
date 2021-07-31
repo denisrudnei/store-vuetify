@@ -43,7 +43,7 @@
             class="ma-2"
             :to="`/categories/${product.category.slug}/product/${product.id}`"
           >
-            $ {{ product.price }}
+            {{ product.price | dinero }}
           </v-btn>
           <v-btn
             v-if="!hideCart"

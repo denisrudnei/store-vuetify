@@ -4,6 +4,7 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { Purchase } from '../models/Purchase'
 import { User } from '../models/User'
+import { ItemType } from '../models/summary/ItemType'
 
 export class SummaryService {
   public static async allTime() {
@@ -14,22 +15,27 @@ export class SummaryService {
     return [
       {
         name: 'Purchases',
+        type: ItemType.COUNT,
         value: await Purchase.count(),
       },
       {
         name: 'Users',
+        type: ItemType.COUNT,
         value: await User.count(),
       },
       {
         name: 'Products',
+        type: ItemType.COUNT,
         value: await Product.count(),
       },
       {
         name: 'Categories',
+        type: ItemType.COUNT,
         value: await Category.count(),
       },
       {
         name: 'Total sold',
+        type: ItemType.PRICE,
         value: totalSold.reduce((acc, item) => (acc += Number(item)), 0),
       },
     ]

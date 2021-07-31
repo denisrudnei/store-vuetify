@@ -29,7 +29,7 @@
         <h3 class="text-h4 font-weight-light primary--text mb-2">
           {{ product.name }}
         </h3>
-        <span class="text-h6">$ {{ product.price }}</span>
+        <span class="text-h6">{{ product.price | dinero }}</span>
         <template v-if="!hideCategory">
           <v-divider class="pt-2 pb-4" />
           <v-chip

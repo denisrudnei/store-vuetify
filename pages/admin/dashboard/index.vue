@@ -10,7 +10,12 @@
                 <v-card-text align="center">
                   <span class="text-h4">{{ item.name }}</span>
                   <v-divider class="my-2" />
-                  <span class="text-h5">{{ item.value }}</span>
+                  <span v-if="item.type === 'COUNT'" class="text-h5">
+                    {{ item.value }}
+                  </span>
+                  <span v-if="item.type === 'PRICE'" class="text-h5">
+                    {{ item.value | dinero }}
+                  </span>
                 </v-card-text>
               </v-card>
             </v-col>
