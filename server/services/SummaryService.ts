@@ -7,6 +7,10 @@ import { User } from '../models/User'
 
 export class SummaryService {
   public static async allTime() {
+    const totalSold = await Promise.all(
+      (await Purchase.find()).map((purchase) => purchase.totalPrice())
+    )
+
     return [
       {
         name: 'Purchases',
@@ -23,6 +27,10 @@ export class SummaryService {
       {
         name: 'Categories',
         value: await Category.count(),
+      },
+      {
+        name: 'Total sold',
+        value: totalSold.reduce((acc, item) => (acc += Number(item)), 0),
       },
     ]
   }
