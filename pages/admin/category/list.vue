@@ -32,7 +32,7 @@
 
 <script>
 import { mdiPencil, mdiTagOff } from '@mdi/js'
-import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
+import { GetAllCategories } from '~/graphql/query/admin/category/GetAllCategories'
 export default {
   data() {
     return {
@@ -57,6 +57,9 @@ export default {
     this.$apollo
       .query({
         query: GetAllCategories,
+        variables: {
+          withNoProducts: true,
+        },
       })
       .then((response) => {
         this.categories = response.data.GetAllCategories

@@ -1,15 +1,25 @@
-import { Category } from '../models/Category'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
+import { Category } from '../models/Category'
 import { S3 } from '../S3'
+import { Product } from '../models/Product'
 
 export class CategoryService {
-  public static getRootCategories() {
-    return Category.find({
+  public static async getAllCategories(withNoProducts: Boolean = false) {
+    const categories = await Category.find({ relations: ['products'] })
+    if (withNoProducts) return categories
+    return categories.filter((category) => category.products.length)
+  }
+
+  public static async getRootCategories(withNoProducts: Boolean = false) {
+    const categories = await Category.find({
+      relations: ['products'],
       where: {
         father: null,
       },
     })
+    if (withNoProducts) return categories
+    return categories.filter((category) => category.products.length)
   }
 
   public static async getCategory(id: Category['id']) {
@@ -120,5 +130,22 @@ export class CategoryService {
     )
 
     return true
+  }
+
+  public static async getProducts(id: Category['id']): Promise<Product[]> {
+    const { products, subCategories } = (await Category.findOne(id, {
+      relations: ['products', 'subCategories'],
+    })) as Category
+    if (!products.length && !subCategories.length) return []
+    if (!products.length) {
+      const productsInSubCategories: Product[] = []
+
+      for (const sub of subCategories) {
+        productsInSubCategories.push(...(await this.getProducts(sub.id)))
+      }
+      return await Promise.all(productsInSubCategories)
+    }
+
+    return products
   }
 }

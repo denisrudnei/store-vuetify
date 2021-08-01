@@ -1,10 +1,10 @@
 import { createGzip } from 'zlib'
+import consola from 'consola'
 import { Router } from 'express'
 import { SitemapStream, streamToPromise } from 'sitemap'
 
-import consola from 'consola'
-import { Category } from '../models/Category'
 import { Product } from '../models/Product'
+import { CategoryService } from '../services/CategoryService'
 
 const SitemapController = Router()
 let sitemap: Buffer
@@ -26,7 +26,7 @@ SitemapController.get('/sitemap.xml', async (_, res) => {
 
     const pipeline = sitemapStream.pipe(createGzip())
     const products = await Product.find({ relations: ['category'] })
-    const categories = await Category.find()
+    const categories = await CategoryService.getAllCategories()
 
     for (const product of products) {
       sitemapStream.write({

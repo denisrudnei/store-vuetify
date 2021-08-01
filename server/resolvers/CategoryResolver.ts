@@ -14,17 +14,24 @@ import { CategoryService } from '../services/CategoryService'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { Role } from '../enums/Role'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
+import { Product } from '../models/Product'
 
 @Resolver(() => Category)
 export class CategoryResolver {
   @Query(() => [Category])
-  public GetCategories() {
-    return CategoryService.getRootCategories()
+  public GetCategories(
+    @Arg('withNoProducts', () => Boolean, { nullable: true })
+    withNoProducts?: boolean
+  ) {
+    return CategoryService.getRootCategories(withNoProducts)
   }
 
   @Query(() => [Category])
-  public GetAllCategories() {
-    return Category.find()
+  public GetAllCategories(
+    @Arg('withNoProducts', () => Boolean, { nullable: true })
+    withNoProducts?: boolean
+  ) {
+    return CategoryService.getAllCategories(withNoProducts)
   }
 
   @Query(() => [Category])
@@ -87,11 +94,8 @@ export class CategoryResolver {
     return subCategories
   }
 
-  @FieldResolver()
-  public async products(@Root() root: Category) {
-    const { products } = (await Category.findOne(root.id, {
-      relations: ['products'],
-    })) as Category
-    return products
+  @FieldResolver(() => [Product])
+  public products(@Root() root: Category) {
+    return CategoryService.getProducts(root.id)
   }
 }
