@@ -63,7 +63,9 @@ export default {
   mixins: [theme],
   data() {
     return {
-      purchase: {},
+      purchase: {
+        totalPrice: 0,
+      },
     }
   },
   head() {
