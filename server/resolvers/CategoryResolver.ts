@@ -87,11 +87,24 @@ export class CategoryResolver {
   }
 
   @FieldResolver()
-  public async subCategories(@Root() root: Category) {
+  public async subCategories(
+    @Arg('withNoProducts', () => Boolean, { nullable: true })
+    withNoProducts: Boolean = false,
+    @Root() root: Category
+  ) {
     const { subCategories } = (await Category.findOne(root.id, {
       relations: ['subCategories'],
     })) as Category
-    return subCategories
+    if (withNoProducts) return subCategories
+    const categoriesWithSubProducts = await Promise.all(
+      subCategories.map(async (sub) => {
+        return {
+          ...sub,
+          products: await CategoryService.getProducts(sub.id),
+        }
+      })
+    )
+    return categoriesWithSubProducts.filter((sub) => sub.products.length > 0)
   }
 
   @FieldResolver(() => [Product])
