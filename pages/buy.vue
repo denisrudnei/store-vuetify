@@ -197,7 +197,6 @@ export default {
           amount: this.products
             .reduce((acc, actual) => (acc += actual.amount * actual.price), 0)
             .toFixed(2),
-          currency: 'USD',
         },
       })
       braintree.client
