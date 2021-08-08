@@ -189,14 +189,16 @@ export default {
   methods: {
     async createDropIn() {
       const { data } = await this.$axios.get('/gateway/token')
+      const amount = this.products
+        .reduce((acc, actual) => (acc += actual.amount * actual.price), 0)
+        .toFixed(2)
       this.dropInInstance = await this.dropIn.create({
         authorization: data.token,
         container: '#dropin-container',
         paypal: {
           flow: 'checkout',
-          amount: this.products
-            .reduce((acc, actual) => (acc += actual.amount * actual.price), 0)
-            .toFixed(2),
+          amount,
+          currency: 'BRL', // TODO
         },
       })
       braintree.client
