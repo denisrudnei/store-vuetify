@@ -1,6 +1,14 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col cols="12">
+      <v-menu :close-on-content-click="false">
+        <template #activator="{ on }">
+          <v-btn class="primary white--text" v-on="on"> Select date </v-btn>
+        </template>
+        <v-date-picker v-model="date" type="month" />
+      </v-menu>
+    </v-col>
+    <v-col cols="12">
       <v-card>
         <v-card-text :class="isDark ? 'white--text' : 'black--text'">
           <no-ssr>
@@ -20,12 +28,13 @@
 </template>
 
 <script>
-import { getMonth, getYear } from 'date-fns'
+import { getMonth, getYear, format, parse } from 'date-fns'
 import { GetPurchaseSummaryInMonth } from '../../../graphql/query/admin/GetPurchaseSummaryInMonth'
 export default {
   data() {
     return {
       vue: undefined,
+      date: '',
       purchases: [],
       options: {
         type: 'bar',
@@ -56,6 +65,12 @@ export default {
     isDark() {
       return this.$vuetify.theme.dark
     },
+    year() {
+      return getYear(parse(this.date, 'yyyy-MM', new Date()))
+    },
+    month() {
+      return getMonth(parse(this.date, 'yyyy-MM', new Date()))
+    },
   },
   watch: {
     '$vuetify.theme.currentTheme.primary': {
@@ -64,31 +79,40 @@ export default {
         this.updateChartTheme(value)
       },
     },
+    date() {
+      this.getData()
+    },
   },
   async mounted() {
     await this.$nextTick()
     this.updateChartTheme(this.$vuetify.theme.currentTheme.primary)
   },
   created() {
-    this.$apollo
-      .query({
-        query: GetPurchaseSummaryInMonth,
-        variables: {
-          year: getYear(new Date()),
-          month: getMonth(new Date()),
-        },
-      })
-      .then((response) => {
-        this.purchases = response.data.GetPurchaseSummaryInMonth
-        this.series.push({
-          data: this.purchases.map((purchase) => ({
-            x: purchase.day,
-            y: purchase.total,
-          })),
-        })
-      })
+    this.date = format(new Date(), 'yyyy-MM')
+    this.getData()
   },
   methods: {
+    getData() {
+      this.$apollo
+        .query({
+          query: GetPurchaseSummaryInMonth,
+          variables: {
+            year: this.year,
+            month: this.month,
+          },
+        })
+        .then((response) => {
+          this.purchases = []
+          this.series = []
+          this.purchases = response.data.GetPurchaseSummaryInMonth
+          this.series.push({
+            data: this.purchases.map((purchase) => ({
+              x: purchase.day,
+              y: purchase.total,
+            })),
+          })
+        })
+    },
     updateChartTheme(color) {
       const mode = this.isDark ? 'dark' : 'light'
       this.options = {
