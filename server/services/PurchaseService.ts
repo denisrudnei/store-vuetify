@@ -1,9 +1,11 @@
 import { getConnection, SelectQueryBuilder } from 'typeorm'
-import { Purchase } from '../models/Purchase'
-import { User } from '../models/User'
-import { Product } from '../models/Product'
+
 import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { HistoryProduct } from '../models/HistoryProduct'
+import { Product } from '../models/Product'
+import { Purchase } from '../models/Purchase'
+import { User } from '../models/User'
+import { GatewayService } from './GatewayService'
 
 export class PurchaseService {
   public static getPurchases() {
@@ -47,9 +49,11 @@ export class PurchaseService {
 
   public static async createPurchase(
     userId: User['id'],
-    productsForPurchase: ProductForPurchaseInput[]
+    productsForPurchase: ProductForPurchaseInput[],
+    nonce: string,
+    deviceData: string
   ) {
-    const user = await User.findOne(userId)
+    const user = await User.findOne(userId, { relations: ['addresses'] })
     if (!user) throw new Error('User not found')
     const purchase = await Purchase.create().save()
     purchase.user = user
@@ -76,6 +80,16 @@ export class PurchaseService {
         return history.save()
       })
     )
+
+    const transaction = await GatewayService.makeSale(
+      purchase,
+      nonce,
+      deviceData
+    )
+
+    if (!transaction) throw new Error('Error creating transaction')
+    if (!transaction.success) throw new Error(transaction.message)
+
     return purchase.save()
   }
 }

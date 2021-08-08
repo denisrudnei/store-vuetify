@@ -75,35 +75,25 @@
           <v-stepper-content step="3">
             <v-row class="py-2">
               <v-col cols="12">
-                <v-text-field
-                  v-mask="'#### #### #### ####'"
-                  outlined
-                  type="tel"
-                  label="Card number"
-                />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-mask="'##/##'"
-                  outlined
-                  label="Exp date"
-                  type="tel"
-                />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-mask="'###'"
-                  outlined
-                  type="tel"
-                  label="Card code"
-                ></v-text-field>
+                <v-row>
+                  <v-col cols="12">
+                    <div id="dropin-container"></div>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-btn
+                      v-if="dropInInstance"
+                      class="primary white--text"
+                      @click="buy"
+                    >
+                      Buy
+                      <v-icon right>{{ icons.mdiCreditCardOutline }}</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
               </v-col>
               <v-col cols="12">
                 <v-btn class="primary white--text" @click="step = 2">
                   Back
-                </v-btn>
-                <v-btn class="primary white--text" @click="buy">
-                  Buy <v-icon right>{{ icons.mdiCreditCardOutline }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -127,6 +117,9 @@ export default {
   directives: { TheMask },
   data() {
     return {
+      dropIn: undefined,
+      dropInInstance: undefined,
+      deviceData: '',
       icons: {
         mdiCheckAll,
         mdiDelete,
@@ -167,30 +160,102 @@ export default {
   },
   head: {
     title: 'Payment',
+    script: [
+      {
+        type: 'text/javascript',
+        src: 'https://js.braintreegateway.com/web/3.79.1/js/client.min.js',
+        async: true,
+      },
+      {
+        type: 'text/javascript',
+        src: 'https://js.braintreegateway.com/web/3.79.1/js/data-collector.min.js',
+        async: true,
+      },
+    ],
   },
   computed: mapGetters({
     products: 'products/getCart',
   }),
+  watch: {
+    step(value) {
+      if (value === 3) {
+        this.createDropIn()
+      }
+    },
+  },
+  mounted() {
+    this.dropIn = require('braintree-web-drop-in')
+  },
   methods: {
-    buy() {
-      this.$apollo
-        .mutate({
-          mutation: Buy,
-          variables: {
-            products: this.products.map((product) => ({
-              id: product.id,
-              amount: product.amount,
-            })),
+    async createDropIn() {
+      const { data } = await this.$axios.get('/gateway/token')
+      this.dropInInstance = await this.dropIn.create({
+        authorization: data.token,
+        container: '#dropin-container',
+        paypal: {
+          flow: 'checkout',
+          amount: this.products
+            .reduce((acc, actual) => (acc += actual.amount * actual.price), 0)
+            .toFixed(2),
+          currency: 'USD',
+        },
+      })
+      braintree.client
+        .create({
+          authorization: data.token,
+        })
+        .then((clientInstance) => {
+          return braintree.dataCollector
+            .create({
+              client: clientInstance,
+            })
+            .then((dataCollectorInstance) => {
+              this.deviceData = dataCollectorInstance.deviceData
+            })
+        })
+        .catch((err) => {
+          this.$toast.error(err)
+        })
+    },
+    async buy() {
+      try {
+        const method = await this.dropInInstance.requestPaymentMethod()
+        this.$apollo
+          .mutate({
+            mutation: Buy,
+            errorPolicy: 'all',
+            variables: {
+              products: this.products.map((product) => ({
+                id: product.id,
+                amount: product.amount,
+              })),
+              nonce: method.nonce,
+              deviceData: this.deviceData,
+            },
             awaitRefetchQueries: true,
             refetchQueries: [{ query: GetMyPurchases }],
-          },
-        })
-        .then(() => {
-          this.$toast.show('sucess')
-        })
-        .catch((e) => {
-          this.$sentry.captureException(e)
-        })
+          })
+          .then(({ errors }) => {
+            if (errors && errors.length) {
+              errors.forEach((error) => {
+                this.$toast.error(error.message, {
+                  duration: 10000,
+                })
+              })
+            } else {
+              this.$toast.show('Success', {
+                duration: 1000,
+              })
+              this.$store.commit('products/cleanCart')
+              this.$router.push('/profile/purchases')
+            }
+          })
+          .catch((e) => {
+            this.$sentry.captureException(e)
+          })
+      } catch (e) {
+        this.$sentry.captureException(e)
+      }
     },
     remove(id) {
       this.$store.commit('products/remove', id)

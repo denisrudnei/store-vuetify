@@ -8,6 +8,7 @@ import { buildSchema } from 'type-graphql'
 import { app } from './app'
 import createConnection from './db/typeormConnection'
 import CustomAuthChecker from './CustomAuthChecker'
+import { GatewayService } from './services/GatewayService'
 
 const server = express()
 
@@ -17,6 +18,8 @@ async function start() {
   await createConnection
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
   const host = process.env.HOST || '0.0.0.0'
+
+  GatewayService.init()
 
   const apolloServer = new ApolloServer({
     introspection: true,

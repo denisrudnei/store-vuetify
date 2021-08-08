@@ -4,13 +4,14 @@
       <v-row align="center" justify="center">
         <v-col md="1" cols="12" class="pa-5">
           <v-img
+            v-if="purchase.products.length"
             :src="purchase.products[0].data.primaryImage"
             :aspect-ratio="1"
           />
         </v-col>
         <v-divider v-if="!isMobile" vertical />
         <v-col md="7" cols="12">
-          <v-card flat>
+          <v-card v-if="purchase.products.length" flat>
             <v-card-title>
               {{ purchase.products[0].data.name }}
             </v-card-title>

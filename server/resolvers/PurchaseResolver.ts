@@ -46,10 +46,12 @@ export class PurchaseResolver {
   public Buy(
     @Arg('products', () => [ProductForPurchaseInput])
     products: ProductForPurchaseInput[],
+    @Arg('nonce', () => String) nonce: string,
+    @Arg('deviceData', () => String) deviceData: string,
     @Ctx() { req }: CustomExpressContext
   ) {
     const id = req.session.authUser!.id
-    return PurchaseService.createPurchase(id, products)
+    return PurchaseService.createPurchase(id, products, nonce, deviceData)
   }
 
   @FieldResolver()
