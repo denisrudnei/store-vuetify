@@ -53,7 +53,7 @@ export class PurchaseService {
     nonce: string,
     deviceData: string
   ) {
-    const user = await User.findOne(userId, { relations: ['addresses'] })
+    const user = await User.findOne(userId)
     if (!user) throw new Error('User not found')
     const purchase = await Purchase.create().save()
     purchase.user = user
