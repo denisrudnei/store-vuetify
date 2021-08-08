@@ -9,7 +9,11 @@ import { GatewayService } from './GatewayService'
 
 export class PurchaseService {
   public static getPurchases() {
-    return Purchase.find()
+    return Purchase.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    })
   }
 
   public static async getPurchase(userId: User['id'], id: Purchase['id']) {
@@ -42,6 +46,7 @@ export class PurchaseService {
       .where('purchase."userId" = :user', {
         user,
       })
+      .orderBy('purchase.createdAt', 'DESC')
       .getRawMany()
 
     return result
