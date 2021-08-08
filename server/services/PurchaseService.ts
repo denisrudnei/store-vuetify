@@ -85,6 +85,7 @@ export class PurchaseService {
         return history.save()
       })
     )
+    await purchase.save()
 
     const transaction = await GatewayService.makeSale(
       purchase,
@@ -95,6 +96,6 @@ export class PurchaseService {
     if (!transaction) throw new Error('Error creating transaction')
     if (!transaction.success) throw new Error(transaction.message)
 
-    return purchase.save()
+    return purchase
   }
 }
