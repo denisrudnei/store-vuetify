@@ -9,9 +9,9 @@ export const state = () => ({
     lightPrimary: '#FFFFFF',
     lightSecondary: '#FFFFFF',
     lightAccent: '#FFFFFF',
-    currency: '',
-    locale: '',
   },
+  currency: 'USD',
+  locale: '',
 })
 
 export const mutations = {

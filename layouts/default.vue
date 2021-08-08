@@ -289,6 +289,11 @@ export default {
         )
 
         this.$store.commit(
+          'site-settings/setCurrency',
+          response.data.GetSiteSettings.currency
+        )
+
+        this.$store.commit(
           'category/setCategories',
           response.data.GetCategories
         )

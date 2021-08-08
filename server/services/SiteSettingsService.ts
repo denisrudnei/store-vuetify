@@ -14,4 +14,18 @@ export class SiteSettingsService {
     Object.assign(siteSettings, settings)
     return siteSettings.save()
   }
+
+  public static async updateCurrency(currency: string) {
+    const siteSettings = await this.getSiteSettings()
+
+    await SiteSettings.update(
+      {
+        id: siteSettings.id,
+      },
+      {
+        currency,
+      }
+    )
+    return true
+  }
 }

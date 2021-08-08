@@ -1,27 +1,22 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card>
-        <v-card-title> Summary </v-card-title>
-        <v-card-text>
-          <v-row justify="center" align="center">
-            <v-col v-for="item in summary" :key="item.name" cols="12" md="4">
-              <v-card color="primary" dark>
-                <v-card-text align="center">
-                  <span class="text-h4">{{ item.name }}</span>
-                  <v-divider class="my-2" />
-                  <span v-if="item.type === 'COUNT'" class="text-h5">
-                    {{ item.value }}
-                  </span>
-                  <span v-if="item.type === 'PRICE'" class="text-h5">
-                    {{ item.value | dinero }}
-                  </span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
+      <v-row justify="center" align="center">
+        <v-col v-for="item in summary" :key="item.name" cols="12" md="4">
+          <v-card color="primary" dark>
+            <v-card-text align="center">
+              <span class="text-h4">{{ item.name }}</span>
+              <v-divider class="my-2" />
+              <span v-if="item.type === 'COUNT'" class="text-h5">
+                {{ item.value }}
+              </span>
+              <span v-if="item.type === 'PRICE'" class="text-h5">
+                {{ item.value | dinero }}
+              </span>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-col>
     <v-col v-for="card in items" :key="card.id" cols="12" md="4">
       <v-card color="primary" dark class="mx-auto text-center" tile>

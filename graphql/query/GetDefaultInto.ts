@@ -12,6 +12,7 @@ query {
     id
     name
     logo
+    currency
   }
   GetSocialNetworks {
     id

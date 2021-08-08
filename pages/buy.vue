@@ -192,13 +192,14 @@ export default {
       const amount = this.products
         .reduce((acc, actual) => (acc += actual.amount * actual.price), 0)
         .toFixed(2)
+
       this.dropInInstance = await this.dropIn.create({
         authorization: data.token,
         container: '#dropin-container',
         paypal: {
           flow: 'checkout',
           amount,
-          currency: 'BRL', // TODO
+          currency: this.$store.getters['site-settings/getCurrency'],
         },
       })
       braintree.client

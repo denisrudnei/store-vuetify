@@ -20,4 +20,10 @@ export class SiteSettingsResolver {
   ) {
     return SiteSettingsService.editSiteSettings(settings)
   }
+
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public UpdateCurrency(@Arg('currency', () => String) currency: string) {
+    return SiteSettingsService.updateCurrency(currency)
+  }
 }

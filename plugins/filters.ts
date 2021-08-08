@@ -30,6 +30,7 @@ Vue.filter('dateAndHour', (value: Date | string) => {
 export default (context: Context) => {
   Vue.filter('dinero', (value: string | number) => {
     const { currency, locale } = context.store.state['site-settings']
+
     return dineroFormatter(value, currency !== '' ? currency : 'USD', locale)
   })
 }

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-row>
+      <v-row align="center" justify="center">
         <v-col v-if="state === 'LOADING'" cols="12">
           <v-progress-linear color="primary" indeterminate />
         </v-col>
@@ -14,22 +14,56 @@
             Fix category slug
           </v-btn>
         </v-col>
+        <v-col cols="12">
+          <v-autocomplete
+            label="Currency"
+            outlined
+            hide-details
+            :items="currencies"
+            :value="currency"
+            :prepend-inner-icon="icons.mdiCurrencyUsd"
+            @change="updateCurrency"
+          />
+        </v-col>
       </v-row>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { mdiTag } from '@mdi/js'
+import { mapGetters } from 'vuex'
+import { mdiTag, mdiCurrencyUsd } from '@mdi/js'
+import { UpdateCurrency } from '../../graphql/mutation/admin/management/UpdateCurrency'
+import { GetCurrency } from '../../graphql/query/admin/management/GetCurrency'
+import values from './currencies.json'
 import { FixCategoriesSlug } from '~/graphql/mutation/category/FixCategoriesSlug'
+import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
 export default {
   data() {
     return {
       state: 'LOADED',
+      currencies: [],
       icons: {
         mdiTag,
+        mdiCurrencyUsd,
       },
     }
+  },
+  computed: mapGetters({
+    currency: 'site-settings/getCurrency',
+  }),
+  created() {
+    this.currencies = values.currency
+    this.$apollo
+      .query({
+        query: GetCurrency,
+      })
+      .then((response) => {
+        this.$store.commit(
+          'site-settings/setCurrency',
+          response.data.GetCurrency.currency
+        )
+      })
   },
   methods: {
     fixCategoriesSlug() {
@@ -46,6 +80,23 @@ export default {
         })
         .catch(() => {
           this.state = 'ERROR'
+        })
+    },
+    updateCurrency(value) {
+      this.$apollo
+        .mutate({
+          mutation: UpdateCurrency,
+          variables: {
+            currency: value,
+          },
+          awaitRefetchQueries: true,
+          refetchQueries: [{ query: GetSiteSettings }, { query: GetCurrency }],
+        })
+        .then(() => {
+          this.$store.commit('site-settings/setCurrency', value)
+          this.$toast.show('Currency updated', {
+            duration: 1000,
+          })
         })
     },
   },
