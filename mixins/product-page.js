@@ -54,7 +54,7 @@ export default {
         {
           hid: 'product:price:currency',
           property: 'product:price:currency',
-          content: 'BRL',
+          content: this.$store.getters['site-settings/getCurrency'],
         },
         {
           hid: 'og:url',
