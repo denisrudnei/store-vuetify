@@ -25,6 +25,17 @@
             @change="updateCurrency"
           />
         </v-col>
+        <v-col cols="12">
+          <v-autocomplete
+            label="Locale"
+            outlined
+            hide-details
+            :items="locales"
+            :value="locale"
+            :prepend-inner-icon="icons.mdiTranslate"
+            @change="updateLocale"
+          />
+        </v-col>
       </v-row>
     </v-card-text>
   </v-card>
@@ -32,9 +43,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { mdiTag, mdiCurrencyUsd } from '@mdi/js'
+import { mdiTag, mdiCurrencyUsd, mdiTranslate } from '@mdi/js'
 import { UpdateCurrency } from '../../graphql/mutation/admin/management/UpdateCurrency'
 import { GetCurrency } from '../../graphql/query/admin/management/GetCurrency'
+import { UpdateLocale } from '../../graphql/mutation/admin/management/UpdateLocale'
+import { GetLocale } from '../../graphql/query/admin/management/GetLocale'
 import values from './currencies.json'
 import { FixCategoriesSlug } from '~/graphql/mutation/category/FixCategoriesSlug'
 import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
@@ -43,17 +56,26 @@ export default {
     return {
       state: 'LOADED',
       currencies: [],
+      locales: [],
+
       icons: {
         mdiTag,
         mdiCurrencyUsd,
+        mdiTranslate,
       },
     }
   },
   computed: mapGetters({
     currency: 'site-settings/getCurrency',
+    locale: 'site-settings/getLocale',
   }),
   created() {
     this.currencies = values.currency
+
+    this.locales = Object.entries(values.locale).map((value) => ({
+      text: value[1],
+      value: value[0],
+    }))
     this.$apollo
       .query({
         query: GetCurrency,
@@ -95,6 +117,23 @@ export default {
         .then(() => {
           this.$store.commit('site-settings/setCurrency', value)
           this.$toast.show('Currency updated', {
+            duration: 1000,
+          })
+        })
+    },
+    updateLocale(value) {
+      this.$apollo
+        .mutate({
+          mutation: UpdateLocale,
+          variables: {
+            locale: value,
+          },
+          awaitRefetchQueries: true,
+          refetchQueries: [{ query: GetSiteSettings }, { query: GetLocale }],
+        })
+        .then(() => {
+          this.$store.commit('site-settings/setLocale', value)
+          this.$toast.show('Locale updated', {
             duration: 1000,
           })
         })

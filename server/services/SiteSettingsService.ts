@@ -28,4 +28,18 @@ export class SiteSettingsService {
     )
     return true
   }
+
+  public static async updateLocale(locale: string) {
+    const siteSettings = await this.getSiteSettings()
+
+    await SiteSettings.update(
+      {
+        id: siteSettings.id,
+      },
+      {
+        locale,
+      }
+    )
+    return true
+  }
 }

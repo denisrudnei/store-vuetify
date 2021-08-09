@@ -21,6 +21,10 @@ export class SiteSettings extends BaseEntity {
   public currency!: string
 
   @Field()
+  @Column({ default: '' })
+  public locale!: string
+
+  @Field()
   @Column({ default: true })
   public isDark!: boolean
 

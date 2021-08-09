@@ -26,4 +26,10 @@ export class SiteSettingsResolver {
   public UpdateCurrency(@Arg('currency', () => String) currency: string) {
     return SiteSettingsService.updateCurrency(currency)
   }
+
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public UpdateLocale(@Arg('locale', () => String) locale: string) {
+    return SiteSettingsService.updateLocale(locale)
+  }
 }
