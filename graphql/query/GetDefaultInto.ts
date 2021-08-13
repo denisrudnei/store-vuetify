@@ -13,6 +13,7 @@ query {
     name
     logo
     currency
+    locale
   }
   GetSocialNetworks {
     id

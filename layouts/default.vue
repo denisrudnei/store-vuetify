@@ -294,6 +294,11 @@ export default {
         )
 
         this.$store.commit(
+          'site-settings/setLocale',
+          response.data.GetSiteSettings.locale
+        )
+
+        this.$store.commit(
           'category/setCategories',
           response.data.GetCategories
         )
