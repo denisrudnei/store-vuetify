@@ -138,7 +138,7 @@
               'primary--text': !isDark,
             }"
             icon
-            to="/admin"
+            to="/admin/dashboard"
           >
             <v-icon>{{ icons.mdiCog }}</v-icon>
           </v-btn>
