@@ -1,3 +1,4 @@
+import { validate } from 'class-validator'
 import { SelectQueryBuilder } from 'typeorm'
 
 import { CreateAddressInput } from '../inputs/CreateAddressInput'
@@ -12,6 +13,8 @@ export class AddressService {
     const newAddress = Address.create()
     Object.assign(newAddress, address)
     newAddress.user = user
+    const errors = await validate(newAddress)
+    if (errors.length) throw new Error('Failed to validate')
     return newAddress.save()
   }
 

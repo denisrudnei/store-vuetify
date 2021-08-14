@@ -7,6 +7,11 @@ query {
     name
     email
     image
+    phones {
+      id
+      description
+      number
+    }
     addresses {
       id
       fullName

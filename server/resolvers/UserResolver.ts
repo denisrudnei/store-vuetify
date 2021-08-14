@@ -69,4 +69,12 @@ export class UserResolver {
     })) as User
     return addresses
   }
+
+  @FieldResolver(() => [Address])
+  public async phones(@Root() root: User) {
+    const { phones } = (await User.findOne(root.id, {
+      relations: ['phones'],
+    })) as User
+    return phones
+  }
 }

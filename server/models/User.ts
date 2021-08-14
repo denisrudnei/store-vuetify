@@ -14,6 +14,7 @@ import { Role } from '../enums/Role'
 import { Address } from './Address'
 import { Purchase } from './Purchase'
 import { Order } from './Order'
+import { Phone } from './Phone'
 
 @Entity()
 @ObjectType()
@@ -47,6 +48,10 @@ export class User extends BaseEntity {
   @Field(() => [Address], { nullable: true })
   @OneToMany(() => Address, (address) => address.user)
   public addresses!: Address[]
+
+  @Field(() => [Phone])
+  @OneToMany(() => Phone, (phone) => phone.user)
+  public phones!: Phone[]
 
   @Field(() => [Purchase])
   @OneToMany(() => Purchase, (purchase) => purchase.user)

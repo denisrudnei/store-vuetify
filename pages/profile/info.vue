@@ -103,7 +103,7 @@
                       </v-btn>
                     </v-list-item-action>
                     <v-list-item-action>
-                      <v-btn icon @click="deleteAdddress(address)">
+                      <v-btn icon color="red" @click="deleteAdddress(address)">
                         <v-icon>{{ icons.mdiDelete }}</v-icon>
                       </v-btn>
                     </v-list-item-action>
@@ -123,10 +123,84 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-btn class="primary white--text">
-        Save
-        <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
-      </v-btn>
+      <v-card>
+        <v-card-title> Phones </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-list>
+                <template v-for="phone in user.phones">
+                  <v-list-item :key="`${phone.number}Item`">
+                    <v-list-item-action>
+                      <v-btn
+                        :href="`tel://${phone}`"
+                        class="primary white--text"
+                        icon
+                      >
+                        <v-icon>{{ icons.mdiPhoneDial }}</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <span>
+                        {{ phone.description }}
+                        <v-chip label outlined class="ml-3">
+                          {{ phone.number }}
+                        </v-chip>
+                      </span>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-btn icon color="red" @click="removePhone(phone)">
+                        <v-icon>
+                          {{ icons.mdiDelete }}
+                        </v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                  <v-divider :key="`${phone.number}Divider`" />
+                </template>
+              </v-list>
+            </v-col>
+            <v-col cols="12">
+              <v-menu v-model="phoneMenu" :close-on-content-click="false">
+                <template #activator="{ on }">
+                  <v-btn class="primary white--text" v-on="on">
+                    Add
+                    <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title />
+                  <v-card-text>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="currentPhoneDescription"
+                          label="Description"
+                          outlined
+                        />
+
+                        <v-text-field
+                          v-model="currentPhoneNumber"
+                          v-mask="['(##) ####-####', '(##) #####-####']"
+                          outlined
+                          type="tel"
+                          label="Phone"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-btn class="primary white--text" @click="addPhone">
+                          Save
+                          <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+              </v-menu>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
     </v-col>
     <v-col cols="12">
       <v-dialog
@@ -152,16 +226,23 @@ import {
   mdiPencil,
   mdiPlus,
   mdiDelete,
+  mdiPhoneDial,
 } from '@mdi/js'
+import { TheMask } from 'vue-the-mask'
 import { UpdateUserInfo } from '../../graphql/mutation/user/UpdateUserInfo'
 import { ResetPassword } from '../../graphql/mutation/user/ResetPassword'
 import { CreateAddress } from '../../graphql/mutation/info/CreateAddress'
 import { RemoveAddress } from '../../graphql/mutation/info/RemoveAddress'
 import { UpdateAddress } from '../../graphql/mutation/info/UpdateAddress'
+import { CreatePhone } from '../../graphql/mutation/info/phone/CreatePhone'
+import { RemovePhone } from '../../graphql/mutation/info/phone/RemovePhone'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 import addressCreate from '~/components/address-create.vue'
 export default {
   components: { addressCreate },
+  directives: {
+    TheMask,
+  },
   data() {
     return {
       icons: {
@@ -169,6 +250,7 @@ export default {
         mdiPencil,
         mdiPlus,
         mdiDelete,
+        mdiPhoneDial,
       },
       image: undefined,
       user: {
@@ -177,6 +259,9 @@ export default {
       },
       currentAddress: undefined,
       showAddressDialog: false,
+      phoneMenu: false,
+      currentPhoneNumber: '',
+      currentPhoneDescription: '',
       newPassword: '',
       repeatNewPassword: '',
       showNewPassword: false,
@@ -246,12 +331,21 @@ export default {
       this.$apollo
         .mutate({
           mutation: CreateAddress,
+          errorPolicy: 'all',
           variables: {
             address,
           },
         })
-        .then((response) => {
-          this.user.addresses.push(response.data.CreateAddress)
+        .then(({ data, errors }) => {
+          if (errors && errors.length) {
+            errors.forEach((error) => {
+              this.$toast.error(error.message, {
+                duration: 10000,
+              })
+            })
+            return
+          }
+          this.user.addresses.push(data.CreateAddress)
           this.showAddressDialog = false
           this.currentAddress = undefined
         })
@@ -260,6 +354,7 @@ export default {
       this.$apollo
         .mutate({
           mutation: UpdateAddress,
+          errorPolicy: 'all',
           variables: {
             address: {
               id: address.id,
@@ -273,10 +368,18 @@ export default {
             },
           },
         })
-        .then((response) => {
+        .then(({ errors, data }) => {
+          if (errors && errors.length) {
+            errors.forEach((error) => {
+              this.$toast.error(error.message, {
+                duration: 10000,
+              })
+            })
+            return
+          }
           this.user.addresses = [
             ...this.user.addresses.filter((item) => item.id !== address.id),
-            response.data.UpdateAddress,
+            data.UpdateAddress,
           ]
           this.showAddressDialog = false
           this.currentAddress = undefined
@@ -293,6 +396,48 @@ export default {
         .then(() => {
           this.user.addresses = this.user.addresses.filter(
             (item) => item.id !== address.id
+          )
+        })
+    },
+    addPhone() {
+      const phone = {
+        number: this.currentPhoneNumber,
+        description: this.currentPhoneDescription,
+      }
+      this.$apollo
+        .mutate({
+          mutation: CreatePhone,
+          errorPolicy: 'all',
+          variables: {
+            phone,
+          },
+        })
+        .then(({ data, errors }) => {
+          if (errors && errors.length) {
+            errors.forEach((error) => {
+              this.$toast.error(error.message, {
+                duration: 10000,
+              })
+            })
+            return
+          }
+          this.user.phones.push(data.CreatePhone)
+          this.phoneMenu = false
+          this.currentPhoneNumber = ''
+          this.currentPhoneDescription = ''
+        })
+    },
+    removePhone(phone) {
+      this.$apollo
+        .mutate({
+          mutation: RemovePhone,
+          variables: {
+            id: phone.id,
+          },
+        })
+        .then(() => {
+          this.user.phones = this.user.phones.filter(
+            (item) => item.id !== phone.id
           )
         })
     },
