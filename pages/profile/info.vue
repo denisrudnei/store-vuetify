@@ -133,7 +133,7 @@
                   <v-list-item :key="`${phone.number}Item`">
                     <v-list-item-action>
                       <v-btn
-                        :href="`tel://${phone}`"
+                        :href="`tel://${phone.number}`"
                         class="primary white--text"
                         icon
                       >
