@@ -7,6 +7,7 @@ import session from 'express-session'
 
 import { AuthController } from './controllers/AuthController'
 import { CategoryController } from './controllers/CategoryController'
+import { CepController } from './controllers/CepController'
 import { GatewayController } from './controllers/GatewayController'
 import { ProductController } from './controllers/ProductController'
 import { SitemapController } from './controllers/SitemapController'
@@ -54,6 +55,7 @@ app.use('/api', UserController)
 app.use('/api', ProductController)
 app.use('/api', CategoryController)
 app.use('/api', GatewayController)
+app.use('/api', CepController)
 app.use(SitemapController)
 
 export { app }

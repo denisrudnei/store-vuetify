@@ -90,26 +90,33 @@
         <v-card-title>Address</v-card-title>
         <v-card-text>
           <v-row>
-            <v-col cols="12" md="2">
-              <v-text-field outlined label="Zip code"> </v-text-field>
+            <v-col cols="12">
+              <v-list>
+                <template v-for="address in user.addresses">
+                  <v-list-item :key="`${address.id}Item`">
+                    <v-list-item-content>
+                      {{ address.fullName }}
+                    </v-list-item-content>
+                    <v-list-item-action @click="editAddress(address)">
+                      <v-btn icon>
+                        <v-icon>{{ icons.mdiPencil }}</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                    <v-list-item-action>
+                      <v-btn icon @click="deleteAdddress(address)">
+                        <v-icon>{{ icons.mdiDelete }}</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                  <v-divider :key="`${address.id}Divider`" />
+                </template>
+              </v-list>
             </v-col>
-            <v-col cols="12" md="5">
-              <v-text-field outlined label="Country"> </v-text-field>
-            </v-col>
-            <v-col cols="12" md="5">
-              <v-text-field outlined label="City"> </v-text-field>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-text-field outlined label="Number"> </v-text-field>
-            </v-col>
-            <v-col cols="12" md="8">
-              <v-text-field outlined label="Street"> </v-text-field>
-            </v-col>
-            <v-col md="6" cols="12">
-              <v-text-field outlined label="District"> </v-text-field>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field outlined label="State"> </v-text-field>
+            <v-col cols="12">
+              <v-btn class="primary white--text" @click="addNew">
+                Add
+                <v-icon right>{{ icons.mdiPlus }}</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-card-text>
@@ -121,25 +128,55 @@
         <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
       </v-btn>
     </v-col>
+    <v-col cols="12">
+      <v-dialog
+        v-if="showAddressDialog"
+        v-model="showAddressDialog"
+        width="75%"
+      >
+        <address-create
+          :value="currentAddress"
+          @save="addAddress"
+          @update="updateAddress"
+        />
+      </v-dialog>
+    </v-col>
   </v-row>
 </template>
 
 <script>
-import { mdiCheckAll, mdiEye, mdiEyeOff } from '@mdi/js'
+import {
+  mdiCheckAll,
+  mdiEye,
+  mdiEyeOff,
+  mdiPencil,
+  mdiPlus,
+  mdiDelete,
+} from '@mdi/js'
 import { UpdateUserInfo } from '../../graphql/mutation/user/UpdateUserInfo'
 import { ResetPassword } from '../../graphql/mutation/user/ResetPassword'
+import { CreateAddress } from '../../graphql/mutation/info/CreateAddress'
+import { RemoveAddress } from '../../graphql/mutation/info/RemoveAddress'
+import { UpdateAddress } from '../../graphql/mutation/info/UpdateAddress'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
+import addressCreate from '~/components/address-create.vue'
 export default {
+  components: { addressCreate },
   data() {
     return {
       icons: {
         mdiCheckAll,
+        mdiPencil,
+        mdiPlus,
+        mdiDelete,
       },
       image: undefined,
       user: {
         name: '',
         email: '',
       },
+      currentAddress: undefined,
+      showAddressDialog: false,
       newPassword: '',
       repeatNewPassword: '',
       showNewPassword: false,
@@ -195,6 +232,68 @@ export default {
           this.$toast.show('Updated', {
             duration: 1000,
           })
+        })
+    },
+    editAddress(address) {
+      this.currentAddress = address
+      this.showAddressDialog = true
+    },
+    addNew() {
+      this.currentAddress = undefined
+      this.showAddressDialog = true
+    },
+    addAddress(address) {
+      this.$apollo
+        .mutate({
+          mutation: CreateAddress,
+          variables: {
+            address,
+          },
+        })
+        .then((response) => {
+          this.user.addresses.push(response.data.CreateAddress)
+          this.showAddressDialog = false
+          this.currentAddress = undefined
+        })
+    },
+    updateAddress(address) {
+      this.$apollo
+        .mutate({
+          mutation: UpdateAddress,
+          variables: {
+            address: {
+              id: address.id,
+              street: address.street,
+              number: address.number,
+              city: address.city,
+              country: address.country,
+              district: address.district,
+              state: address.state,
+              zipCode: address.zipCode,
+            },
+          },
+        })
+        .then((response) => {
+          this.user.addresses = [
+            ...this.user.addresses.filter((item) => item.id !== address.id),
+            response.data.UpdateAddress,
+          ]
+          this.showAddressDialog = false
+          this.currentAddress = undefined
+        })
+    },
+    deleteAdddress(address) {
+      this.$apollo
+        .mutate({
+          mutation: RemoveAddress,
+          variables: {
+            id: address.id,
+          },
+        })
+        .then(() => {
+          this.user.addresses = this.user.addresses.filter(
+            (item) => item.id !== address.id
+          )
         })
     },
     previewImage() {

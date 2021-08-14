@@ -7,6 +7,17 @@ query {
     name
     email
     image
+    addresses {
+      id
+      fullName
+      street
+      number
+      city
+      country
+      district
+      state
+      zipCode
+    }
   }
 }
 `

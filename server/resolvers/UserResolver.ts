@@ -1,10 +1,20 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from 'type-graphql'
 
 import { User } from '../models/User'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { Role } from '../enums/Role'
 import { UserService } from '../services/UserService'
 import { UpdateUserInfoInput } from '../inputs/UpdteUserInfoInput'
+import { Address } from '../models/Address'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -50,5 +60,13 @@ export class UserResolver {
   ) {
     const id = req.session.authUser!.id
     return UserService.resetPassword(id, newPassword)
+  }
+
+  @FieldResolver(() => [Address])
+  public async addresses(@Root() root: User) {
+    const { addresses } = (await User.findOne(root.id, {
+      relations: ['addresses'],
+    })) as User
+    return addresses
   }
 }

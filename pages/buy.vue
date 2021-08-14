@@ -108,10 +108,10 @@
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
 import { mdiCheckAll, mdiDelete, mdiCreditCardOutline } from '@mdi/js'
-import faker from 'faker'
 import { Buy } from '../graphql/mutation/buy/Buy'
 import cartInfo from '~/components/cartInfo.vue'
 import { GetMyPurchases } from '~/graphql/query/purchase/GetMyPurchases'
+import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 export default {
   components: { cartInfo },
   directives: { TheMask },
@@ -125,9 +125,9 @@ export default {
         mdiDelete,
         mdiCreditCardOutline,
       },
-      addresses: [
-        `${faker.address.streetName()} - ${faker.address.city()}, ${faker.address.stateAbbr()} (${faker.address.zipCode()})`,
-      ],
+      user: {
+        addresses: [],
+      },
       step: 1,
       headers: [
         {
@@ -173,15 +173,29 @@ export default {
       },
     ],
   },
-  computed: mapGetters({
-    products: 'products/getCart',
-  }),
+  computed: {
+    addresses() {
+      return this.user.addresses.map((address) => address.fullName)
+    },
+    ...mapGetters({
+      products: 'products/getCart',
+    }),
+  },
   watch: {
     step(value) {
       if (value === 3) {
         this.createDropIn()
       }
     },
+  },
+  created() {
+    this.$apollo
+      .query({
+        query: GetActualUser,
+      })
+      .then((response) => {
+        this.user = response.data.GetActualUser
+      })
   },
   mounted() {
     this.dropIn = require('braintree-web-drop-in')

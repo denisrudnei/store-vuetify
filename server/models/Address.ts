@@ -38,9 +38,18 @@ export class Address extends BaseEntity {
 
   @Field()
   @Column({ default: '' })
+  public number!: string
+
+  @Field()
+  @Column({ default: '' })
   public district!: string
 
   @Field()
   @Column({ default: '' })
   public state!: string
+
+  @Field(() => String)
+  public fullName() {
+    return `${this.street} - ${this.city}, ${this.state} (${this.zipCode})`
+  }
 }
