@@ -1,7 +1,12 @@
 <template>
   <v-row>
     <v-col>
-      <v-data-table :items="purchases" :headers="headers">
+      <v-data-table
+        :items="purchases"
+        :headers="headers"
+        :sort-by="['createdAt']"
+        :sort-desc="[true]"
+      >
         <template #item.actions="{ item }">
           <v-btn
             icon
@@ -26,8 +31,9 @@
 </template>
 
 <script>
-import { GetPurchases } from '@/graphql/query/purchase/GetPurchases'
 import { mdiEye } from '@mdi/js'
+import { GetPurchases } from '@/graphql/query/purchase/GetPurchases'
+import { NewPurchase } from '@/graphql/subscription/purchase/NewPurchase'
 export default {
   data() {
     return {
@@ -38,6 +44,7 @@ export default {
         {
           text: 'Actions',
           value: 'actions',
+          sortable: false,
         },
         {
           text: 'Date',
@@ -56,8 +63,28 @@ export default {
           value: 'user',
         },
       ],
-      purchases: [],
     }
+  },
+  computed: {
+    purchases: {
+      set(value) {
+        this.$store.commit('purchase/setPurchases', value)
+      },
+      get() {
+        return this.$store.getters['purchase/getPurchases']
+      },
+    },
+  },
+  mounted() {
+    const vue = this
+    const newPurchaseSubscription = this.$apollo.subscribe({
+      query: NewPurchase,
+    })
+    newPurchaseSubscription.subscribe({
+      next({ data }) {
+        vue.$store.commit('purchase/addPurchase', data.NewPurchase)
+      },
+    })
   },
   created() {
     this.$apollo

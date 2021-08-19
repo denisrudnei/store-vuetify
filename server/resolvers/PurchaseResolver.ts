@@ -10,6 +10,7 @@ import {
   Query,
   Resolver,
   Root,
+  Subscription,
 } from 'type-graphql'
 
 import { Role } from '../enums/Role'
@@ -19,6 +20,7 @@ import { PurchaseService } from '../services/PurchaseService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { Notification } from '../models/notification/Notification'
 import { NotificationEvents } from '../enums/NotificationEvents'
+import { PurchaseEvents } from '../enums/PurchaseEvents'
 
 @Resolver(() => Purchase)
 export class PurchaseResolver {
@@ -67,6 +69,7 @@ export class PurchaseResolver {
     notification.content = 'New purchase'
     await notification.save()
     pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
+    pubSub.publish(PurchaseEvents.NEW_PURCHASE, purchase)
     return purchase
   }
 
@@ -84,5 +87,16 @@ export class PurchaseResolver {
       relations: ['user'],
     })) as Purchase
     return user
+  }
+
+  @Subscription(() => Purchase, {
+    topics: PurchaseEvents.NEW_PURCHASE,
+    filter: ({ context }) => {
+      if (!context.req || !context.req.authUser) return false
+      return context.req.authUser.role === Role.ADMIN
+    },
+  })
+  public NewPurchase(@Root() payload: Purchase) {
+    return payload
   }
 }
