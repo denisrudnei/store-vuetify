@@ -4,6 +4,7 @@
       <v-tabs>
         <v-tab to="/admin/category/list">List</v-tab>
         <v-tab to="/admin/category/create">Create</v-tab>
+        <v-tab to="/admin/category/tree-view"> Tree view </v-tab>
       </v-tabs>
     </v-col>
     <v-col cols="12">
