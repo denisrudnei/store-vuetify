@@ -5,6 +5,8 @@ import {
   FieldResolver,
   ID,
   Mutation,
+  PubSub,
+  PubSubEngine,
   Query,
   Resolver,
   Root,
@@ -18,6 +20,7 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { ProductService } from '../services/ProductService'
 import { DeletedProductResult } from '../types/DeletedProductResult'
+import { SummaryEvents } from '../enums/SummaryEvents'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -59,9 +62,12 @@ export class ProductResolver {
   @Mutation(() => Product)
   @Authorized(Role.ADMIN)
   public CreateProduct(
-    @Arg('product', () => CreateProductInput) product: CreateProductInput
+    @Arg('product', () => CreateProductInput) product: CreateProductInput,
+    @PubSub() pubSub: PubSubEngine
   ) {
-    return ProductService.createProduct(product)
+    const newProduct = ProductService.createProduct(product)
+    pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    return newProduct
   }
 
   @Mutation(() => Product)
@@ -75,26 +81,46 @@ export class ProductResolver {
 
   @Mutation(() => Boolean)
   @Authorized(Role.ADMIN)
-  public InactivateProduct(@Arg('id', () => ID) id: Product['id']) {
-    return ProductService.inactivate(id)
+  public InactivateProduct(
+    @Arg('id', () => ID) id: Product['id'],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const inactivated = ProductService.inactivate(id)
+    pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    return inactivated
   }
 
   @Mutation(() => Boolean)
   @Authorized(Role.ADMIN)
-  public InactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
-    return ProductService.inactivateMany(ids)
+  public InactivateProducts(
+    @Arg('ids', () => [ID]) ids: Product['id'][],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const inactivated = ProductService.inactivateMany(ids)
+    pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    return inactivated
   }
 
   @Mutation(() => Boolean)
   @Authorized(Role.ADMIN)
-  public ReactivateProduct(@Arg('id', () => ID) id: Product['id']) {
-    return ProductService.reactivate(id)
+  public ReactivateProduct(
+    @Arg('id', () => ID) id: Product['id'],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const reactivated = ProductService.reactivate(id)
+    pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    return reactivated
   }
 
   @Mutation(() => Boolean)
   @Authorized(Role.ADMIN)
-  public ReactivateProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
-    return ProductService.reactivateMany(ids)
+  public ReactivateProducts(
+    @Arg('ids', () => [ID]) ids: Product['id'][],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const reactivated = ProductService.reactivateMany(ids)
+    pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    return reactivated
   }
 
   @Mutation(() => Boolean)

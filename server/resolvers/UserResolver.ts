@@ -13,7 +13,7 @@ import { User } from '../models/User'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { Role } from '../enums/Role'
 import { UserService } from '../services/UserService'
-import { UpdateUserInfoInput } from '../inputs/UpdteUserInfoInput'
+import { UpdateUserInfoInput } from '../inputs/UpdateUserInfoInput'
 import { Address } from '../models/Address'
 
 @Resolver(() => User)

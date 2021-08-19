@@ -21,6 +21,7 @@ import { CustomExpressContext } from '../types/CustomExpressContext'
 import { Notification } from '../models/notification/Notification'
 import { NotificationEvents } from '../enums/NotificationEvents'
 import { PurchaseEvents } from '../enums/PurchaseEvents'
+import { SummaryEvents } from '../enums/SummaryEvents'
 
 @Resolver(() => Purchase)
 export class PurchaseResolver {
@@ -70,6 +71,7 @@ export class PurchaseResolver {
     await notification.save()
     pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
     pubSub.publish(PurchaseEvents.NEW_PURCHASE, purchase)
+    pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
     return purchase
   }
 

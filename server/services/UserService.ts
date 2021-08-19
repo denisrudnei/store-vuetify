@@ -1,5 +1,5 @@
 import { User } from '../models/User'
-import { UpdateUserInfoInput } from '../inputs/UpdteUserInfoInput'
+import { UpdateUserInfoInput } from '../inputs/UpdateUserInfoInput'
 
 export class UserService {
   public static getOne(id: User['id']) {

@@ -63,6 +63,7 @@
 <script>
 import { mdiLabel, mdiTagMultiple, mdiApps } from '@mdi/js'
 import { GetSummary } from '../../../graphql/query/admin/GetSummary'
+import { UpdateSummary } from '../../../graphql/subscription/summary/UpdateSummary'
 export default {
   data() {
     return {
@@ -75,14 +76,32 @@ export default {
       summary: [],
     }
   },
+  mounted() {
+    const vue = this
+    const updateSummarySubscriber = this.$apollo.subscribe({
+      query: UpdateSummary,
+    })
+
+    updateSummarySubscriber.subscribe({
+      next() {
+        vue.getSummary()
+      },
+    })
+  },
   created() {
-    this.$apollo
-      .query({
-        query: GetSummary,
-      })
-      .then((response) => {
-        this.summary = response.data.GetSummary
-      })
+    this.getSummary()
+  },
+  methods: {
+    getSummary() {
+      this.$apollo
+        .query({
+          query: GetSummary,
+          fetchPolicy: 'network-only',
+        })
+        .then((response) => {
+          this.summary = response.data.GetSummary
+        })
+    },
   },
 }
 </script>

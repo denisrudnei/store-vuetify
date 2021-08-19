@@ -1,13 +1,15 @@
-import { set, lastDayOfMonth, getDaysInMonth } from 'date-fns'
+import { getDaysInMonth, lastDayOfMonth, set } from 'date-fns'
 import { getConnection } from 'typeorm'
+
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { Purchase } from '../models/Purchase'
-import { User } from '../models/User'
 import { ItemType } from '../models/summary/ItemType'
+import { SummaryItem } from '../models/summary/SummaryItem'
+import { User } from '../models/User'
 
 export class SummaryService {
-  public static async allTime() {
+  public static async allTime(): Promise<SummaryItem[]> {
     const totalSold = await Promise.all(
       (await Purchase.find()).map((purchase) => purchase.totalPrice())
     )
