@@ -1,11 +1,11 @@
 import { Context } from '@nuxt/types'
 import { format, parse } from 'date-fns'
 import Vue from 'vue'
-import Dinero, { Currency } from 'dinero.js'
+import Dinero from 'dinero.js'
 
 export const dineroFormatter = (
   value: string | number,
-  currency: Currency = 'USD',
+  currency: Dinero.Currency = 'USD',
   locale: string
 ) =>
   Dinero({
