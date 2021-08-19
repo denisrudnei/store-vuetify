@@ -24,7 +24,7 @@
           <nuxt-link
             :to="`/categories/${product.category.slug}/product/${product.id}`"
           >
-            <v-img :src="product.primaryImage" height="150">
+            <v-img :src="product.primaryImage" height="150" contain>
               <template #placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
                   <v-progress-circular indeterminate color="grey lighten-5" />
@@ -37,9 +37,10 @@
         <v-col sum="4" cols="6" align="center">
           <v-btn
             elevation="0"
-            fab
             large
+            tile
             outlined
+            block
             class="ma-2"
             :to="`/categories/${product.category.slug}/product/${product.id}`"
           >

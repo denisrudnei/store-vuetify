@@ -7,6 +7,7 @@
             v-if="purchase.products.length"
             :src="purchase.products[0].data.primaryImage"
             :aspect-ratio="1"
+            contain
           />
         </v-col>
         <v-divider v-if="!isMobile" vertical />

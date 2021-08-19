@@ -4,7 +4,7 @@
       <nuxt-link
         :to="`/categories/${product.category.slug}/product/${product.id}`"
       >
-        <v-img :src="product.primaryImage" :aspect-ratio="16 / 9">
+        <v-img :src="product.primaryImage" :aspect-ratio="16 / 9" contain>
           <template #placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular indeterminate color="grey lighten-5" />

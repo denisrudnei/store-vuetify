@@ -19,16 +19,22 @@
             </v-col>
             <v-divider vertical />
             <v-col cols="12" md="1">
-              <v-menu open-on-hover max-width="450">
+              <v-menu open-on-hover max-width="250">
                 <template #activator="{ on }">
                   <v-img
                     :src="product.data.primaryImage"
                     :aspect-ratio="1"
+                    contain
                     v-on="on"
                   />
                 </template>
                 <v-card>
-                  <v-img :src="product.data.primaryImage" />
+                  <v-img
+                    :src="product.data.primaryImage"
+                    :aspect-ratio="1"
+                    width="250"
+                    contain
+                  />
                 </v-card>
               </v-menu>
             </v-col>
