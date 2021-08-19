@@ -7,7 +7,7 @@ export const getters = {
   getNotifications(state) {
     return state.notifications
   },
-  getAllNotification(state) {
+  getAllNotifications(state) {
     return state.allNotifications
   },
 }
@@ -23,6 +23,12 @@ export const mutations = {
     state.notifications.push(notification)
   },
   readNotification(state, notification) {
+    const notificationIndex = state.allNotifications.findIndex(
+      (item) => item.id === notification.id
+    )
+    if (notificationIndex !== -1) {
+      Object.assign(state.allNotifications[notificationIndex], notification)
+    }
     state.notifications = state.notifications.filter(
       (item) => item.id !== notification.id
     )

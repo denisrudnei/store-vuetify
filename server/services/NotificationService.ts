@@ -16,13 +16,29 @@ export class NotificationService {
           userId,
         }).andWhere('notification.read = false')
       },
+      order: {
+        date: 'DESC',
+      },
     })
   }
 
-  public static async getAllNotifications(userId: User['id']) {
-    const user = await User.findOne(userId, { relations: ['notifications'] })
-    if (!user) throw new Error('User not found')
-    return user.notifications
+  public static getAllNotifications(userId: User['id']) {
+    return Notification.find({
+      join: {
+        alias: 'notification',
+        leftJoinAndSelect: {
+          user: 'notification.user',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Notification>) => {
+        qb.where('notification.user = :userId', {
+          userId,
+        })
+      },
+      order: {
+        date: 'DESC',
+      },
+    })
   }
 
   public static async read(

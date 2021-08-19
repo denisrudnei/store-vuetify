@@ -15,7 +15,9 @@
         v-on="on"
       >
         <v-badge bottom overlap left bordered color="accent">
-          <v-icon>{{ icons.mdiBell }}</v-icon>
+          <v-icon>
+            {{ notifications.length ? icons.mdiBellRing : icons.mdiBell }}
+          </v-icon>
           <template #badge>
             {{ notifications.length }}
           </template>
@@ -27,7 +29,7 @@
         <v-card-title>Notifications</v-card-title>
         <v-divider />
       </v-sheet>
-      <v-card-text>
+      <v-card-text v-if="notifications.length">
         <v-list three-line>
           <template v-for="notification in notifications">
             <v-list-item :key="`list${notification.id}`">
@@ -66,14 +68,30 @@
     <v-card class="fixed-buttons">
       <v-card-text>
         <v-row>
-          <v-col cols="12">
+          <v-col v-if="!notifications.length" cols="12">
+            <v-alert
+              color="warning"
+              outlined
+              prominent
+              :icon="icons.mdiBellOff"
+            >
+              No notification
+            </v-alert>
+          </v-col>
+          <v-col v-if="notifications.length" cols="12">
             <v-btn block class="primary white--text">
               Read all
               <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
             </v-btn>
           </v-col>
           <v-col cols="12">
-            <v-btn class="primary white--text" block> View all</v-btn>
+            <v-btn
+              class="primary white--text"
+              block
+              to="/profile/notifications"
+            >
+              View all
+            </v-btn>
           </v-col>
           <v-col>
             <v-btn
@@ -93,7 +111,15 @@
 </template>
 
 <script>
-import { mdiBell, mdiClose, mdiCheckAll, mdiCheck, mdiPlus } from '@mdi/js'
+import {
+  mdiBell,
+  mdiBellRing,
+  mdiClose,
+  mdiCheckAll,
+  mdiCheck,
+  mdiPlus,
+  mdiBellOff,
+} from '@mdi/js'
 import { GetNotifications } from '../graphql/query/notification/GetNotifications'
 import { NewNotification } from '../graphql/subscription/notification/NewNotification'
 import { ReadNotification } from '../graphql/mutation/notification/ReadNotification'
@@ -102,10 +128,12 @@ export default {
     return {
       icons: {
         mdiBell,
+        mdiBellRing,
         mdiClose,
         mdiCheckAll,
         mdiCheck,
         mdiPlus,
+        mdiBellOff,
       },
       menu: false,
     }

@@ -4,6 +4,7 @@
       <v-tabs>
         <v-tab to="/profile/info">Info</v-tab>
         <v-tab to="/profile/purchases">Purchases</v-tab>
+        <v-tab to="/profile/notifications"> Notifications </v-tab>
       </v-tabs>
     </v-col>
     <v-col cols="12">
