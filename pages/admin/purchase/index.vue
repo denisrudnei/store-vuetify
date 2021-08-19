@@ -16,6 +16,9 @@
             <v-icon>{{ icons.mdiEye }}</v-icon>
           </v-btn>
         </template>
+        <template #item.totalPrice="{ item }">
+          {{ item.totalPrice | dinero }}
+        </template>
         <template #item.createdAt="{ item }">
           {{ item.createdAt | dateAndHour }}
         </template>
