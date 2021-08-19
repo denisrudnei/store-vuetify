@@ -15,6 +15,7 @@ import { Address } from './Address'
 import { Purchase } from './Purchase'
 import { Order } from './Order'
 import { Phone } from './Phone'
+import { Notification } from './notification/Notification'
 
 @Entity()
 @ObjectType()
@@ -48,6 +49,10 @@ export class User extends BaseEntity {
   @Field(() => [Address], { nullable: true })
   @OneToMany(() => Address, (address) => address.user)
   public addresses!: Address[]
+
+  @Field(() => [Notification])
+  @OneToMany(() => Notification, (notification) => notification.user)
+  public notifications!: Notification[]
 
   @Field(() => [Phone])
   @OneToMany(() => Phone, (phone) => phone.user)

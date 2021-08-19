@@ -9,7 +9,6 @@
                 {{ item.children ? icons.mdiLabelMultiple : icons.mdiLabel }}
               </v-icon>
             </template>
-
             <template #label="{ item }">
               <v-list>
                 <v-list-item>

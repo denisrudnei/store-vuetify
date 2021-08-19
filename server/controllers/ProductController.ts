@@ -1,8 +1,9 @@
 import { Router } from 'express'
 import multer from 'multer'
-import { isLogged } from '../AuthUtil'
-import { S3 } from '../S3'
+
 import { Product } from '../models/Product'
+import { S3 } from '../S3'
+import { isLogged } from '../util/auth-util'
 
 const ProductController = Router()
 

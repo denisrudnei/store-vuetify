@@ -1,7 +1,15 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 
-import { User } from './models/User'
+import { User } from '../models/User'
+
+function getUserByAuthorizationHeader(authorization: string) {
+  const items = authorization!.split(' ')
+  const token = items[items.length - 1]
+
+  const data = jwt.decode(token) as User
+  return User.findOne(data.id)
+}
 
 async function isLogged(req: express.Request) {
   if (!req.headers.authorization && !req.session) return false
@@ -18,4 +26,4 @@ async function isLogged(req: express.Request) {
   return true
 }
 
-export { isLogged }
+export { isLogged, getUserByAuthorizationHeader }

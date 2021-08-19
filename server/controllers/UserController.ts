@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import multer from 'multer'
-import { isLogged } from '../AuthUtil'
+import { isLogged } from '../util/auth-util'
 
 import { User } from '../models/User'
 import { S3 } from '../S3'

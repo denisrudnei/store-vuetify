@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import multer from 'multer'
 
-import { isLogged } from '../AuthUtil'
+import { Category } from '../models/Category'
 import { S3 } from '../S3'
 import { CategoryService } from '../services/CategoryService'
-import { Category } from '../models/Category'
+import { isLogged } from '../util/auth-util'
 
 const CategoryController = Router()
 

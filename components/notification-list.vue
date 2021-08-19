@@ -14,7 +14,12 @@
         }"
         v-on="on"
       >
-        <v-icon>{{ icons.mdiBell }}</v-icon>
+        <v-badge bottom overlap left bordered color="accent">
+          <v-icon>{{ icons.mdiBell }}</v-icon>
+          <template #badge>
+            {{ notifications.length }}
+          </template>
+        </v-badge>
       </v-btn>
     </template>
     <v-card>
@@ -23,18 +28,33 @@
         <v-divider />
       </v-sheet>
       <v-card-text>
-        <v-list>
+        <v-list three-line>
           <template v-for="notification in notifications">
             <v-list-item :key="`list${notification.id}`">
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ notification.text }}
+                  {{ notification.content }}
                 </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ notification.date | dateAndHour }}
+                </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn icon>
-                  <v-icon>{{ icons.mdiPlus }}</v-icon>
-                </v-btn>
+                <v-menu nudge-width="350" :close-on-content-click="false">
+                  <template #activator="{ on }">
+                    <v-btn icon v-on="on">
+                      <v-icon>{{ icons.mdiPlus }}</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item @click="read(notification)">
+                      <v-list-item-icon>
+                        <v-icon>{{ icons.mdiCheck }}</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content> Read </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-list-item-action>
             </v-list-item>
             <v-divider :key="`divider${notification.id}`" />
@@ -73,8 +93,10 @@
 </template>
 
 <script>
-import faker from 'faker'
-import { mdiBell, mdiClose, mdiCheckAll, mdiPlus } from '@mdi/js'
+import { mdiBell, mdiClose, mdiCheckAll, mdiCheck, mdiPlus } from '@mdi/js'
+import { GetNotifications } from '../graphql/query/notification/GetNotifications'
+import { NewNotification } from '../graphql/subscription/notification/NewNotification'
+import { ReadNotification } from '../graphql/mutation/notification/ReadNotification'
 export default {
   data() {
     return {
@@ -82,16 +104,54 @@ export default {
         mdiBell,
         mdiClose,
         mdiCheckAll,
+        mdiCheck,
         mdiPlus,
       },
       menu: false,
-      notifications: Array.from({ length: 15 }, (_, i) => (i += 1)).map(
-        (item) => ({
-          id: item,
-          text: faker.lorem.sentence(),
-        })
-      ),
     }
+  },
+  computed: {
+    notifications: {
+      set(value) {
+        this.$store.commit('notification/setNotifications', value)
+      },
+      get() {
+        return this.$store.getters['notification/getNotifications']
+      },
+    },
+  },
+  created() {
+    const vue = this
+    this.$apollo
+      .query({
+        query: GetNotifications,
+      })
+      .then((response) => {
+        this.notifications = response.data.GetNotifications
+      })
+    const notificationSubscription = this.$apollo.subscribe({
+      query: NewNotification,
+    })
+
+    notificationSubscription.subscribe({
+      next({ data }) {
+        vue.$store.commit('notification/addNotification', data.NewNotification)
+      },
+    })
+  },
+  methods: {
+    read(notification) {
+      this.$apollo
+        .mutate({
+          mutation: ReadNotification,
+          variables: {
+            id: notification.id,
+          },
+        })
+        .then(() => {
+          this.$store.commit('notification/readNotification', notification)
+        })
+    },
   },
 }
 </script>

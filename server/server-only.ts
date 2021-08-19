@@ -1,16 +1,19 @@
 import http from 'http'
 import path from 'path'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer, PubSub } from 'apollo-server-express'
 import consola from 'consola'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 
 import { app } from './app'
-import createConnection from './db/typeormConnection'
 import CustomAuthChecker from './CustomAuthChecker'
+import createConnection from './db/typeormConnection'
 import { GatewayService } from './services/GatewayService'
+import { onConnect } from './util/graphql-functions'
 
 const server = express()
+
+const pubSub = new PubSub()
 
 process.on('SIGTERM', () => process.exit())
 
@@ -26,16 +29,25 @@ async function start() {
     schema: await buildSchema({
       resolvers: [path.resolve(__dirname, 'resolvers/**/*Resolver*')],
       authChecker: CustomAuthChecker,
+      pubSub,
     }),
-    context: (context) => ({
-      req: context.req,
-      res: context.res,
-    }),
+    context: ({ req, res, connection }) => {
+      if (!req || !req.headers) {
+        return connection!.context
+      } else {
+        return {
+          req,
+          res,
+          pubSub,
+        }
+      }
+    },
     playground: {
       endpoint: '/graphql',
     },
     subscriptions: {
       path: '/subscriptions',
+      onConnect,
     },
   })
 
