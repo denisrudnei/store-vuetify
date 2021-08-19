@@ -13,43 +13,6 @@
                 label="Email"
                 readonly
               />
-              <v-btn class="primary white--text" @click="updateUser">
-                Update info
-              </v-btn>
-              <v-divider class="my-4" />
-              <v-card flat>
-                <v-card-title class="red--text"> Danger area </v-card-title>
-                <v-card-text>
-                  <v-text-field
-                    v-model="newPassword"
-                    outlined
-                    label="Password"
-                    :type="showNewPassword ? 'text' : 'password'"
-                    :append-icon="passwordIcon('showNewPassword')"
-                    @click:append="showNewPassword = !showNewPassword"
-                  />
-
-                  <v-text-field
-                    v-model="repeatNewPassword"
-                    outlined
-                    label="Confirm password"
-                    :type="showRepeatNewPassword ? 'text' : 'password'"
-                    :append-icon="passwordIcon('showRepeatNewPassword')"
-                    @click:append="
-                      showRepeatNewPassword = !showRepeatNewPassword
-                    "
-                  />
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    class="red white--text"
-                    :disabled="!validToReset"
-                    @click="reset"
-                  >
-                    Reset passwrod
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
             </v-col>
             <v-divider vertical />
             <v-col cols="12" md="2" class="pl-5">
@@ -61,28 +24,41 @@
                     :aspect-ratio="1"
                   />
                 </v-col>
-                <v-col cols="12">
-                  <v-file-input
-                    v-model="image"
-                    outlined
-                    label="Select profile image"
-                    @change="previewImage"
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-btn
-                    class="primary white--text mt-2"
-                    block
-                    :disabled="!image"
-                    @click="updateImage"
-                  >
-                    Update image
-                  </v-btn>
-                </v-col>
               </v-row>
+            </v-col>
+            <v-col cols="12">
+              <v-file-input
+                v-model="image"
+                outlined
+                label="Select profile image"
+                @change="previewImage"
+              />
             </v-col>
           </v-row>
         </v-card-text>
+        <v-card-actions>
+          <v-row>
+            <v-col cols="12" md="auto">
+              <v-btn
+                class="primary white--text"
+                :disabled="!image"
+                :block="isMobile"
+                @click="updateImage"
+              >
+                Update image
+              </v-btn>
+            </v-col>
+            <v-col cols="12" md="auto">
+              <v-btn
+                class="primary white--text"
+                :block="isMobile"
+                @click="updateUser"
+              >
+                Update info
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
       </v-card>
     </v-col>
     <v-col cols="12">
@@ -178,7 +154,6 @@
                           label="Description"
                           outlined
                         />
-
                         <v-text-field
                           v-model="currentPhoneNumber"
                           v-mask="['(##) ####-####', '(##) #####-####']"
@@ -200,6 +175,39 @@
             </v-col>
           </v-row>
         </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col cols="12">
+      <v-card flat>
+        <v-card-title class="red--text"> Danger area </v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="newPassword"
+            outlined
+            label="Password"
+            :type="showNewPassword ? 'text' : 'password'"
+            :append-icon="passwordIcon('showNewPassword')"
+            @click:append="showNewPassword = !showNewPassword"
+          />
+
+          <v-text-field
+            v-model="repeatNewPassword"
+            outlined
+            label="Confirm password"
+            :type="showRepeatNewPassword ? 'text' : 'password'"
+            :append-icon="passwordIcon('showRepeatNewPassword')"
+            @click:append="showRepeatNewPassword = !showRepeatNewPassword"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            class="red white--text"
+            :disabled="!validToReset"
+            @click="reset"
+          >
+            Reset passwrod
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-col>
     <v-col cols="12">
@@ -238,11 +246,13 @@ import { CreatePhone } from '../../graphql/mutation/info/phone/CreatePhone'
 import { RemovePhone } from '../../graphql/mutation/info/phone/RemovePhone'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 import addressCreate from '~/components/address-create.vue'
+import theme from '~/mixins/theme'
 export default {
   components: { addressCreate },
   directives: {
     TheMask,
   },
+  mixins: [theme],
   data() {
     return {
       icons: {
