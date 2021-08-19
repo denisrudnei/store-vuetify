@@ -18,29 +18,6 @@
         </v-col>
       </v-row>
     </v-col>
-    <v-col v-for="card in items" :key="card.id" cols="12" md="4">
-      <v-card color="primary" dark class="mx-auto text-center" tile>
-        <v-card-text>
-          <v-sheet color="rgba(0, 0, 0, .12)">
-            <v-sparkline
-              :value="card.values"
-              color="rgba(255, 255, 255, .7)"
-              height="100"
-              line-width="2"
-              padding="10"
-              smooth
-            >
-              <template #label="item"> ${{ item.value }} </template>
-            </v-sparkline>
-          </v-sheet>
-        </v-card-text>
-        <v-card-text class="title">{{ card.name }}</v-card-text>
-        <v-divider />
-        <v-card-actions>
-          <v-btn class="primary white--text" block text>View details</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
     <v-navigation-drawer fixed right clipped app :mini-variant="mini">
       <v-list>
         <v-list-item @click="mini = !mini">
@@ -84,7 +61,6 @@
 </template>
 
 <script>
-import faker from 'faker'
 import { mdiLabel, mdiTagMultiple, mdiApps } from '@mdi/js'
 import { GetSummary } from '../../../graphql/query/admin/GetSummary'
 export default {
@@ -97,13 +73,6 @@ export default {
       },
       mini: true,
       summary: [],
-      items: Array.from({ length: 12 }, (_, i) => (i += 1)).map((item) => ({
-        id: item,
-        name: faker.commerce.productName(),
-        values: Array.from({ length: 5 }, (_, __) =>
-          Math.floor(Math.random() * 15)
-        ),
-      })),
     }
   },
   created() {

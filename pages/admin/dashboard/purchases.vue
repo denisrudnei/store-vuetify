@@ -11,7 +11,7 @@
     <v-col cols="12">
       <v-card>
         <v-card-text :class="isDark ? 'white--text' : 'black--text'">
-          <no-ssr>
+          <client-only>
             <apexchart
               ref="chart"
               :options="options"
@@ -20,7 +20,7 @@
               :height="options.height"
               width="100%"
             />
-          </no-ssr>
+          </client-only>
         </v-card-text>
       </v-card>
     </v-col>
