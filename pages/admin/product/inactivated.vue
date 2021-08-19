@@ -13,6 +13,9 @@
         :items="inactivated"
         show-select
       >
+        <template #item.price="{ item }">
+          {{ item.price | dinero }}
+        </template>
         <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
