@@ -5,6 +5,7 @@ query GetPurchase ($id: ID!) {
   GetPurchase (id: $id) {
     id
     products {
+      productId
       data {
         id
         name

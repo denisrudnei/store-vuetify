@@ -24,6 +24,10 @@ export class ProductService {
     return Product.findOne(id)
   }
 
+  public static getProductsByIds(ids: Product['id'][]) {
+    return Product.findByIds(ids)
+  }
+
   public static async searchProduct(search: SearchProductInput) {
     const result = await getConnection()
       .createQueryBuilder()

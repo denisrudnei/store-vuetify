@@ -26,6 +26,11 @@ export class ProductResolver {
     return ProductService.getProducts()
   }
 
+  @Query(() => [Product])
+  public GetProductsByIds(@Arg('ids', () => [ID]) ids: Product['id'][]) {
+    return ProductService.getProductsByIds(ids)
+  }
+
   @Query(() => Product, { nullable: true })
   GetProduct(@Arg('id', () => ID) id: Product['id']) {
     return ProductService.getProduct(id)

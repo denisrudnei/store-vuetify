@@ -35,7 +35,11 @@
               </v-btn>
             </v-col>
             <v-col cols="12">
-              <v-btn block class="primary white--text" to="/buy">
+              <v-btn
+                block
+                class="primary white--text"
+                @click="buyAgain(purchase.id)"
+              >
                 Buy again
               </v-btn>
             </v-col>
@@ -58,6 +62,8 @@
 </template>
 
 <script>
+import { GetProductsByIds } from '../graphql/query/product/GetProductsByIds'
+import { GetPurchase } from '~/graphql/query/purchase/GetPurchase'
 import theme from '~/mixins/theme'
 export default {
   mixins: [theme],
@@ -68,6 +74,35 @@ export default {
         id: 0,
         products: [],
       }),
+    },
+  },
+  methods: {
+    buyAgain(id) {
+      this.$apollo
+        .query({
+          query: GetPurchase,
+          variables: {
+            id,
+          },
+        })
+        .then((response) => {
+          const ids = response.data.GetPurchase.products.map((product) => {
+            return product.productId
+          })
+          this.$apollo
+            .query({
+              query: GetProductsByIds,
+              variables: {
+                ids,
+              },
+            })
+            .then((response) => {
+              response.data.GetProductsByIds.forEach((product) => {
+                this.$store.commit('products/addToCart', product)
+              })
+              this.$router.push('/buy')
+            })
+        })
     },
   },
 }
