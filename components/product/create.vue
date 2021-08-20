@@ -210,6 +210,7 @@ export default {
             this.emitSave()
           })
           .catch(() => {
+            this.newImages = []
             this.emitSave()
           })
       } else {
