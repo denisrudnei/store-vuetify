@@ -169,6 +169,22 @@ export default {
       )
     },
   },
+  beforeDestroy() {
+    if (this.newImages.length) {
+      return this.$dialog(
+        'There are still unsaved changes, do you want to save before continuing?'
+      )
+        .then(async () => {
+          await this.uploadImages()
+          this.emitSave()
+        })
+        .catch(() => {
+          this.$toast.show("Don't saved", {
+            duration: 1000,
+          })
+        })
+    }
+  },
   mounted() {
     this.editor = require('@ckeditor/ckeditor5-build-classic')
   },
@@ -187,6 +203,20 @@ export default {
   },
   methods: {
     save() {
+      if (this.newImages.length) {
+        this.$dialog('Upload new images before saving?')
+          .then(async () => {
+            await this.uploadImages()
+            this.emitSave()
+          })
+          .catch(() => {
+            this.emitSave()
+          })
+      } else {
+        this.emitSave()
+      }
+    },
+    emitSave() {
       this.$emit('save', {
         ...this.product,
         price: parseFloat(this.product.price.toString().replace(',', '.')),
@@ -216,9 +246,10 @@ export default {
       for (const index in this.images) {
         formData.append('images', this.images[index])
       }
-      this.$axios
+      return this.$axios
         .post(`/product/${this.product.id}/images`, formData)
         .then(() => {
+          this.newImages = []
           this.$toast.show('Uplaoded', {
             duration: 1000,
           })
