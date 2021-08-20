@@ -1,18 +1,25 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-row align="center" justify="center">
+      <v-row align="center">
         <v-col v-if="state === 'LOADING'" cols="12">
           <v-progress-linear color="primary" indeterminate />
         </v-col>
         <v-col v-if="state === 'ERROR'" cols="12">
           <v-alert color="error" outlined prominent> Failed to load</v-alert>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md="auto">
           <v-btn class="primary white--text" @click="fixCategoriesSlug">
             <v-icon left>{{ icons.mdiTag }}</v-icon>
             Fix category slug
           </v-btn>
+        </v-col>
+        <v-col cols="12" md="auto">
+          <v-switch
+            v-model="adSense"
+            label="Enable AdSense"
+            @change="toggleAdSense"
+          />
         </v-col>
         <v-col cols="12">
           <v-autocomplete
@@ -48,6 +55,7 @@ import { UpdateCurrency } from '../../graphql/mutation/admin/management/UpdateCu
 import { GetCurrency } from '../../graphql/query/admin/management/GetCurrency'
 import { UpdateLocale } from '../../graphql/mutation/admin/management/UpdateLocale'
 import { GetLocale } from '../../graphql/query/admin/management/GetLocale'
+import { ToggleAdSense } from '../../graphql/mutation/site-settings/ToggleAdSense'
 import values from './currencies.json'
 import { FixCategoriesSlug } from '~/graphql/mutation/category/FixCategoriesSlug'
 import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
@@ -57,7 +65,6 @@ export default {
       state: 'LOADED',
       currencies: [],
       locales: [],
-
       icons: {
         mdiTag,
         mdiCurrencyUsd,
@@ -65,10 +72,20 @@ export default {
       },
     }
   },
-  computed: mapGetters({
-    currency: 'site-settings/getCurrency',
-    locale: 'site-settings/getLocale',
-  }),
+  computed: {
+    adSense: {
+      set(value) {
+        this.$store.commit('site-settings/setAdSense', value)
+      },
+      get() {
+        return this.$store.getters['site-settings/getAdSense']
+      },
+    },
+    ...mapGetters({
+      currency: 'site-settings/getCurrency',
+      locale: 'site-settings/getLocale',
+    }),
+  },
   created() {
     this.currencies = values.currency
 
@@ -134,6 +151,20 @@ export default {
         .then(() => {
           this.$store.commit('site-settings/setLocale', value)
           this.$toast.show('Locale updated', {
+            duration: 1000,
+          })
+        })
+    },
+    toggleAdSense(value) {
+      this.$apollo
+        .mutate({
+          mutation: ToggleAdSense,
+          variables: {
+            status: value,
+          },
+        })
+        .then(() => {
+          this.$toast.show('Updated', {
             duration: 1000,
           })
         })

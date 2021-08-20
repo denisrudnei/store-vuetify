@@ -14,6 +14,7 @@ query {
     logo
     currency
     locale
+    adSense
   }
   GetSocialNetworks {
     id

@@ -9,6 +9,10 @@ export class SiteSettings extends BaseEntity {
   public id!: number
 
   @Field()
+  @Column({ default: false })
+  public adSense!: boolean
+
+  @Field()
   @Column({ default: '/images/not-set.svg' })
   public logo!: string
 

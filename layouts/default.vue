@@ -71,7 +71,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <adsbygoogle />
+      <adsbygoogle v-if="adSense" />
     </v-navigation-drawer>
     <v-app-bar clipped-left clipped-right fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -238,6 +238,7 @@ export default {
   computed: {
     ...mapGetters({
       logo: 'site-settings/getLogo',
+      adSense: 'site-settings/getAdSense',
     }),
     logged() {
       return this.$auth.loggedIn
@@ -296,6 +297,11 @@ export default {
         this.$store.commit(
           'site-settings/setLocale',
           response.data.GetSiteSettings.locale
+        )
+
+        this.$store.commit(
+          'site-settings/setAdSense',
+          response.data.GetSiteSettings.adSense
         )
 
         this.$store.commit(

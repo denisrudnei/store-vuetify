@@ -42,4 +42,18 @@ export class SiteSettingsService {
     )
     return true
   }
+
+  public static async toggleAdSense(status: boolean) {
+    const siteSettings = await this.getSiteSettings()
+
+    await SiteSettings.update(
+      {
+        id: siteSettings.id,
+      },
+      {
+        adSense: status,
+      }
+    )
+    return true
+  }
 }

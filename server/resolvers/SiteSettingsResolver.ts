@@ -32,4 +32,10 @@ export class SiteSettingsResolver {
   public UpdateLocale(@Arg('locale', () => String) locale: string) {
     return SiteSettingsService.updateLocale(locale)
   }
+
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public ToggleAdSense(@Arg('status', () => Boolean) status: boolean) {
+    return SiteSettingsService.toggleAdSense(status)
+  }
 }

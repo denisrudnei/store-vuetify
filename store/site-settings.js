@@ -12,6 +12,7 @@ export const state = () => ({
   },
   currency: 'USD',
   locale: '',
+  adSense: false,
 })
 
 export const mutations = {
@@ -45,6 +46,9 @@ export const mutations = {
   setLocale(state, locale) {
     state.locale = locale
   },
+  setAdSense(state, adSense) {
+    state.adSense = adSense
+  },
 }
 
 export const getters = {
@@ -59,5 +63,8 @@ export const getters = {
   },
   getLocale(state) {
     return state.locale
+  },
+  getAdSense(state) {
+    return state.adSense
   },
 }
