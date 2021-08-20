@@ -29,6 +29,7 @@ CategoryController.post(
       ContentType: req.file.mimetype,
       ACL: 'public-read',
       Body: req.file.buffer,
+      CacheControl: 'max-age=604800',
     }
 
     const { Location } = await S3.upload(params).promise()

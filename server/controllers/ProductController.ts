@@ -34,6 +34,7 @@ ProductController.post(
         ContentType: file.mimetype,
         ACL: 'public-read',
         Body: file.buffer,
+        CacheControl: 'max-age=604800',
       }
       const { Location } = await S3.upload(params).promise()
       product.images = Array.from(new Set([...product.images, Location]))
