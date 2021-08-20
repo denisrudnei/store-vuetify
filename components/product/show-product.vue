@@ -24,7 +24,7 @@
       <v-row>
         <v-col cols="12">
           <v-img v-if="!product.images.length" :src="image" />
-          <v-carousel v-if="product.images.length">
+          <v-carousel v-if="product.images.length" height="auto">
             <v-carousel-item
               v-for="item in product.images"
               :key="item"
