@@ -1,4 +1,5 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, Float, ObjectType } from 'type-graphql'
+
 import { ItemType } from './ItemType'
 
 @ObjectType()
@@ -6,7 +7,7 @@ export class SummaryItem {
   @Field()
   public name!: string
 
-  @Field(() => Int)
+  @Field(() => Float)
   public value!: number
 
   @Field(() => ItemType)
