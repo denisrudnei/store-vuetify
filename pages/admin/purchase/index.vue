@@ -19,6 +19,22 @@
         <template #item.totalPrice="{ item }">
           {{ item.totalPrice | dinero }}
         </template>
+        <template #item.type="{ item }">
+          <v-chip text label>
+            <v-icon left>
+              {{
+                item.type === 'NORMAL' ? icons.mdiCashMultiple : icons.mdiTruck
+              }}
+            </v-icon>
+            {{ item.type }}
+          </v-chip>
+        </template>
+        <template #item.payment="{ item }">
+          <span v-show="item.payment.change" class="red--text">
+            {{ item.payment.change | dinero }}
+          </span>
+          <span v-show="!item.payment.change"> It is not necessary </span>
+        </template>
         <template #item.createdAt="{ item }">
           {{ item.createdAt | dateAndHour }}
         </template>
@@ -34,7 +50,7 @@
 </template>
 
 <script>
-import { mdiEye } from '@mdi/js'
+import { mdiEye, mdiCashMultiple, mdiTruck } from '@mdi/js'
 import { GetPurchases } from '@/graphql/query/purchase/GetPurchases'
 import { NewPurchase } from '@/graphql/subscription/purchase/NewPurchase'
 export default {
@@ -42,6 +58,8 @@ export default {
     return {
       icons: {
         mdiEye,
+        mdiCashMultiple,
+        mdiTruck,
       },
       headers: [
         {
@@ -60,6 +78,18 @@ export default {
         {
           text: 'Total',
           value: 'totalPrice',
+        },
+        {
+          text: 'Type',
+          value: 'type',
+        },
+        {
+          text: 'Status',
+          value: 'status',
+        },
+        {
+          text: 'Change',
+          value: 'payment',
         },
         {
           text: 'User',

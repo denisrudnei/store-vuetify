@@ -7,6 +7,12 @@ subscription {
     createdAt
     totalPrice
     totalAmount
+    type
+    status
+    payment {
+      id
+      change
+    }
     user {
       id
       name

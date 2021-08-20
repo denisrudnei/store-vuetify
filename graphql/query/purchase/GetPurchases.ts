@@ -10,6 +10,12 @@ query {
       name
       image
     }
+    type
+    status
+    payment {
+      id
+      change
+    }
     totalPrice
     totalAmount
   }

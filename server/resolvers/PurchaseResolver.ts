@@ -33,6 +33,12 @@ export class PurchaseResolver {
     return PurchaseService.getPurchases()
   }
 
+  @Query(() => [Purchase])
+  @Authorized(Role.ADMIN)
+  public GetDelivery() {
+    return PurchaseService.getDelivery()
+  }
+
   @Query(() => Purchase)
   @Authorized(Role.USER)
   public GetPurchase(
@@ -106,5 +112,13 @@ export class PurchaseResolver {
   })
   public NewPurchase(@Root() payload: Purchase) {
     return payload
+  }
+
+  @FieldResolver()
+  public async payment(@Root() root: Purchase) {
+    const { payment } = (await Purchase.findOne(root.id, {
+      relations: ['payment'],
+    })) as Purchase
+    return payment
   }
 }

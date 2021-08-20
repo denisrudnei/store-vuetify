@@ -1,14 +1,15 @@
-import { getConnection, SelectQueryBuilder } from 'typeorm'
+import { getConnection, Not, SelectQueryBuilder } from 'typeorm'
 
+import { DeliveryStatus } from '../enums/DeliveryStatus'
+import { PaymentType } from '../enums/PaymentType'
 import { PurchaseType } from '../enums/PurchaseType'
 import { PaymentInput } from '../inputs/PaymentInput'
 import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { HistoryProduct } from '../models/HistoryProduct'
+import { Payment } from '../models/Payment'
 import { Product } from '../models/Product'
 import { Purchase } from '../models/Purchase'
 import { User } from '../models/User'
-import { Payment } from '../models/Payment'
-import { PaymentType } from '../enums/PaymentType'
 import { GatewayService } from './GatewayService'
 
 export class PurchaseService {
@@ -16,6 +17,15 @@ export class PurchaseService {
     return Purchase.find({
       order: {
         createdAt: 'DESC',
+      },
+    })
+  }
+
+  public static getDelivery() {
+    return Purchase.find({
+      where: {
+        type: PurchaseType.DELIVERY,
+        status: Not(DeliveryStatus.DELIVERED),
       },
     })
   }
@@ -115,7 +125,7 @@ export class PurchaseService {
       if (!transaction.success) throw new Error(transaction.message)
     } else {
       const purchasePayment = Payment.create()
-      purchasePayment.change = payment.value - payment.paid
+      purchasePayment.change = Math.abs(payment.value - payment.paid)
       purchasePayment.paid = payment.paid
       purchasePayment.type = payment.type
       purchasePayment.value = payment.value

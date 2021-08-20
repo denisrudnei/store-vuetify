@@ -12,6 +12,7 @@ import {
 } from 'typeorm'
 
 import { PurchaseType } from '../enums/PurchaseType'
+import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { HistoryProduct } from './HistoryProduct'
 import { Payment } from './Payment'
 import { User } from './User'
@@ -43,6 +44,10 @@ export class Purchase extends BaseEntity {
   @Field(() => PurchaseType)
   @Column({ type: 'varchar', default: PurchaseType.NORMAL })
   public type!: PurchaseType
+
+  @Field(() => DeliveryStatus)
+  @Column({ type: 'varchar', default: DeliveryStatus.REQUIRED })
+  public status!: DeliveryStatus
 
   @Field(() => Int)
   public async totalAmount() {
