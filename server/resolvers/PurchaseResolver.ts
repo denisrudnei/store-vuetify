@@ -22,6 +22,8 @@ import { Notification } from '../models/notification/Notification'
 import { NotificationEvents } from '../enums/NotificationEvents'
 import { PurchaseEvents } from '../enums/PurchaseEvents'
 import { SummaryEvents } from '../enums/SummaryEvents'
+import { PurchaseType } from '../enums/PurchaseType'
+import { PaymentInput } from '../inputs/PaymentInput'
 
 @Resolver(() => Purchase)
 export class PurchaseResolver {
@@ -51,6 +53,8 @@ export class PurchaseResolver {
   @Mutation(() => Purchase)
   @Authorized(Role.USER)
   public async Buy(
+    @Arg('type', () => PurchaseType) type: PurchaseType,
+    @Arg('payment', () => PaymentInput) payment: PaymentInput,
     @Arg('products', () => [ProductForPurchaseInput])
     products: ProductForPurchaseInput[],
     @Arg('nonce', () => String) nonce: string,
@@ -61,6 +65,8 @@ export class PurchaseResolver {
     const id = req.session.authUser!.id
     const purchase = await PurchaseService.createPurchase(
       id,
+      type,
+      payment,
       products,
       nonce,
       deviceData

@@ -1,14 +1,19 @@
-import { Field, ID, Int, ObjectType, Float } from 'type-graphql'
+import { Field, Float, ID, Int, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
+  Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
+import { PurchaseType } from '../enums/PurchaseType'
 import { HistoryProduct } from './HistoryProduct'
+import { Payment } from './Payment'
 import { User } from './User'
 
 @ObjectType()
@@ -29,6 +34,15 @@ export class Purchase extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.purchases)
   public user!: User
+
+  @OneToOne(() => Payment, (payment) => payment.purchase)
+  @Field(() => Payment)
+  @JoinColumn()
+  public payment!: Payment
+
+  @Field(() => PurchaseType)
+  @Column({ type: 'varchar', default: PurchaseType.NORMAL })
+  public type!: PurchaseType
 
   @Field(() => Int)
   public async totalAmount() {

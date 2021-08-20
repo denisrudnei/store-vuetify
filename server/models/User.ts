@@ -1,21 +1,21 @@
-import { Field, ObjectType, ID } from 'type-graphql'
+import bcrypt from 'bcryptjs'
+import { Field, ID, ObjectType } from 'type-graphql'
 import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  BaseEntity,
   AfterLoad,
+  BaseEntity,
   BeforeInsert,
   BeforeUpdate,
+  Column,
+  Entity,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
-import bcrypt from 'bcryptjs'
+
 import { Role } from '../enums/Role'
 import { Address } from './Address'
-import { Purchase } from './Purchase'
-import { Order } from './Order'
-import { Phone } from './Phone'
 import { Notification } from './notification/Notification'
+import { Phone } from './Phone'
+import { Purchase } from './Purchase'
 
 @Entity()
 @ObjectType()
@@ -61,10 +61,6 @@ export class User extends BaseEntity {
   @Field(() => [Purchase])
   @OneToMany(() => Purchase, (purchase) => purchase.user)
   public purchases!: Purchase[]
-
-  @Field(() => [Order])
-  @OneToMany(() => Order, (order) => order.user)
-  public orders!: Order[]
 
   @Column({ default: Role.USER, type: 'varchar' })
   public role!: Role

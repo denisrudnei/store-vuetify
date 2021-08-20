@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import cartInfo from '@/components/cartInfo.vue'
 import { mdiDelete, mdiCashMultiple } from '@mdi/js'
+import cartInfo from '@/components/cartInfo.vue'
 export default {
   auth: false,
   components: {

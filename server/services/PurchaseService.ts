@@ -1,10 +1,14 @@
 import { getConnection, SelectQueryBuilder } from 'typeorm'
 
+import { PurchaseType } from '../enums/PurchaseType'
+import { PaymentInput } from '../inputs/PaymentInput'
 import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { HistoryProduct } from '../models/HistoryProduct'
 import { Product } from '../models/Product'
 import { Purchase } from '../models/Purchase'
 import { User } from '../models/User'
+import { Payment } from '../models/Payment'
+import { PaymentType } from '../enums/PaymentType'
 import { GatewayService } from './GatewayService'
 
 export class PurchaseService {
@@ -54,6 +58,8 @@ export class PurchaseService {
 
   public static async createPurchase(
     userId: User['id'],
+    type: PurchaseType,
+    payment: PaymentInput,
     productsForPurchase: ProductForPurchaseInput[],
     nonce: string,
     deviceData: string
@@ -62,6 +68,7 @@ export class PurchaseService {
     if (!user) throw new Error('User not found')
     const purchase = await Purchase.create().save()
     purchase.user = user
+    purchase.type = type
 
     purchase.products = await Promise.all(
       productsForPurchase.map(async (productForPurchase) => {
@@ -87,14 +94,36 @@ export class PurchaseService {
     )
     await purchase.save()
 
-    const transaction = await GatewayService.makeSale(
-      purchase,
-      nonce,
-      deviceData
-    )
+    if (type === PurchaseType.NORMAL) {
+      const transaction = await GatewayService.makeSale(
+        purchase,
+        nonce,
+        deviceData
+      )
+      const totalPrice = await purchase.totalPrice()
+      const purchasePayment = Payment.create()
+      purchasePayment.change = 0
+      purchasePayment.paid = totalPrice
+      purchasePayment.type = PaymentType.CARD
+      purchasePayment.value = totalPrice
 
-    if (!transaction) throw new Error('Error creating transaction')
-    if (!transaction.success) throw new Error(transaction.message)
+      purchase.payment = await purchasePayment.save()
+
+      await purchase.save()
+
+      if (!transaction) throw new Error('Error creating transaction')
+      if (!transaction.success) throw new Error(transaction.message)
+    } else {
+      const purchasePayment = Payment.create()
+      purchasePayment.change = payment.value - payment.paid
+      purchasePayment.paid = payment.paid
+      purchasePayment.type = payment.type
+      purchasePayment.value = payment.value
+
+      purchase.payment = await purchasePayment.save()
+
+      await purchase.save()
+    }
 
     return purchase
   }

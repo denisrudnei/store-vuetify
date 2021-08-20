@@ -17,19 +17,46 @@
           <v-stepper-content step="1">
             <v-row>
               <v-col cols="12">
-                <v-select outlined label="Address" :items="addresses" />
+                <v-select
+                  v-model="address"
+                  outlined
+                  label="Address"
+                  :items="addresses"
+                />
               </v-col>
               <v-col cols="12">
-                <v-text-field
-                  v-mask="['(##) ####-####', '(##) #####-####']"
-                  type="tel"
+                <v-autocomplete
+                  v-model="phone"
+                  :items="phones"
                   outlined
                   label="Phone"
                 />
               </v-col>
               <v-col cols="12">
-                <v-btn class="primary white--text" @click="step = 2">
-                  Confirm <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
+                <v-card tile elevation="0">
+                  <v-card-title> Purchase type </v-card-title>
+                  <v-card-text>
+                    <v-checkbox
+                      v-model="purchaseType"
+                      value="NORMAL"
+                      label="Normal"
+                    />
+                    <v-checkbox
+                      v-model="purchaseType"
+                      value="DELIVERY"
+                      label="Delivery"
+                    />
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols="12">
+                <v-btn
+                  class="primary white--text"
+                  :disabled="noInformation"
+                  @click="step = 2"
+                >
+                  Confirm
+                  <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -76,13 +103,90 @@
             <v-row class="py-2">
               <v-col cols="12">
                 <v-row>
-                  <v-col cols="12">
-                    <div id="dropin-container"></div>
+                  <v-col v-if="purchaseType === 'DELIVERY'" cols="12">
+                    <v-card tile elevation="0">
+                      <v-card-title> Pay on delivery </v-card-title>
+                      <v-card-text>
+                        <v-row>
+                          <v-col>
+                            <v-checkbox
+                              v-model="payOnDelivery"
+                              label="Card"
+                              value="CARD"
+                            />
+                            <v-checkbox
+                              v-model="payOnDelivery"
+                              label="Debit card"
+                              value="DEBIT_CARD"
+                            />
+                            <v-checkbox
+                              v-model="payOnDelivery"
+                              label="Credit card"
+                              value="CREDIT_CARD"
+                            />
+                            <v-checkbox
+                              v-model="payOnDelivery"
+                              label="Money"
+                              value="MONEY"
+                            />
+                          </v-col>
+                          <v-divider
+                            v-if="payOnDelivery === 'MONEY'"
+                            vertical
+                          />
+                          <v-col v-if="payOnDelivery === 'MONEY'">
+                            <v-row>
+                              <v-col cols="12">
+                                <v-text-field
+                                  v-model="money"
+                                  v-mask="'#######'"
+                                  type="tel"
+                                  label="Value"
+                                  outlined
+                                />
+                              </v-col>
+                              <v-col cols="12">
+                                <h2 class="text-center text-h2">
+                                  Total: {{ total | dinero }}
+                                </h2>
+                              </v-col>
+                              <v-col cols="12">
+                                <h3 class="text-center text-h3">
+                                  Change: {{ change | dinero }}
+                                </h3>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-btn
+                                  class="primary white--text"
+                                  block
+                                  @click="noNeedChange"
+                                >
+                                  Don't need change
+                                  <v-icon right>
+                                    {{ icons.mdiCashMultiple }}
+                                  </v-icon>
+                                </v-btn>
+                              </v-col>
+                            </v-row>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-divider />
+                  <v-col v-show="!payOnDelivery" cols="12">
+                    <v-card tile elevation="0">
+                      <v-card-title> Pay now </v-card-title>
+                      <v-card-text>
+                        <div id="dropin-container"></div>
+                      </v-card-text>
+                    </v-card>
                   </v-col>
                   <v-col cols="12">
                     <v-btn
                       v-if="dropInInstance"
                       class="primary white--text"
+                      :disabled="buyDisabled"
                       @click="buy"
                     >
                       Buy
@@ -107,7 +211,12 @@
 <script>
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
-import { mdiCheckAll, mdiDelete, mdiCreditCardOutline } from '@mdi/js'
+import {
+  mdiCheckAll,
+  mdiDelete,
+  mdiCreditCardOutline,
+  mdiCashMultiple,
+} from '@mdi/js'
 import { Buy } from '../graphql/mutation/buy/Buy'
 import cartInfo from '~/components/cartInfo.vue'
 import { GetMyPurchases } from '~/graphql/query/purchase/GetMyPurchases'
@@ -124,10 +233,17 @@ export default {
         mdiCheckAll,
         mdiDelete,
         mdiCreditCardOutline,
+        mdiCashMultiple,
       },
       user: {
         addresses: [],
+        phones: [],
       },
+      address: undefined,
+      phone: undefined,
+      purchaseType: 'NORMAL',
+      payOnDelivery: undefined,
+      money: 0,
       step: 1,
       headers: [
         {
@@ -175,7 +291,35 @@ export default {
   },
   computed: {
     addresses() {
-      return this.user.addresses.map((address) => address.fullName)
+      return this.user.addresses.map((address) => ({
+        text: address.fullName,
+        value: address,
+      }))
+    },
+    phones() {
+      return this.user.phones.map((phone) => ({
+        text: `${phone.description} - ${phone.number}`,
+        value: phone,
+      }))
+    },
+    noInformation() {
+      return !this.address || !this.purchaseType || !this.phone
+    },
+    total() {
+      return this.products.reduce(
+        (previous, item) => previous + parseFloat(item.price),
+        0
+      )
+    },
+    change() {
+      const result = this.money - this.total
+      return isNaN(result) ? -this.total : result
+    },
+    buyDisabled() {
+      if (this.purchaseType === 'DELIVERY' && this.payOnDelivery === 'MONEY') {
+        return this.money < this.total
+      }
+      return false
     },
     ...mapGetters({
       products: 'products/getCart',
@@ -195,6 +339,12 @@ export default {
       })
       .then((response) => {
         this.user = response.data.GetActualUser
+        if (this.user.phones.length === 1) {
+          this.phone = this.user.phones[0]
+        }
+        if (this.user.addresses.length === 1) {
+          this.address = this.user.addresses[0]
+        }
       })
   },
   mounted() {
@@ -234,18 +384,33 @@ export default {
         })
     },
     async buy() {
+      let method = {}
       try {
-        const method = await this.dropInInstance.requestPaymentMethod()
+        if (!this.payOnDelivery) {
+          method = await this.dropInInstance.requestPaymentMethod()
+        }
         this.$apollo
           .mutate({
             mutation: Buy,
             errorPolicy: 'all',
             variables: {
+              type: this.purchaseType,
+              payment: this.payOnDelivery
+                ? {
+                    type: this.payOnDelivery,
+                    value: this.total,
+                    paid: this.money ? parseFloat(this.money) : this.total,
+                  }
+                : {
+                    type: 'CARD',
+                    value: this.total,
+                    paid: this.total,
+                  },
               products: this.products.map((product) => ({
                 id: product.id,
                 amount: product.amount,
               })),
-              nonce: method.nonce,
+              nonce: method.nonce ? method.nonce : '',
               deviceData: this.deviceData,
             },
             awaitRefetchQueries: true,
@@ -272,6 +437,9 @@ export default {
       } catch (e) {
         this.$sentry.captureException(e)
       }
+    },
+    noNeedChange() {
+      this.money = this.total
     },
     remove(id) {
       this.$store.commit('products/remove', id)

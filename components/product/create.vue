@@ -193,6 +193,9 @@ export default {
     this.$apollo
       .query({
         query: GetAllCategories,
+        variables: {
+          withNoProducts: true,
+        },
       })
       .then((response) => {
         this.categories = response.data.GetAllCategories.map((item) => ({

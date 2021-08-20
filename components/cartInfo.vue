@@ -21,7 +21,7 @@ export default {
     },
     total() {
       return this.cart.reduce(
-        (previous, item) => previous + parseInt(item.price, 10),
+        (previous, item) => previous + parseFloat(item.price),
         0
       )
     },
