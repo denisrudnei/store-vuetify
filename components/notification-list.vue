@@ -163,6 +163,7 @@ export default {
 
     notificationSubscription.subscribe({
       next({ data }) {
+        navigator.vibrate([500, 250, 500])
         vue.$store.commit('notification/addNotification', data.NewNotification)
       },
     })
