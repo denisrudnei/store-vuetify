@@ -79,7 +79,7 @@
             </v-alert>
           </v-col>
           <v-col v-if="notifications.length" cols="12">
-            <v-btn block class="primary white--text">
+            <v-btn block class="primary white--text" @click="readAll">
               Read all
               <v-icon right>{{ icons.mdiCheckAll }}</v-icon>
             </v-btn>
@@ -123,6 +123,7 @@ import {
 import { GetNotifications } from '../graphql/query/notification/GetNotifications'
 import { NewNotification } from '../graphql/subscription/notification/NewNotification'
 import { ReadNotification } from '../graphql/mutation/notification/ReadNotification'
+import { ReadAllNotifications } from '../graphql/mutation/notification/ReadAllNotifications'
 export default {
   data() {
     return {
@@ -179,6 +180,15 @@ export default {
         })
         .then(() => {
           this.$store.commit('notification/readNotification', notification)
+        })
+    },
+    readAll() {
+      this.$apollo
+        .mutate({
+          mutation: ReadAllNotifications,
+        })
+        .then(() => {
+          this.$store.commit('notification/setNotifications', [])
         })
     },
   },
