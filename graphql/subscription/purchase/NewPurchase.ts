@@ -12,6 +12,7 @@ subscription {
     payment {
       id
       change
+      type
     }
     user {
       id

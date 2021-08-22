@@ -13,17 +13,18 @@ import {
   Subscription,
 } from 'type-graphql'
 
+import { DeliveryStatus } from '../enums/DeliveryStatus'
+import { NotificationEvents } from '../enums/NotificationEvents'
+import { PurchaseEvents } from '../enums/PurchaseEvents'
+import { PurchaseType } from '../enums/PurchaseType'
 import { Role } from '../enums/Role'
+import { SummaryEvents } from '../enums/SummaryEvents'
+import { PaymentInput } from '../inputs/PaymentInput'
 import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
+import { Notification } from '../models/notification/Notification'
 import { Purchase } from '../models/Purchase'
 import { PurchaseService } from '../services/PurchaseService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
-import { Notification } from '../models/notification/Notification'
-import { NotificationEvents } from '../enums/NotificationEvents'
-import { PurchaseEvents } from '../enums/PurchaseEvents'
-import { SummaryEvents } from '../enums/SummaryEvents'
-import { PurchaseType } from '../enums/PurchaseType'
-import { PaymentInput } from '../inputs/PaymentInput'
 
 @Resolver(() => Purchase)
 export class PurchaseResolver {
@@ -37,6 +38,12 @@ export class PurchaseResolver {
   @Authorized(Role.ADMIN)
   public GetDelivery() {
     return PurchaseService.getDelivery()
+  }
+
+  @Query(() => [Purchase])
+  @Authorized(Role.ADMIN)
+  public GetNormalPurchases() {
+    return PurchaseService.getNormalPurchases()
   }
 
   @Query(() => Purchase)
@@ -87,6 +94,24 @@ export class PurchaseResolver {
     return purchase
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public async ChangePurchaseStatus(
+    @Arg('id', () => ID) id: Purchase['id'],
+    @Arg('status', () => DeliveryStatus) status: DeliveryStatus,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const result = await PurchaseService.changeStatus(id, status)
+    const notification = Notification.create()
+    notification.content = `Your purchase had the status updated to ${status}`
+    const purchase = await Purchase.findOne(result.id, { relations: ['user'] })
+    notification.user = purchase!.user
+    await notification.save()
+    pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
+    pubSub.publish(PurchaseEvents.DELIVERY_STATUS_UPDATED, result)
+    return true
+  }
+
   @FieldResolver()
   public async products(@Root() root: Purchase) {
     const { products } = (await Purchase.findOne(root.id, {
@@ -120,5 +145,17 @@ export class PurchaseResolver {
       relations: ['payment'],
     })) as Purchase
     return payment
+  }
+
+  @Subscription(() => Purchase, {
+    topics: PurchaseEvents.DELIVERY_STATUS_UPDATED,
+    filter: ({ payload, context }) => {
+      if (!context.req || !context.req.authUser) return false
+      if (context.req.authUser.role === 'ADMIN') return true
+      return payload.user.id === context.req.authUser.id
+    },
+  })
+  public PurchaseStatusUpdated(@Root() payload: Purchase) {
+    return payload
   }
 }

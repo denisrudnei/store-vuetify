@@ -30,6 +30,15 @@ export class PurchaseService {
     })
   }
 
+  public static getNormalPurchases() {
+    return Purchase.find({
+      where: {
+        type: PurchaseType.NORMAL,
+        status: Not(DeliveryStatus.DELIVERED),
+      },
+    })
+  }
+
   public static async getPurchase(userId: User['id'], id: Purchase['id']) {
     const user = await User.findOne(userId)
     if (!user) throw new Error('User not found')
@@ -136,5 +145,22 @@ export class PurchaseService {
     }
 
     return purchase
+  }
+
+  public static async changeStatus(id: Purchase['id'], status: DeliveryStatus) {
+    const purchase = await Purchase.findOne(id)
+    if (!purchase) throw new Error('Purchase not found')
+    await Purchase.update(
+      {
+        id: purchase.id,
+      },
+      {
+        status,
+      }
+    )
+    return {
+      ...purchase,
+      status,
+    }
   }
 }
