@@ -310,7 +310,7 @@ export default {
         )
         Object.entries(response.data.GetSocialNetworks).forEach((entry) => {
           const [name, value] = entry
-          if (name !== 'id' && value.length) {
+          if (name !== 'id' && value && value.length) {
             this.socialNetworks.push({
               name,
               icon: this.icons[
