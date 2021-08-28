@@ -33,7 +33,7 @@ export class User extends BaseEntity {
   public name!: string
 
   @Field()
-  @Column({ default: '/images/not-set.svg' })
+  @Column({ default: '/images/profile.jpg' })
   public image!: string
 
   @Column()
