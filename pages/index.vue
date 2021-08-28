@@ -18,14 +18,16 @@
             </v-row>
           </template>
         </v-img>
-        <v-card-title>
+        <v-card-text>
           <v-tooltip top>
             <template #activator="{ on }">
-              <span class="text-truncate" v-on="on">{{ category.name }}</span>
+              <p class="text-center text-truncate title" v-on="on">
+                {{ category.name }}
+              </p>
             </template>
             <span>{{ category.name }}</span>
           </v-tooltip>
-        </v-card-title>
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>
