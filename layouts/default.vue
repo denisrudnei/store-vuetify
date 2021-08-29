@@ -1,80 +1,16 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      clipped
-      fixed
-      :mini-variant="false"
-      app
-    >
-      <v-list>
-        <v-list-item>
-          <v-list-item-content>
-            <v-img :src="logo" :aspect-ratio="1" class="rounded-circle" />
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon color="primary">{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content
-            :class="{ 'primary--text': !$vuetify.theme.isDark }"
-          >
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/all-categories" router exact>
-          <v-list-item-action>
-            <v-icon color="primary">{{ icons.mdiExpandAll }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title
-              :class="{ 'primary--text': !$vuetify.theme.isDark }"
-            >
-              All categories
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/products" router exact>
-          <v-list-item-action>
-            <v-icon color="primary">{{ icons.mdiTagMultiple }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title
-              :class="{ 'primary--text': !$vuetify.theme.isDark }"
-            >
-              All products
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider />
-        <v-list-item
-          v-for="item in categoriesItems"
-          :key="item.title"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon color="primary">{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content
-            :class="{ 'primary--text': !$vuetify.theme.isDark }"
-          >
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-      <adsbygoogle v-if="adSense" />
-    </v-navigation-drawer>
+    <main-drawer />
+    <admin-drawer v-if="isAdmin" />
     <v-app-bar clipped-left clipped-right fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-toolbar-items v-if="drawer">
+        <v-btn icon @click="mainMini = !mainMini">
+          <v-icon>
+            {{ mainMini ? icons.mdiChevronRight : icons.mdiChevronLeft }}
+          </v-icon>
+        </v-btn>
+      </v-toolbar-items>
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <v-tooltip left>
@@ -175,16 +111,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import {
-  mdiApps,
   mdiWhiteBalanceSunny,
   mdiWeatherNight,
   mdiAccount,
   mdiCart,
-  mdiTagMultiple,
-  mdiExpandAll,
-  mdiLabel,
   mdiFacebook,
   mdiYoutube,
   mdiTwitter,
@@ -192,17 +123,20 @@ import {
   mdiClose,
   mdiCog,
   mdiExitToApp,
+  mdiChevronRight,
+  mdiChevronLeft,
 } from '@mdi/js'
 import ColorMiddleware from '../middleware/ColorMiddleware'
-import { UpdateTheme } from '../graphql/mutation/user/UpdateTheme'
 import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
-import cartMenu from '~/components/cartMenu.vue'
-import DialogBox from '~/components/dialog-box.vue'
-import NotificationList from '~/components/notification-list.vue'
+import cartMenu from '~/components/cartMenu'
+import NotificationList from '~/components/notification-list'
+import mainDrawer from '~/components/drawers/main-drawer'
+import adminDrawer from '~/components/drawers/admin-drawer'
 import theme from '~/mixins/theme'
 import color from '~/mixins/color'
+import { UpdateTheme } from '~/graphql/mutation/user/UpdateTheme'
 export default {
-  components: { cartMenu, NotificationList, DialogBox },
+  components: { cartMenu, NotificationList, mainDrawer, adminDrawer },
   mixins: [theme, color],
   middleware: [ColorMiddleware],
   data() {
@@ -210,13 +144,10 @@ export default {
       clipped: false,
       socialNetworks: [],
       icons: {
-        mdiApps,
         mdiWhiteBalanceSunny,
         mdiWeatherNight,
         mdiAccount,
         mdiCart,
-        mdiTagMultiple,
-        mdiExpandAll,
         mdiFacebook,
         mdiYoutube,
         mdiTwitter,
@@ -224,22 +155,13 @@ export default {
         mdiClose,
         mdiCog,
         mdiExitToApp,
+        mdiChevronRight,
+        mdiChevronLeft,
       },
-      items: [
-        {
-          icon: mdiApps,
-          title: 'Home',
-          to: '/',
-        },
-      ],
       title: 'Store',
     }
   },
   computed: {
-    ...mapGetters({
-      logo: 'site-settings/getLogo',
-      adSense: 'site-settings/getAdSense',
-    }),
     logged() {
       return this.$auth.loggedIn
     },
@@ -254,6 +176,14 @@ export default {
         this.$store.commit('menus/setMainDrawer', value)
       },
     },
+    mainMini: {
+      get() {
+        return this.$store.getters['menus/getMainMiniVariant']
+      },
+      set(value) {
+        this.$store.commit('menus/setMainMiniVariant', value)
+      },
+    },
     cartMenu: {
       get() {
         return this.$store.getters['menus/getCartMenu']
@@ -266,16 +196,6 @@ export default {
       get() {
         return this.$store.getters['products/getCart']
       },
-    },
-    categories() {
-      return this.$store.getters['category/getCategories']
-    },
-    categoriesItems() {
-      return this.categories.map((category) => ({
-        icon: mdiLabel,
-        title: `${category.name}`,
-        to: `/categories/${category.slug}`,
-      }))
     },
   },
   created() {
@@ -321,6 +241,9 @@ export default {
           }
         })
       })
+    if (this.isAdmin) {
+      this.$store.commit('menus/setAdminDrawer', true)
+    }
   },
   methods: {
     toggleTheme() {
