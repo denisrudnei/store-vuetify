@@ -1,7 +1,9 @@
 <template>
   <v-app dark>
     <main-drawer />
-    <admin-drawer v-if="isAdmin" />
+    <client-only>
+      <admin-drawer v-if="isAdmin" />
+    </client-only>
     <v-app-bar clipped-left clipped-right fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-items v-if="drawer">
