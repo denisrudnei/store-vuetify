@@ -22,7 +22,9 @@
         <v-list-item-action>
           <v-btn icon>
             <v-badge bottom overlap bordered left>
-              <template #badge> <span>0</span> </template>
+              <template #badge>
+                <span>{{ deliveries.length }}</span>
+              </template>
               <v-icon>
                 {{ icons.mdiTruck }}
               </v-icon>
@@ -64,6 +66,16 @@ export default {
       },
       set(value) {
         this.$store.commit('menus/setAdminMiniVariant', value)
+      },
+    },
+    deliveries: {
+      get() {
+        return this.$store.getters['purchase/getDeliveries'].filter(
+          (delivery) => delivery.status !== 'DELIVERED'
+        )
+      },
+      set(value) {
+        this.$store.commit('purchase/setDeliveries', value)
       },
     },
   },

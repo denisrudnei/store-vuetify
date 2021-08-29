@@ -139,7 +139,10 @@ export default {
           },
         })
         .then(() => {
-          item.status = status
+          this.$store.commit('purchase/updatePurchase', {
+            ...item,
+            status,
+          })
         })
     },
   },

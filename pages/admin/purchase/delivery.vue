@@ -15,17 +15,19 @@
 <script>
 import { GetDelivery } from '../../../graphql/query/purchase/GetDelivery'
 import deliveryCard from '@/components/delivery-card'
-import { NewPurchase } from '~/graphql/subscription/purchase/NewPurchase'
 export default {
   components: {
     deliveryCard,
   },
-  data() {
-    return {
-      deliveries: [],
-    }
-  },
   computed: {
+    deliveries: {
+      get() {
+        return this.$store.getters['purchase/getDeliveries']
+      },
+      set(value) {
+        this.$store.commit('purchase/setDeliveries', value)
+      },
+    },
     required() {
       return this.deliveries.filter(
         (delivery) => delivery.status === 'REQUIRED'
@@ -41,19 +43,6 @@ export default {
         (delivery) => delivery.status === 'DELIVERY_PROCESS'
       )
     },
-  },
-  mounted() {
-    const vue = this
-    const newPurchaseSubscription = this.$apollo.subscribe({
-      query: NewPurchase,
-    })
-    newPurchaseSubscription.subscribe({
-      next({ data }) {
-        if (data.NewPurchase.type === 'DELIVERY') {
-          vue.deliveries.push(data.NewPurchase)
-        }
-      },
-    })
   },
   created() {
     this.$apollo

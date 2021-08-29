@@ -130,6 +130,7 @@ import {
 } from '@mdi/js'
 import ColorMiddleware from '../middleware/ColorMiddleware'
 import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
+import { PurchaseStatusUpdated } from '../graphql/subscription/purchase/PurchaseStatusUpdated'
 import cartMenu from '~/components/cartMenu'
 import NotificationList from '~/components/notification-list'
 import mainDrawer from '~/components/drawers/main-drawer'
@@ -137,6 +138,7 @@ import adminDrawer from '~/components/drawers/admin-drawer'
 import theme from '~/mixins/theme'
 import color from '~/mixins/color'
 import { UpdateTheme } from '~/graphql/mutation/user/UpdateTheme'
+import { NewPurchase } from '~/graphql/subscription/purchase/NewPurchase'
 export default {
   components: { cartMenu, NotificationList, mainDrawer, adminDrawer },
   mixins: [theme, color],
@@ -245,6 +247,32 @@ export default {
       })
     if (this.isAdmin) {
       this.$store.commit('menus/setAdminDrawer', true)
+    }
+  },
+  mounted() {
+    if (this.isAdmin) {
+      const vue = this
+      const newPurchaseSubscription = this.$apollo.subscribe({
+        query: NewPurchase,
+      })
+      newPurchaseSubscription.subscribe({
+        next({ data }) {
+          if (data.NewPurchase.type === 'DELIVERY') {
+            vue.$store.commit('purchase/addDelivery', data.NewPurchase)
+          }
+        },
+      })
+      const purchaseStatusUpdated = this.$apollo.subscribe({
+        query: PurchaseStatusUpdated,
+      })
+      purchaseStatusUpdated.subscribe({
+        next({ data }) {
+          vue.$store.commit(
+            'purchase/updatePurchase',
+            data.PurchaseStatusUpdated
+          )
+        },
+      })
     }
   },
   methods: {
