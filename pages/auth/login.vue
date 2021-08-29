@@ -62,6 +62,10 @@ export default {
       this.$auth
         .loginWith('local', { data: this.user })
         .then(() => {
+          if (this.$auth.user.role === 'ADMIN') {
+            this.$store.commit('menus/setAdminDrawer', true)
+          }
+
           this.$toast.show('Logged', {
             duration: 1000,
           })
