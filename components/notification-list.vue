@@ -2,7 +2,8 @@
   <v-menu
     v-model="menu"
     :max-height="$vuetify.breakpoint.mobile ? '90vh' : 450"
-    nudge-width="450"
+    :max-width="$vuetify.breakpoint.mobile ? '90vh' : 450"
+    :nudge-width="$vuetify.breakpoint.mobile ? '90vh' : 450"
     :close-on-content-click="false"
   >
     <template #activator="{ on }">
