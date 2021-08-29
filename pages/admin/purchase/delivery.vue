@@ -59,6 +59,7 @@ export default {
     this.$apollo
       .query({
         query: GetDelivery,
+        fetchPolicy: 'network-only',
       })
       .then((response) => {
         this.deliveries = response.data.GetDelivery
