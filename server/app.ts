@@ -1,9 +1,11 @@
 import './types/CustomExpressContext'
 
 import compression from 'compression'
+import redisConnect from 'connect-redis'
 import cors from 'cors'
 import express, { Router } from 'express'
 import session from 'express-session'
+import redis from 'redis'
 
 import { AuthController } from './controllers/AuthController'
 import { CategoryController } from './controllers/CategoryController'
@@ -15,6 +17,10 @@ import { SiteSettingsController } from './controllers/SiteSettingsController'
 import { UserController } from './controllers/UserController'
 
 const app = Router()
+
+const RedisStore = redisConnect(session)
+const redisClient = redis.createClient({ url: process.env.REDIS_URL })
+const store = new RedisStore({ client: redisClient })
 
 app.use(compression())
 
@@ -31,6 +37,7 @@ app.use(express.json())
 
 app.use(
   session({
+    store,
     proxy: true,
     resave: true,
     rolling: true,
