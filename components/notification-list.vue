@@ -1,9 +1,11 @@
 <template>
   <v-menu
     v-model="menu"
-    :max-height="$vuetify.breakpoint.mobile ? '90vh' : 450"
-    :max-width="$vuetify.breakpoint.mobile ? '90vh' : 450"
-    :nudge-width="$vuetify.breakpoint.mobile ? '90vh' : 450"
+    :max-height="isMobile ? '90vh' : 450"
+    :max-width="isMobile ? '95vw' : 800"
+    :nudge-width="isMobile ? '95vw' : 450"
+    offset-y
+    left
     :close-on-content-click="false"
   >
     <template #activator="{ on }">
@@ -125,7 +127,9 @@ import { GetNotifications } from '../graphql/query/notification/GetNotifications
 import { NewNotification } from '../graphql/subscription/notification/NewNotification'
 import { ReadNotification } from '../graphql/mutation/notification/ReadNotification'
 import { ReadAllNotifications } from '../graphql/mutation/notification/ReadAllNotifications'
+import theme from '~/mixins/theme'
 export default {
+  mixins: [theme],
   data() {
     return {
       icons: {
