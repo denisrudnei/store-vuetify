@@ -15,7 +15,7 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,vue}": "eslint"
+    "!(docs/**/*)*.{js,vue}": "eslint"
   },
   "husky": {
     "hooks": {
