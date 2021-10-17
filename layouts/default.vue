@@ -43,6 +43,11 @@
       <client-only>
         <notification-list v-if="logged" />
       </client-only>
+      <client-only>
+        <v-btn v-if="isAdmin" icon class="primary--text" to="/restaurant">
+          <v-icon>{{ icons.mdiSilverware }}</v-icon>
+        </v-btn>
+      </client-only>
       <v-menu
         v-model="cartMenu"
         nudge-width="450"
@@ -127,6 +132,7 @@ import {
   mdiExitToApp,
   mdiChevronRight,
   mdiChevronLeft,
+  mdiSilverware,
 } from '@mdi/js'
 import ColorMiddleware from '../middleware/ColorMiddleware'
 import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
@@ -161,6 +167,7 @@ export default {
         mdiExitToApp,
         mdiChevronRight,
         mdiChevronLeft,
+        mdiSilverware,
       },
       title: 'Store',
     }

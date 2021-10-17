@@ -16,6 +16,7 @@ import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { HistoryProduct } from './HistoryProduct'
 import { Payment } from './Payment'
 import { User } from './User'
+import { EstablishmentTable } from './EstablishmentTable'
 
 @ObjectType()
 @Entity()
@@ -48,6 +49,12 @@ export class Purchase extends BaseEntity {
   @Field(() => DeliveryStatus)
   @Column({ type: 'varchar', default: DeliveryStatus.REQUIRED })
   public status!: DeliveryStatus
+
+  @Field(() => EstablishmentTable)
+  @ManyToOne(() => EstablishmentTable, (table) => table.orders, {
+    nullable: true,
+  })
+  public establishmentTable!: EstablishmentTable
 
   @Field(() => Int)
   public async totalAmount() {
