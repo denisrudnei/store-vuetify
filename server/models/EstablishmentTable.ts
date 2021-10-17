@@ -19,6 +19,10 @@ export class EstablishmentTable extends BaseEntity {
   @Column()
   public name!: string
 
+  @Field()
+  @Column({ default: false })
+  public inUse!: boolean
+
   @Field(() => Purchase)
   public activeOrder!: Purchase
 

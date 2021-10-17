@@ -6,6 +6,7 @@
         <v-tab to="/admin/purchase">Purchases</v-tab>
         <v-tab to="/admin/product">Products</v-tab>
         <v-tab to="/admin/category">Categories</v-tab>
+        <v-tab to="/admin/restaurant/tables">Restaurant</v-tab>
         <v-tab to="/admin/user"> Users</v-tab>
         <v-tab to="/admin/customization">Customization</v-tab>
         <v-tab to="/admin/social-networks">Social networks</v-tab>
