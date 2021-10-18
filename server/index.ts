@@ -53,7 +53,6 @@ async function start() {
     },
     subscriptions: {
       path: '/subscriptions',
-      keepAlive: 10 * 60 * 1000,
       onConnect,
     },
   })
