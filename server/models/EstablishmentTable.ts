@@ -1,11 +1,15 @@
+import { Field, ID, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   Column,
-  PrimaryGeneratedColumn,
+  DeleteDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
-import { ID, Field, ObjectType } from 'type-graphql'
+
 import { Purchase } from './Purchase'
 
 @Entity()
@@ -23,10 +27,17 @@ export class EstablishmentTable extends BaseEntity {
   @Column({ default: false })
   public inUse!: boolean
 
-  @Field(() => Purchase)
-  public activeOrder!: Purchase
+  @Field(() => Purchase, { nullable: true })
+  @OneToOne(() => Purchase, (order) => order.establishmentTable, {
+    nullable: true,
+  })
+  @JoinColumn()
+  public activeOrder!: Purchase | undefined
 
   @OneToMany(() => Purchase, (purchase) => purchase.establishmentTable)
   @Field(() => [Purchase])
   public orders!: Purchase[]
+
+  @DeleteDateColumn()
+  public deletedAt?: Date
 }

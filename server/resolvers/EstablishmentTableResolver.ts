@@ -43,6 +43,18 @@ export class EstablishmentTableResolver {
     return result
   }
 
+  @Mutation(() => Boolean)
+  public async RemoveEstablishmentTable(
+    @Arg('id', () => ID) id: EstablishmentTable['id'],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const establishmentTable = await EstablishmentTable.findOne(id)
+    if (!establishmentTable) throw new Error('Establishment table not found')
+    await EstablishmentTable.softRemove(establishmentTable)
+    pubSub.publish(EstablishmentTableEvents.TABLE_REMOVED, establishmentTable)
+    return true
+  }
+
   @Subscription(() => EstablishmentTable, {
     topics: EstablishmentTableEvents.STATUS_UPDATED,
   })
