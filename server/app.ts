@@ -15,6 +15,7 @@ import { ProductController } from './controllers/ProductController'
 import { SitemapController } from './controllers/SitemapController'
 import { SiteSettingsController } from './controllers/SiteSettingsController'
 import { UserController } from './controllers/UserController'
+import { ConfigController } from './controllers/ConfigController'
 
 const app = Router()
 
@@ -63,6 +64,7 @@ app.use('/api', ProductController)
 app.use('/api', CategoryController)
 app.use('/api', GatewayController)
 app.use('/api', CepController)
-app.use(SitemapController)
+app.use('/api', ConfigController)
+app.use('/api', SitemapController)
 
 export { app }
