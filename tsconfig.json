@@ -12,6 +12,7 @@
     "sourceMap": true,
     "outDir": "dist/",
     "strict": true,
+    "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
@@ -30,6 +31,9 @@
       "@nuxtjs/sentry"
     ]
   },
+  "include": [
+    "locales/*.json"
+  ],
   "exclude": [
     "node_modules",
     ".nuxt",

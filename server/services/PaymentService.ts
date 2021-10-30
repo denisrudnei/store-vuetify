@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import '~/locales/en-us.json'
 
 export class PaymentService {
   public static getPaymentDescriptions(locale?: string) {
