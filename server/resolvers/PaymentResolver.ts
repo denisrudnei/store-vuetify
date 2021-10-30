@@ -1,13 +1,16 @@
-import { Authorized, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Query, Resolver } from 'type-graphql'
 
-import { PaymentType } from '../enums/PaymentType'
 import { Role } from '../enums/Role'
+import { PaymentService } from '../services/PaymentService'
+import { PaymentDescription } from '../types/PaymentDescription'
 
 @Resolver()
 export class PaymentResolver {
-  @Query(() => [String])
+  @Query(() => [PaymentDescription])
   @Authorized(Role.USER)
-  GetPaymentTypes() {
-    return Object.values(PaymentType)
+  GetPaymentTypes(
+    @Arg('locale', () => String, { nullable: true }) locale?: string
+  ) {
+    return PaymentService.getPaymentDescriptions(locale)
   }
 }
