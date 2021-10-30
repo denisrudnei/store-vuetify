@@ -1,6 +1,7 @@
 import { Like } from 'typeorm'
 
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { User } from '../models/User'
 
 export type UserRegister = {
@@ -35,5 +36,22 @@ export class AuthService {
     const logged = bcrypt.compareSync(password, user.password)
     if (logged) return user
     throw new Error('Incorrect password')
+  }
+
+  public static generateToken(user: User) {
+    const token = jwt.sign(
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        darkTheme: user.darkTheme,
+      },
+      process.env.JWT_KEY!,
+      {
+        expiresIn: '30m',
+      }
+    )
+    return token
   }
 }

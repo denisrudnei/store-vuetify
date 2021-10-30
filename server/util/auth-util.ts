@@ -14,6 +14,7 @@ function getUserByAuthorizationHeader(authorization: string) {
 async function isLogged(req: express.Request) {
   if (!req.headers.authorization && !req.session) return false
   if (req.session.authUser) return true
+  if (!req.headers.authorization) return false
   const items = req.headers.authorization!.split(' ')
   const token = items[items.length - 1]
 

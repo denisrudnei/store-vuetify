@@ -9,19 +9,7 @@ const AuthController = Router()
 AuthController.post('/auth/login', (req, res) => {
   AuthService.login(req.body.username, req.body.password)
     .then((user) => {
-      const token = jwt.sign(
-        {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          darkTheme: user.darkTheme,
-        },
-        process.env.JWT_KEY!,
-        {
-          expiresIn: '30m',
-        }
-      )
+      const token = AuthService.generateToken(user)
 
       req.session!.authUser = user
       res.header('authorization', `Bearer ${token}`)

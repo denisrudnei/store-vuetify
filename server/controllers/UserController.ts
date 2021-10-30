@@ -10,7 +10,8 @@ const UserController = Router()
 const upload = multer()
 
 UserController.post('/user/image', upload.single('image'), async (req, res) => {
-  if (!isLogged(req)) return res.sendStatus(401)
+  const logged = await isLogged(req)
+  if (!logged) return res.sendStatus(401)
   const id = req.session.authUser!.id
   const params = {
     Bucket: process.env.AWS_S3_BUCKET!,
