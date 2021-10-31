@@ -1,0 +1,14 @@
+{
+  "PT_BR": {
+    "MONEY": "Dinheiro",
+    "CARD": "Cartão",
+    "CREDIT_CARD": "Cartão de crédito",
+    "DEBIT_CARD": "Cartão de débito"
+  },
+  "EN_US": {  
+    "MONEY": "Money",
+    "CARD": "Card",
+    "CREDIT_CARD": "Credit card",
+    "DEBIT_CARD": "Debit card"
+  }
+}
