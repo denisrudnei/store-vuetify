@@ -5,6 +5,7 @@ subscription {
   NewPurchase {
     id
     createdAt
+    origin
     totalPrice
     totalAmount
     type
