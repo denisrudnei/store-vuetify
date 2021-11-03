@@ -39,10 +39,12 @@
           {{ item.createdAt | dateAndHour }}
         </template>
         <template #item.user="{ item }">
-          <v-avatar class="mt-1 mr-3">
-            <v-img :src="item.user.image" />
-          </v-avatar>
-          {{ item.user.name }}
+          <template v-if="item.user">
+            <v-avatar class="mt-1 mr-3">
+              <v-img :src="item.user.image" />
+            </v-avatar>
+            {{ item.user.name }}
+          </template>
         </template>
       </v-data-table>
     </v-col>
@@ -76,6 +78,10 @@ export default {
         {
           text: 'Total',
           value: 'totalPrice',
+        },
+        {
+          text: 'Origin',
+          value: 'origin',
         },
         {
           text: 'Type',

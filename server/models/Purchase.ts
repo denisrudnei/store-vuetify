@@ -13,10 +13,12 @@ import {
 
 import { PurchaseType } from '../enums/PurchaseType'
 import { DeliveryStatus } from '../enums/DeliveryStatus'
+import { PurchaseOrigin } from '../enums/PurchaseOrigin'
 import { HistoryProduct } from './HistoryProduct'
 import { Payment } from './Payment'
 import { User } from './User'
 import { EstablishmentTable } from './EstablishmentTable'
+import { POS } from './POS'
 
 @ObjectType()
 @Entity()
@@ -33,9 +35,21 @@ export class Purchase extends BaseEntity {
   @OneToMany(() => HistoryProduct, (history) => history.purchase)
   public products!: HistoryProduct[]
 
-  @Field(() => User)
-  @ManyToOne(() => User, (user) => user.purchases)
-  public user!: User
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.purchases, { nullable: true })
+  public user?: User
+
+  @Field(() => POS, { nullable: true })
+  @ManyToOne(() => POS, (pos) => pos.purchases, { nullable: true })
+  public pos?: POS
+
+  @Field(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.purchasesMade, { nullable: true })
+  public operator?: User
+
+  @Field(() => PurchaseOrigin)
+  @Column({ default: PurchaseOrigin.ECOMMERCE, type: 'varchar' })
+  public origin!: PurchaseOrigin
 
   @OneToOne(() => Payment, (payment) => payment.purchase)
   @Field(() => Payment)

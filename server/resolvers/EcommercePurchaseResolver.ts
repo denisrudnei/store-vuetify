@@ -27,7 +27,7 @@ import { PurchaseService } from '../services/PurchaseService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 
 @Resolver(() => Purchase)
-export class PurchaseResolver {
+export class EcommercePurchaseResolver {
   @Query(() => [Purchase])
   @Authorized(Role.ADMIN)
   public GetPurchases() {

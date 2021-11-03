@@ -62,6 +62,10 @@ export class User extends BaseEntity {
   @OneToMany(() => Purchase, (purchase) => purchase.user)
   public purchases!: Purchase[]
 
+  @Field(() => [Purchase])
+  @OneToMany(() => Purchase, (purchase) => purchase.operator)
+  public purchasesMade!: Purchase[]
+
   @Column({ default: Role.USER, type: 'varchar' })
   public role!: Role
 
