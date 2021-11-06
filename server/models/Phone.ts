@@ -1,18 +1,19 @@
 import { Length } from 'class-validator'
-import { ObjectType, Field } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql'
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   BaseEntity,
-  ManyToOne,
   Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
+
 import { User } from './User'
 
 @ObjectType()
 @Entity()
 export class Phone extends BaseEntity {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   public id!: number
 

@@ -15,6 +15,7 @@ import { Role } from '../enums/Role'
 import { UserService } from '../services/UserService'
 import { UpdateUserInfoInput } from '../inputs/UpdateUserInfoInput'
 import { Address } from '../models/Address'
+import { Purchase } from '../models/Purchase'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -82,5 +83,13 @@ export class UserResolver {
       relations: ['phones'],
     })) as User
     return phones
+  }
+
+  @FieldResolver(() => [Purchase])
+  public async purchases(@Root() root: User) {
+    const { purchases } = (await User.findOne(root.id, {
+      relations: ['purchases'],
+    })) as User
+    return purchases
   }
 }
