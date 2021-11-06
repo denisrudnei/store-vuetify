@@ -31,6 +31,12 @@ export class UserResolver {
     return UserService.getAll()
   }
 
+  @Query(() => [User])
+  @Authorized(Role.OPERATOR)
+  public FindUsers(@Arg('name', () => String) name: string) {
+    return UserService.findUser(name)
+  }
+
   @Mutation(() => User)
   @Authorized(Role.USER)
   public UpdateTheme(

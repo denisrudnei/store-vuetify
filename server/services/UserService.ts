@@ -1,3 +1,4 @@
+import { ILike } from 'typeorm'
 import { User } from '../models/User'
 import { UpdateUserInfoInput } from '../inputs/UpdateUserInfoInput'
 
@@ -32,5 +33,13 @@ export class UserService {
     if (!user) throw new Error('User not found')
     user.password = newPassword
     return user.save()
+  }
+
+  public static findUser(name: string) {
+    return User.find({
+      where: {
+        name: ILike(`%${name}%`),
+      },
+    })
   }
 }
