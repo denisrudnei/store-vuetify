@@ -29,19 +29,19 @@ import { CustomExpressContext } from '../types/CustomExpressContext'
 @Resolver(() => Purchase)
 export class EcommercePurchaseResolver {
   @Query(() => [Purchase])
-  @Authorized(Role.ADMIN)
+  @Authorized(Role.OPERATOR)
   public GetPurchases() {
     return PurchaseService.getPurchases()
   }
 
   @Query(() => [Purchase])
-  @Authorized(Role.ADMIN)
+  @Authorized(Role.OPERATOR)
   public GetDelivery() {
     return PurchaseService.getDelivery()
   }
 
   @Query(() => [Purchase])
-  @Authorized(Role.ADMIN)
+  @Authorized(Role.OPERATOR)
   public GetNormalPurchases() {
     return PurchaseService.getNormalPurchases()
   }
@@ -95,7 +95,7 @@ export class EcommercePurchaseResolver {
   }
 
   @Mutation(() => Boolean)
-  @Authorized(Role.ADMIN)
+  @Authorized(Role.OPERATOR)
   public async ChangePurchaseStatus(
     @Arg('id', () => ID) id: Purchase['id'],
     @Arg('status', () => DeliveryStatus) status: DeliveryStatus,
