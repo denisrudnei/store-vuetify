@@ -7,6 +7,8 @@ import {
   Query,
   Resolver,
   PubSub,
+  FieldResolver,
+  Root,
 } from 'type-graphql'
 
 import { PubSubEngine } from 'graphql-subscriptions'
@@ -51,5 +53,13 @@ export class POSPurchaseResolver {
     pubSub.publish(PurchaseEvents.NEW_PURCHASE, purchase)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
     return purchase
+  }
+
+  @FieldResolver()
+  public async operator(@Root() root: Purchase) {
+    const { operator } = (await Purchase.findOne(root.id, {
+      relations: ['operator'],
+    })) as Purchase
+    return operator
   }
 }
