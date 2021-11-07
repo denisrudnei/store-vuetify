@@ -1,3 +1,5 @@
+import { Between } from 'typeorm'
+import { set } from 'date-fns'
 import { POS } from '../models/POS'
 import { Purchase } from '../models/Purchase'
 import { User } from '../models/User'
@@ -15,6 +17,27 @@ export class POSPurchaseService {
     return Purchase.find({
       where: {
         pos: id,
+      },
+    })
+  }
+
+  public static getPurchaseInDate(date: Date = new Date()) {
+    return Purchase.find({
+      where: {
+        createdAt: Between(
+          set(date, {
+            seconds: 0,
+            minutes: 0,
+            hours: 0,
+          }),
+          set(date, {
+            hours: 23,
+            minutes: 59,
+            seconds: 59,
+          })
+        ),
+        type: PurchaseType.NORMAL,
+        origin: PurchaseOrigin.POS,
       },
     })
   }

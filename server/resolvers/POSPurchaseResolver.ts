@@ -31,6 +31,15 @@ export class POSPurchaseResolver {
     return POSPurchaseService.getPurchasesFromPOS(id)
   }
 
+  @Query(() => [Purchase])
+  @Authorized(Role.OPERATOR)
+  public GetPurchasesInDate(
+    @Arg('date', () => Date, { nullable: true, defaultValue: new Date() })
+    date: Date = new Date()
+  ) {
+    return POSPurchaseService.getPurchaseInDate(date)
+  }
+
   @Mutation(() => Purchase)
   @Authorized(Role.OPERATOR)
   public async PurchaseFromPOS(
