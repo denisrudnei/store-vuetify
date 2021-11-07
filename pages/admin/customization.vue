@@ -9,6 +9,19 @@
             label="Name"
             @change="updateName"
           />
+          <v-text-field
+            v-mask="['##.###.###/####-##']"
+            :value="settings.cnpj"
+            outlined
+            label="CNPJ"
+            @change="updateCnpj"
+          />
+          <v-text-field
+            :value="settings.address"
+            outlined
+            label="Address"
+            @change="updateAddress"
+          />
         </v-card-text>
       </v-card>
     </v-col>
@@ -213,12 +226,16 @@
 import faker from 'faker'
 import ColorThief from 'colorthief'
 import { mdiPalette, mdiCheckAll, mdiContentSave } from '@mdi/js'
+import { TheMask } from 'vue-the-mask'
 import colorSelect from '~/components/color-select.vue'
 import { EditSiteSettings } from '~/graphql/mutation/site-settings/EditSiteSettings'
 import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
 import color from '~/mixins/color'
 export default {
   components: { colorSelect },
+  directives: {
+    TheMask,
+  },
   mixins: [color],
   data() {
     return {
@@ -331,6 +348,12 @@ export default {
     },
     updateName(name) {
       this.$store.commit('site-settings/updateName', name)
+    },
+    updateCnpj(cnpj) {
+      this.$store.commit('site-settings/updateCnpj', cnpj)
+    },
+    updateAddress(address) {
+      this.$store.commit('site-settings/updateAddress', address)
     },
     updateThemeType(isDark) {
       this.$store.commit('site-settings/updateThemeType', isDark)

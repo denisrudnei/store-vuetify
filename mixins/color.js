@@ -32,6 +32,8 @@ export default {
     const siteSettings = data.GetSiteSettings
     const {
       name,
+      cnpj,
+      address,
       isDark,
       darkPrimary,
       darkSecondary,
@@ -59,6 +61,8 @@ export default {
 
     this.$store.commit('site-settings/setSiteSettings', {
       name,
+      cnpj,
+      address,
       isDark,
       darkPrimary,
       darkSecondary,

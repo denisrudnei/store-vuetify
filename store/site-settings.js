@@ -2,6 +2,8 @@ export const state = () => ({
   settings: {
     name: '',
     logo: '',
+    cnpj: '',
+    address: '',
     isDark: true,
     darkPrimary: '#FFFFFF',
     darkSecondary: '#FFFFFF',
@@ -30,6 +32,12 @@ export const mutations = {
   },
   updateName(state, name) {
     state.settings.name = name
+  },
+  updateCnpj(state, cnpj) {
+    state.settings.cnpj = cnpj
+  },
+  updateAddress(state, address) {
+    state.settings.address = address
   },
   updateThemeType(state, isDark) {
     state.settings.isDark = isDark

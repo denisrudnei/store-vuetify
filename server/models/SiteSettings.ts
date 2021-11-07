@@ -17,6 +17,14 @@ export class SiteSettings extends BaseEntity {
   public logo!: string
 
   @Field()
+  @Column({ default: '' })
+  public address!: string
+
+  @Field()
+  @Column({ default: '00.000.000/0000-00' })
+  public cnpj!: string
+
+  @Field()
   @Column({ default: 'Shop' })
   public name!: string
 

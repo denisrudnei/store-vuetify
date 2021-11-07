@@ -11,6 +11,8 @@ query {
   GetSiteSettings {
     id
     name
+    address
+    cnpj
     logo
     currency
     locale

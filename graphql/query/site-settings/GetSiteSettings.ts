@@ -5,6 +5,8 @@ query {
   GetSiteSettings {
     id
     name
+    address
+    cnpj
     logo
     isDark
     darkPrimary

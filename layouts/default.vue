@@ -236,6 +236,16 @@ export default {
         )
 
         this.$store.commit(
+          'site-settings/setAddress',
+          response.data.GetSiteSettings.address
+        )
+
+        this.$store.commit(
+          'site-settings/setAdSense',
+          response.data.GetSiteSettings.adSense
+        )
+
+        this.$store.commit(
           'category/setCategories',
           response.data.GetCategories
         )
