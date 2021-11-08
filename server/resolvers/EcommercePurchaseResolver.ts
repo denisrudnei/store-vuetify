@@ -25,6 +25,7 @@ import { Notification } from '../models/notification/Notification'
 import { Purchase } from '../models/Purchase'
 import { PurchaseService } from '../services/PurchaseService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
+import { User } from '../models/User'
 
 @Resolver(() => Purchase)
 export class EcommercePurchaseResolver {
@@ -47,7 +48,7 @@ export class EcommercePurchaseResolver {
   }
 
   @Query(() => Purchase)
-  @Authorized(Role.USER)
+  @Authorized([Role.USER, Role.OPERATOR])
   public GetPurchase(
     @Arg('id', () => ID) purchase: Purchase['id'],
     @Ctx() { req }: CustomExpressContext
@@ -60,6 +61,12 @@ export class EcommercePurchaseResolver {
   @Authorized(Role.USER)
   public GetMyPurchases(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
+    return PurchaseService.getPurchasesForUser(id)
+  }
+
+  @Query(() => [Purchase])
+  @Authorized(Role.OPERATOR)
+  public GetMyPurchasesForUser(@Arg('id', () => ID) id: User['id']) {
     return PurchaseService.getPurchasesForUser(id)
   }
 
