@@ -20,14 +20,14 @@ import { Purchase } from '../models/Purchase'
 @Resolver(() => User)
 export class UserResolver {
   @Query(() => User)
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public GetActualUser(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
     return User.findOne(id)
   }
 
   @Query(() => [User])
-  @Authorized(Role.ADMIN)
+  @Authorized(Role.ADMIN, Role.OPERATOR)
   public GetUsers() {
     return UserService.getAll()
   }
