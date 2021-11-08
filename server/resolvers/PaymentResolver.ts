@@ -8,7 +8,7 @@ import { Locale } from '../enums/Locale'
 @Resolver()
 export class PaymentResolver {
   @Query(() => [PaymentDescription])
-  @Authorized(Role.USER)
+  @Authorized([Role.USER, Role.OPERATOR])
   GetPaymentTypes(
     @Arg('locale', () => Locale, { nullable: true }) locale?: Locale
   ) {
