@@ -50,7 +50,7 @@ export class PurchaseService {
         qb.where({
           id,
         }).andWhere(
-          user.role === 'ADMIN' ? '1 = 1' : 'purchase."userId" = :user',
+          user.role === 'OPERATOR' ? '1 = 1' : 'purchase."userId" = :user',
           {
             user: user.id,
           }
