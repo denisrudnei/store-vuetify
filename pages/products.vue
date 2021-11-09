@@ -101,7 +101,7 @@
       </v-row>
     </v-col>
     <v-col>
-      <v-pagination v-model="page" :length="pages" />
+      <v-pagination v-model="page" :length="pages" total-visible="5" />
     </v-col>
   </v-row>
 </template>
