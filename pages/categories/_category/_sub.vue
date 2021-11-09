@@ -82,8 +82,8 @@
 
 <script>
 import slugify from 'slugify'
-import productCard from '@/components/product/product-card'
 import { mdiTagRemoveOutline } from '@mdi/js'
+import productCard from '@/components/product/product-card'
 import { GetCategoryByName } from '~/graphql/query/category/GetCategoryByName'
 import theme from '~/mixins/theme'
 import OtherProducts from '~/components/other-products.vue'

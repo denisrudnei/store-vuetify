@@ -17,6 +17,12 @@ class PageInfo {
 
   @Field()
   public hasNextPage!: boolean
+
+  @Field()
+  public pages!: number
+
+  @Field()
+  public page!: number
 }
 
 @ObjectType()

@@ -9,12 +9,12 @@ import {
   Root,
 } from 'type-graphql'
 
-import { Category } from '../models/Category'
-import { CategoryService } from '../services/CategoryService'
-import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { Role } from '../enums/Role'
+import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
+import { Category } from '../models/Category'
 import { Product } from '../models/Product'
+import { CategoryService } from '../services/CategoryService'
 
 @Resolver(() => Category)
 export class CategoryResolver {

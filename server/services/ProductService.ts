@@ -39,6 +39,8 @@ export class ProductService {
         node: product,
       })),
       pageInfo: {
+        pages,
+        page,
         endCursor: products[products.length - 1].id,
         hasNextPage: page < pages,
       },
@@ -53,34 +55,64 @@ export class ProductService {
     return Product.findByIds(ids)
   }
 
-  public static async searchProduct(search: SearchProductInput) {
+  public static async searchProduct(
+    search: SearchProductInput,
+    page: number,
+    limit: number
+  ) {
+    const where = (qb: SelectQueryBuilder<Product>) => {
+      qb.where({
+        name: ILike(`%${search.name ? search.name : ''}%`),
+      })
+        .andWhere(
+          search.category ? 'product.categoryId = :category' : '1 = 1',
+          {
+            category: search.category,
+          }
+        )
+        .andWhere(search.minPrice ? 'product.price >= :minPrice' : '1 = 1', {
+          minPrice: search.minPrice,
+        })
+        .andWhere(search.maxPrice ? 'product.price <= :maxPrice' : '1 = 1', {
+          maxPrice: search.maxPrice,
+        })
+    }
     const result = await getConnection()
       .createQueryBuilder()
       .select('*')
       .from(Product, 'product')
-      .where((qb: SelectQueryBuilder<Product>) => {
-        qb.where({
-          name: ILike(`%${search.name ? search.name : ''}%`),
-        })
-          .andWhere(
-            search.category ? 'product.categoryId = :category' : '1 = 1',
-            {
-              category: search.category,
-            }
-          )
-          .andWhere(search.minPrice ? 'product.price >= :minPrice' : '1 = 1', {
-            minPrice: search.minPrice,
-          })
-          .andWhere(search.maxPrice ? 'product.price <= :maxPrice' : '1 = 1', {
-            maxPrice: search.maxPrice,
-          })
-      })
+      .where(where)
+      .take(limit)
+      .skip((page - 1) * limit)
       .getRawMany()
-    return result.map((item) => ({
+
+    const products = result.map((item) => ({
       ...item,
       // @ts-ignore
       images: item.images.split(',').filter((image) => image.length),
     }))
+
+    const total = await getConnection()
+      .createQueryBuilder()
+      .select('*')
+      .from(Product, 'product')
+      .where(where)
+      .getCount()
+    const pages = Math.ceil(total / limit)
+
+    return {
+      edges: products.map((product) => ({
+        node: product,
+        cursor: product.id,
+      })),
+      total,
+      pageInfo: {
+        endCursor: products.length > 0 ?? products[products.length - 1].id,
+        hasNextPage: page < pages,
+        pages,
+        page,
+      },
+    }
   }
 
   public static async getProductsForCategory(name: Category['name']) {

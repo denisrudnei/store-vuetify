@@ -1,8 +1,8 @@
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
-import { S3 } from '../S3'
 import { Product } from '../models/Product'
+import { S3 } from '../S3'
 
 export class CategoryService {
   public static async getAllCategories(withNoProducts: Boolean = false) {

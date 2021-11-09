@@ -100,6 +100,9 @@
         </v-col>
       </v-row>
     </v-col>
+    <v-col>
+      <v-pagination v-model="page" :length="pages" />
+    </v-col>
   </v-row>
 </template>
 
@@ -133,6 +136,8 @@ export default {
       maxPrice: undefined,
       products: [],
       categories: [],
+      page: 1,
+      pages: 0,
     }
   },
   computed: {
@@ -143,6 +148,9 @@ export default {
     },
   },
   watch: {
+    page() {
+      this.getData()
+    },
     search: {
       deep: true,
       handler() {
@@ -201,6 +209,7 @@ export default {
         .query({
           query: AllProductsPage,
           variables: {
+            page: this.page,
             search: {
               name: this.search.name,
               minPrice: this.search['min-price']
@@ -214,7 +223,10 @@ export default {
           },
         })
         .then((response) => {
-          this.products = response.data.SearchProducts
+          this.products = response.data.SearchProducts.edges.map(
+            (item) => item.node
+          )
+          this.pages = response.data.SearchProducts.pageInfo.pages
           this.state = 'LOADED'
         })
         .catch(() => {

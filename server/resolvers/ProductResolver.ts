@@ -49,11 +49,13 @@ export class ProductResolver {
     return ProductService.getProduct(id)
   }
 
-  @Query(() => [Product])
+  @Query(() => ProductPaginationConnection)
   SearchProducts(
+    @Arg('page', () => Int, { defaultValue: 1 }) page: number = 1,
+    @Arg('limit', () => Int, { defaultValue: 10 }) limit: number = 10,
     @Arg('search', () => SearchProductInput) search: SearchProductInput
   ) {
-    return ProductService.searchProduct(search)
+    return ProductService.searchProduct(search, page, limit)
   }
 
   @Query(() => [Product])
