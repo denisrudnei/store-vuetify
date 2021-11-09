@@ -57,6 +57,9 @@ export const mutations = {
   setAdSense(state, adSense) {
     state.adSense = adSense
   },
+  setAddress(state, address) {
+    state.address = address
+  },
 }
 
 export const getters = {

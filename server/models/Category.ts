@@ -5,10 +5,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { Product } from './Product'
 
@@ -46,6 +48,14 @@ export class Category extends BaseEntity {
   @Field(() => [Category])
   @OneToMany(() => Category, (category) => category.father)
   public subCategories!: Category[]
+
+  @Field()
+  @UpdateDateColumn()
+  public updatedAt?: Date
+
+  @Field({ nullable: true })
+  @DeleteDateColumn()
+  public deletedAt?: Date
 
   @BeforeUpdate()
   @BeforeInsert()

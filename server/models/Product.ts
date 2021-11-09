@@ -71,7 +71,7 @@ export class Product extends BaseEntity {
   @UpdateDateColumn()
   public updatedAt?: Date
 
-  @Field()
+  @Field({ nullable: true })
   @DeleteDateColumn()
   public deletedAt?: Date
 }

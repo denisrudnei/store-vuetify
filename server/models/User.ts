@@ -6,9 +6,11 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 
 import { Role } from '../enums/Role'
@@ -71,6 +73,14 @@ export class User extends BaseEntity {
 
   @Column({ default: true })
   public darkTheme!: Boolean
+
+  @Field()
+  @UpdateDateColumn()
+  public updatedAt?: Date
+
+  @Field({ nullable: true })
+  @DeleteDateColumn()
+  public deletedAt?: Date
 
   @AfterLoad()
   verifyPassword() {
