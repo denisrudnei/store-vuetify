@@ -14,10 +14,35 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { S3 } from '../S3'
 import { DeletedProductResult } from '../types/DeletedProductResult'
+import { ProductPaginationConnection } from '../types/ProductPagination'
 
 export class ProductService {
   public static getProducts() {
     return Product.find()
+  }
+
+  public static async getProductsPaginated(
+    page: number,
+    limit: number
+  ): Promise<ProductPaginationConnection> {
+    const [products, total] = await Product.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    })
+
+    const pages = Math.round(total / limit)
+
+    return {
+      total,
+      edges: products.map((product) => ({
+        cursor: product.id,
+        node: product,
+      })),
+      pageInfo: {
+        endCursor: products[products.length - 1].id,
+        hasNextPage: page < pages,
+      },
+    }
   }
 
   public static getProduct(id: Product['id']) {

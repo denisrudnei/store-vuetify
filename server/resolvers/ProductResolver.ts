@@ -10,6 +10,7 @@ import {
   Query,
   Resolver,
   Root,
+  Int,
 } from 'type-graphql'
 
 import { Role } from '../enums/Role'
@@ -21,12 +22,21 @@ import { Product } from '../models/Product'
 import { ProductService } from '../services/ProductService'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 import { SummaryEvents } from '../enums/SummaryEvents'
+import { ProductPaginationConnection } from '../types/ProductPagination'
 
 @Resolver(() => Product)
 export class ProductResolver {
   @Query(() => [Product])
   public GetProducts() {
     return ProductService.getProducts()
+  }
+
+  @Query(() => ProductPaginationConnection)
+  public GetProductsPaginated(
+    @Arg('page', () => Int, { defaultValue: 1 }) page: number = 1,
+    @Arg('limit', () => Int, { defaultValue: 10 }) limit: number = 10
+  ) {
+    return ProductService.getProductsPaginated(page, limit)
   }
 
   @Query(() => [Product])
