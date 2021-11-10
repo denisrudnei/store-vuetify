@@ -148,20 +148,30 @@ export class ProductResolver {
   @Authorized(Role.ADMIN)
   public RemoveImage(
     @Arg('product', () => ID) product: Product['id'],
-    @Arg('image', () => String) image: string
+    @Arg('image', () => String) image: string,
+    @PubSub() pubSub: PubSubEngine
   ) {
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return ProductService.removeImage(product, image)
   }
 
   @Mutation(() => Boolean)
   @Authorized(Role.ADMIN)
-  public DeleteProduct(@Arg('id', () => ID) id: Product['id']) {
+  public DeleteProduct(
+    @Arg('id', () => ID) id: Product['id'],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return ProductService.deleteProduct(id)
   }
 
   @Mutation(() => [DeletedProductResult])
   @Authorized(Role.ADMIN)
-  public DeleteProducts(@Arg('ids', () => [ID]) ids: Product['id'][]) {
+  public DeleteProducts(
+    @Arg('ids', () => [ID]) ids: Product['id'][],
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return ProductService.deleteProducts(ids)
   }
 
@@ -169,8 +179,10 @@ export class ProductResolver {
   @Authorized(Role.ADMIN)
   public UpdateCategoryForProducts(
     @Arg('products', () => [ID]) products: Product['id'][],
-    @Arg('category', () => ID) category: Category['id']
+    @Arg('category', () => ID) category: Category['id'],
+    @PubSub() pubSub: PubSubEngine
   ) {
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return ProductService.updateCategoryForProducts(products, category)
   }
 
