@@ -162,7 +162,8 @@ export class EcommercePurchaseResolver {
     topics: PurchaseEvents.DELIVERY_STATUS_UPDATED,
     filter: ({ payload, context }) => {
       if (!context.req || !context.req.authUser) return false
-      if (context.req.authUser.role === 'ADMIN') return true
+      if ([Role.OPERATOR, Role.ADMIN].includes(context.req.authUser.role))
+        return true
       return payload.user.id === context.req.authUser.id
     },
   })
