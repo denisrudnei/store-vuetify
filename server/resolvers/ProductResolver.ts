@@ -11,6 +11,7 @@ import {
   Resolver,
   Root,
   Int,
+  Subscription,
 } from 'type-graphql'
 
 import { Role } from '../enums/Role'
@@ -23,6 +24,7 @@ import { ProductService } from '../services/ProductService'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 import { SummaryEvents } from '../enums/SummaryEvents'
 import { ProductPaginationConnection } from '../types/ProductPagination'
+import { ProductEvents } from '../enums/ProductEvents'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -79,16 +81,19 @@ export class ProductResolver {
   ) {
     const newProduct = ProductService.createProduct(product)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, newProduct)
     return newProduct
   }
 
   @Mutation(() => Product)
   @Authorized(Role.ADMIN)
-  public EditProduct(
+  public async EditProduct(
     @Arg('id', () => ID) id: Product['id'],
-    @Arg('product', () => EditProductInput) product: EditProductInput
+    @Arg('product', () => EditProductInput) product: EditProductInput,
+    @PubSub() pubSub: PubSubEngine
   ) {
-    return ProductService.editProduct(id, product)
+    const newProduct = await ProductService.editProduct(id, product)
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, newProduct)
   }
 
   @Mutation(() => Boolean)
@@ -99,6 +104,7 @@ export class ProductResolver {
   ) {
     const inactivated = ProductService.inactivate(id)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return inactivated
   }
 
@@ -110,6 +116,7 @@ export class ProductResolver {
   ) {
     const inactivated = ProductService.inactivateMany(ids)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return inactivated
   }
 
@@ -121,6 +128,7 @@ export class ProductResolver {
   ) {
     const reactivated = ProductService.reactivate(id)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return reactivated
   }
 
@@ -132,6 +140,7 @@ export class ProductResolver {
   ) {
     const reactivated = ProductService.reactivateMany(ids)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    pubSub.publish(ProductEvents.PRODUCT_UPDATED, null)
     return reactivated
   }
 
@@ -180,5 +189,13 @@ export class ProductResolver {
     })
       .replace('<br />', '\n')
       .slice(0, 157)}...`
+  }
+
+  @Subscription(() => Product, {
+    nullable: true,
+    topics: ProductEvents.PRODUCT_UPDATED,
+  })
+  public ProductUpdated(@Root() root: Product) {
+    return root
   }
 }

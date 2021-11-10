@@ -26,6 +26,7 @@ import { Purchase } from '../models/Purchase'
 import { PurchaseService } from '../services/PurchaseService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { User } from '../models/User'
+import { ProductEvents } from '../enums/ProductEvents'
 
 @Resolver(() => Purchase)
 export class EcommercePurchaseResolver {
@@ -98,6 +99,9 @@ export class EcommercePurchaseResolver {
     pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
     pubSub.publish(PurchaseEvents.NEW_PURCHASE, purchase)
     pubSub.publish(SummaryEvents.UPDATE_SUMMARY, true)
+    purchase.products.forEach((product) => {
+      pubSub.publish(ProductEvents.PRODUCT_UPDATED, product)
+    })
     return purchase
   }
 
