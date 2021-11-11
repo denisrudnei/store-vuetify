@@ -143,7 +143,7 @@ export class EcommercePurchaseResolver {
     topics: PurchaseEvents.NEW_PURCHASE,
     filter: ({ context }) => {
       if (!context.req || !context.req.authUser) return false
-      return context.req.authUser.role === Role.ADMIN
+      return [Role.ADMIN, Role.OPERATOR].includes(context.req.authUser.role)
     },
   })
   public NewPurchase(@Root() payload: Purchase) {
@@ -162,8 +162,11 @@ export class EcommercePurchaseResolver {
     topics: PurchaseEvents.DELIVERY_STATUS_UPDATED,
     filter: ({ payload, context }) => {
       if (!context.req || !context.req.authUser) return false
-      if ([Role.OPERATOR, Role.ADMIN].includes(context.req.authUser.role))
+
+      if ([Role.OPERATOR, Role.ADMIN].includes(context.req.authUser.role)) {
         return true
+      }
+
       return payload.user.id === context.req.authUser.id
     },
   })
