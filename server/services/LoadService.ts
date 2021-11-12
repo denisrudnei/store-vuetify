@@ -28,7 +28,9 @@ export class LoadService {
         withDeleted: true,
       }),
       pos: await POS.find({
-        updatedAt: Between(lastUpdate, new Date()),
+        where: {
+          updatedAt: Between(lastUpdate, new Date()),
+        },
       }),
     } as LoadData
   }
