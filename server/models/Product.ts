@@ -55,6 +55,10 @@ export class Product extends BaseEntity {
     return '/images/not-set.svg'
   }
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  public imageUpdatedAt?: Date
+
   @BeforeInsert()
   @BeforeUpdate()
   update() {

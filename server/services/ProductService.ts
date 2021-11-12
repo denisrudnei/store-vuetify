@@ -252,6 +252,7 @@ export class ProductService {
 
     await S3.deleteObject(params).promise()
     product.images = product.images.filter((item) => item !== image)
+    product.imageUpdatedAt = new Date()
     await product.save()
     return true
   }

@@ -38,6 +38,7 @@ ProductController.post(
       }
       const { Location } = await S3.upload(params).promise()
       product.images = Array.from(new Set([...product.images, Location]))
+      product.imageUpdatedAt = new Date()
       await product.save()
     }
     res.sendStatus(200)
