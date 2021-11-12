@@ -3,6 +3,7 @@ import { Field, ObjectType } from 'type-graphql'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { User } from '../models/User'
+import { POS } from '../models/POS'
 
 @ObjectType()
 export class LoadData {
@@ -14,4 +15,7 @@ export class LoadData {
 
   @Field(() => [Category])
   public categories!: Category[]
+
+  @Field(() => [POS])
+  public pos!: POS[]
 }

@@ -5,6 +5,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { Purchase } from './Purchase'
 import { LoadLog } from './LoadLog'
@@ -27,4 +29,12 @@ export class POS extends BaseEntity {
   @Field(() => [LoadLog])
   @OneToMany(() => LoadLog, (log) => log.pos)
   public loadLogs!: LoadLog[]
+
+  @Field()
+  @CreateDateColumn()
+  public createdAt!: Date
+
+  @Field({ nullable: true })
+  @UpdateDateColumn()
+  public updatedAt?: Date
 }

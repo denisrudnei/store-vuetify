@@ -4,6 +4,7 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { User } from '../models/User'
 import { LoadData } from '../types/LoadData'
+import { POS } from '../models/POS'
 
 export class LoadService {
   public static async getRecentData(lastUpdate: Date) {
@@ -25,6 +26,9 @@ export class LoadService {
           updatedAt: Between(lastUpdate, new Date()),
         },
         withDeleted: true,
+      }),
+      pos: await POS.find({
+        updatedAt: Between(lastUpdate, new Date()),
       }),
     } as LoadData
   }
