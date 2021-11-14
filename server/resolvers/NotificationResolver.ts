@@ -19,21 +19,21 @@ import { CustomExpressContext } from '../types/CustomExpressContext'
 @Resolver(() => Notification)
 export class NotificationResolver {
   @Query(() => [Notification])
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public GetNotifications(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
     return NotificationService.getNotifications(id)
   }
 
   @Query(() => [Notification])
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public GetAllNotifications(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
     return NotificationService.getAllNotifications(id)
   }
 
   @Mutation(() => Boolean)
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public ReadNotification(
     @Arg('id', () => ID) notificationId: Notification['id'],
     @Ctx() { req }: CustomExpressContext
@@ -43,7 +43,7 @@ export class NotificationResolver {
   }
 
   @Mutation(() => Boolean)
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public ReadAllNotifications(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
     return NotificationService.readAll(id)
