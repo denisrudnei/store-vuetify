@@ -83,12 +83,19 @@ export class POSPurchaseService {
         return history.save()
       })
     )
-    const newPayment = Payment.create()
-    newPayment.change = 0
-    newPayment.paid = payments.reduce((acc, payment) => acc + payment.paid, 0)
-    newPayment.value = newPayment.paid
-    newPayment.purchase = purchase
-    newPayment.save()
+    purchase.payments = []
+    for (let i = 0; i < payments.length; i++) {
+      const payment = payments[i]
+      const newPayment = Payment.create()
+      newPayment.change = payment.value - payment.paid
+      newPayment.paid = payment.paid
+      newPayment.value = payment.paid
+      newPayment.type = payment.type
+      newPayment.purchase = purchase
+      await newPayment.save()
+      purchase.payments.push(newPayment)
+    }
+
     return purchase.save()
   }
 }

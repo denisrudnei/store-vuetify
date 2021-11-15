@@ -7,18 +7,18 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
-import { PurchaseType } from '../enums/PurchaseType'
 import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { PurchaseOrigin } from '../enums/PurchaseOrigin'
+import { PurchaseType } from '../enums/PurchaseType'
+import { PaymentType } from '../enums/PaymentType'
+import { EstablishmentTable } from './EstablishmentTable'
 import { HistoryProduct } from './HistoryProduct'
 import { Payment } from './Payment'
-import { User } from './User'
-import { EstablishmentTable } from './EstablishmentTable'
 import { POS } from './POS'
+import { User } from './User'
 
 @ObjectType()
 @Entity()
@@ -51,10 +51,10 @@ export class Purchase extends BaseEntity {
   @Column({ default: PurchaseOrigin.ECOMMERCE, type: 'varchar' })
   public origin!: PurchaseOrigin
 
-  @OneToOne(() => Payment, (payment) => payment.purchase)
-  @Field(() => Payment)
+  @OneToMany(() => Payment, (payment) => payment.purchase)
+  @Field(() => [Payment])
   @JoinColumn()
-  public payment!: Payment
+  public payments!: Payment[]
 
   @Field(() => PurchaseType)
   @Column({ type: 'varchar', default: PurchaseType.NORMAL })
@@ -82,6 +82,27 @@ export class Purchase extends BaseEntity {
     return this.products.reduce((acc, actual) => {
       return (acc += Number(actual.data.amount))
     }, 0)
+  }
+
+  @Field(() => Payment)
+  public async payment() {
+    if (!this.payments) {
+      const purchase = (await Purchase.findOne(this.id, {
+        relations: ['payments'],
+      })) as Purchase
+      this.payments = purchase.payments
+    }
+    return {
+      id: 'grouped payment',
+      type:
+        this.payments.length > 0 ? this.payments[0].type : PaymentType.MONEY,
+      value: this.payments.reduce((acc, value) => acc + Number(value.value), 0),
+      change: this.payments.reduce(
+        (acc, value) => acc + Number(value.change),
+        0
+      ),
+      paid: this.payments.reduce((acc, value) => acc + Number(value.paid), 0),
+    }
   }
 
   @Field(() => Float)

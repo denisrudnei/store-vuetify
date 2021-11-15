@@ -15,6 +15,7 @@ import {
 
 import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { NotificationEvents } from '../enums/NotificationEvents'
+import { ProductEvents } from '../enums/ProductEvents'
 import { PurchaseEvents } from '../enums/PurchaseEvents'
 import { PurchaseType } from '../enums/PurchaseType'
 import { Role } from '../enums/Role'
@@ -23,10 +24,9 @@ import { PaymentInput } from '../inputs/PaymentInput'
 import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { Notification } from '../models/notification/Notification'
 import { Purchase } from '../models/Purchase'
+import { User } from '../models/User'
 import { PurchaseService } from '../services/PurchaseService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
-import { User } from '../models/User'
-import { ProductEvents } from '../enums/ProductEvents'
 
 @Resolver(() => Purchase)
 export class EcommercePurchaseResolver {
@@ -146,16 +146,19 @@ export class EcommercePurchaseResolver {
       return [Role.ADMIN, Role.OPERATOR].includes(context.req.authUser.role)
     },
   })
-  public NewPurchase(@Root() payload: Purchase) {
-    return payload
+  public async NewPurchase(@Root() payload: Purchase) {
+    return {
+      ...payload,
+      payment: await payload.payment(),
+    }
   }
 
   @FieldResolver()
-  public async payment(@Root() root: Purchase) {
-    const { payment } = (await Purchase.findOne(root.id, {
-      relations: ['payment'],
+  public async payments(@Root() root: Purchase) {
+    const { payments } = (await Purchase.findOne(root.id, {
+      relations: ['payments'],
     })) as Purchase
-    return payment
+    return payments
   }
 
   @Subscription(() => Purchase, {

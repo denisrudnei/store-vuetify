@@ -125,8 +125,8 @@ export class PurchaseService {
       purchasePayment.paid = totalPrice
       purchasePayment.type = PaymentType.CARD
       purchasePayment.value = totalPrice
-
-      purchase.payment = await purchasePayment.save()
+      const singlePayment = await purchasePayment.save()
+      purchase.payments = [singlePayment]
 
       await purchase.save()
 
@@ -138,8 +138,8 @@ export class PurchaseService {
       purchasePayment.paid = payment.paid
       purchasePayment.type = payment.type
       purchasePayment.value = payment.value
-
-      purchase.payment = await purchasePayment.save()
+      const singlePayment = await purchasePayment.save()
+      purchase.payments = [singlePayment]
 
       await purchase.save()
     }

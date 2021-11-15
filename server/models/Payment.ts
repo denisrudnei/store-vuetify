@@ -3,7 +3,7 @@ import {
   BaseEntity,
   Column,
   Entity,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
@@ -34,6 +34,6 @@ export class Payment extends BaseEntity {
   public change!: number
 
   @Field(() => Purchase)
-  @OneToOne(() => Purchase, (purchase) => purchase.payment)
+  @ManyToOne(() => Purchase, (purchase) => purchase.payments)
   public purchase!: Purchase
 }
