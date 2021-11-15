@@ -10,6 +10,7 @@ import { Payment } from '../models/Payment'
 import { Product } from '../models/Product'
 import { Purchase } from '../models/Purchase'
 import { User } from '../models/User'
+import { Role } from '../enums/Role'
 import { GatewayService } from './GatewayService'
 
 export class PurchaseService {
@@ -50,7 +51,9 @@ export class PurchaseService {
         qb.where({
           id,
         }).andWhere(
-          user.role === 'OPERATOR' ? '1 = 1' : 'purchase."userId" = :user',
+          [Role.ADMIN, Role.OPERATOR].includes(user.role)
+            ? '1 = 1'
+            : 'purchase."userId" = :user',
           {
             user: user.id,
           }
