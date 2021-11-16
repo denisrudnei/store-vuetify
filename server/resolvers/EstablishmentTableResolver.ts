@@ -1,23 +1,38 @@
 import { PubSubEngine } from 'graphql-subscriptions'
 import {
-  Query,
   Arg,
-  Mutation,
+  Authorized,
+  Ctx,
+  FieldResolver,
   ID,
-  Subscription,
-  Root,
+  Mutation,
   PubSub,
+  Query,
+  Resolver,
+  Root,
+  Subscription,
 } from 'type-graphql'
-import { EstablishmentTableEvents } from '../enums/EstablishmentTableEvents'
-import { CreateEstablishmentTableInput } from '../inputs/CreateEstablishmentTableInput'
 
+import { EstablishmentTableEvents } from '../enums/EstablishmentTableEvents'
+import { Role } from '../enums/Role'
+import { CreateEstablishmentTableInput } from '../inputs/CreateEstablishmentTableInput'
+import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { EstablishmentTable } from '../models/EstablishmentTable'
 import { EstablishmentTableService } from '../services/EstablishmentTableService'
+import { CustomExpressContext } from '../types/CustomExpressContext'
 
+@Resolver(() => EstablishmentTable)
 export class EstablishmentTableResolver {
   @Query(() => [EstablishmentTable])
+  @Authorized(Role.OPERATOR)
   public GetTables() {
     return EstablishmentTableService.getTables()
+  }
+
+  @Query(() => EstablishmentTable)
+  @Authorized(Role.OPERATOR)
+  public GetTable(@Arg('id', () => ID) id: EstablishmentTable['id']) {
+    return EstablishmentTableService.getOne(id)
   }
 
   @Mutation(() => EstablishmentTable)
@@ -32,18 +47,26 @@ export class EstablishmentTableResolver {
   }
 
   @Mutation(() => EstablishmentTable)
+  @Authorized(Role.OPERATOR)
   public async UpdateEstablishmentTableStatus(
     @Arg('id', () => ID) id: EstablishmentTable['id'],
     @Arg('inUse', () => Boolean) inUse: boolean,
-    @PubSub() pubSub: PubSubEngine
+    @PubSub() pubSub: PubSubEngine,
+    @Ctx() { req }: CustomExpressContext
   ) {
+    const userId = req.session.authUser!.id
     const result =
-      await EstablishmentTableService.updateEstablishmentTableStatus(id, inUse)
+      await EstablishmentTableService.updateEstablishmentTableStatus(
+        id,
+        inUse,
+        userId
+      )
     pubSub.publish(EstablishmentTableEvents.STATUS_UPDATED, result)
     return result
   }
 
   @Mutation(() => Boolean)
+  @Authorized(Role.OPERATOR)
   public async RemoveEstablishmentTable(
     @Arg('id', () => ID) id: EstablishmentTable['id'],
     @PubSub() pubSub: PubSubEngine
@@ -53,6 +76,35 @@ export class EstablishmentTableResolver {
     await EstablishmentTable.softRemove(establishmentTable)
     pubSub.publish(EstablishmentTableEvents.TABLE_REMOVED, establishmentTable)
     return true
+  }
+
+  @Mutation(() => EstablishmentTable)
+  @Authorized(Role.OPERATOR)
+  public async AddItemToTable(
+    @Arg('id', () => ID) id: EstablishmentTable['id'],
+    @Arg('product', () => ProductForPurchaseInput)
+    product: ProductForPurchaseInput,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const table = await EstablishmentTableService.addItem(id, product)
+    pubSub.publish(EstablishmentTableEvents.ITEM_ADDED_TO_TABLE, table)
+    return table
+  }
+
+  @FieldResolver()
+  public async activeOrder(@Root() root: EstablishmentTable) {
+    const { activeOrder } = (await EstablishmentTable.findOne(root.id, {
+      relations: ['activeOrder'],
+    })) as EstablishmentTable
+    return activeOrder
+  }
+
+  @FieldResolver()
+  public async orders(@Root() root: EstablishmentTable) {
+    const { orders } = (await EstablishmentTable.findOne(root.id, {
+      relations: ['orders'],
+    })) as EstablishmentTable
+    return orders
   }
 
   @Subscription(() => EstablishmentTable, {
@@ -80,6 +132,13 @@ export class EstablishmentTableResolver {
     topics: EstablishmentTableEvents.TABLE_REMOVED,
   })
   public EstablishmentTableRemoved(@Root() payload: EstablishmentTable) {
+    return payload
+  }
+
+  @Subscription(() => EstablishmentTable, {
+    topics: EstablishmentTableEvents.ITEM_ADDED_TO_TABLE,
+  })
+  public ItemAddedToTable(@Root() payload: EstablishmentTable) {
     return payload
   }
 }

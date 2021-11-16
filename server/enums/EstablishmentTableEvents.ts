@@ -6,6 +6,7 @@ export enum EstablishmentTableEvents {
   TABLE_RESERVED = 'TABLE_RESERVED',
   TABLE_REMOVED = 'TABLE_REMOVED',
   NEW_NOTIFICATION_FROM_TABLE = 'NEW_NOTIFICATION_FROM_TABLE',
+  ITEM_ADDED_TO_TABLE = 'ITEM_ADDED_TO_TABLE',
 }
 
 registerEnumType(EstablishmentTableEvents, {

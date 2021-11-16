@@ -68,7 +68,7 @@ export class Purchase extends BaseEntity {
   @ManyToOne(() => EstablishmentTable, (table) => table.orders, {
     nullable: true,
   })
-  public establishmentTable!: EstablishmentTable
+  public establishmentTable?: EstablishmentTable | null
 
   @Field(() => Int)
   public async totalAmount() {

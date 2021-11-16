@@ -32,7 +32,7 @@ export class EstablishmentTable extends BaseEntity {
     nullable: true,
   })
   @JoinColumn()
-  public activeOrder!: Purchase | undefined
+  public activeOrder?: Purchase | null
 
   @OneToMany(() => Purchase, (purchase) => purchase.establishmentTable)
   @Field(() => [Purchase])
