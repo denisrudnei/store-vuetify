@@ -44,7 +44,11 @@ export class EstablishmentTableService {
     await historyProduct.save()
 
     table.activeOrder.products.push(historyProduct)
-    return table.save()
+    await table.save()
+    return {
+      tableId: table.id,
+      product: historyProduct,
+    }
   }
 
   public static async updateEstablishmentTableStatus(

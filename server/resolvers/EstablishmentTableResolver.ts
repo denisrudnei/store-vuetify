@@ -20,6 +20,7 @@ import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { EstablishmentTable } from '../models/EstablishmentTable'
 import { EstablishmentTableService } from '../services/EstablishmentTableService'
 import { CustomExpressContext } from '../types/CustomExpressContext'
+import { ItemAddedInTableResult } from '../types/ItemAddedInTableResult'
 
 @Resolver(() => EstablishmentTable)
 export class EstablishmentTableResolver {
@@ -78,7 +79,7 @@ export class EstablishmentTableResolver {
     return true
   }
 
-  @Mutation(() => EstablishmentTable)
+  @Mutation(() => ItemAddedInTableResult)
   @Authorized(Role.OPERATOR)
   public async AddItemToTable(
     @Arg('id', () => ID) id: EstablishmentTable['id'],
@@ -86,9 +87,9 @@ export class EstablishmentTableResolver {
     product: ProductForPurchaseInput,
     @PubSub() pubSub: PubSubEngine
   ) {
-    const table = await EstablishmentTableService.addItem(id, product)
-    pubSub.publish(EstablishmentTableEvents.ITEM_ADDED_TO_TABLE, table)
-    return table
+    const result = await EstablishmentTableService.addItem(id, product)
+    pubSub.publish(EstablishmentTableEvents.ITEM_ADDED_TO_TABLE, result)
+    return result
   }
 
   @FieldResolver()
@@ -135,10 +136,10 @@ export class EstablishmentTableResolver {
     return payload
   }
 
-  @Subscription(() => EstablishmentTable, {
+  @Subscription(() => ItemAddedInTableResult, {
     topics: EstablishmentTableEvents.ITEM_ADDED_TO_TABLE,
   })
-  public ItemAddedToTable(@Root() payload: EstablishmentTable) {
+  public ItemAddedToTable(@Root() payload: ItemAddedInTableResult) {
     return payload
   }
 }
