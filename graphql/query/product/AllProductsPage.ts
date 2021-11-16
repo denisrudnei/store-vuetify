@@ -1,8 +1,8 @@
 import ggl from 'graphql-tag'
 
 export const AllProductsPage = ggl`
-query AllProductsPage($search: SearchProductInput!) {
-  SearchProducts(search: $search) {
+query AllProductsPage($search: SearchProductInput!, $page: Int) {
+  SearchProducts(search: $search, page: $page) {
     edges {
       node {
         id

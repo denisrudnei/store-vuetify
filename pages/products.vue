@@ -149,6 +149,13 @@ export default {
   },
   watch: {
     page() {
+      this.$router.push({
+        query: {
+          ...this.$router.currentRoute.query,
+          page: this.page,
+        },
+      })
+
       this.getData()
     },
     search: {
@@ -156,6 +163,7 @@ export default {
       handler() {
         this.$router.push({
           query: {
+            ...this.$router.currentRoute.query,
             ...this.search,
           },
         })
@@ -163,6 +171,9 @@ export default {
     },
   },
   created() {
+    const { page } = this.$router.currentRoute.query
+
+    if (page) this.page = parseInt(page)
     const {
       name,
       category,
@@ -197,6 +208,7 @@ export default {
 
       this.$router.push({
         query: {
+          ...this.$router.currentRoute.query,
           category: this.category.slug,
         },
       })
@@ -208,6 +220,7 @@ export default {
       this.$apollo
         .query({
           query: AllProductsPage,
+          fetchPolicy: 'network-only',
           variables: {
             page: this.page,
             search: {
