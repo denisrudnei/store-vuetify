@@ -1,9 +1,11 @@
+import { getDay, lastDayOfMonth, set } from 'date-fns'
 import { getConnection, Not, SelectQueryBuilder } from 'typeorm'
 
-import { set, lastDayOfMonth, getDay } from 'date-fns'
 import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { PaymentType } from '../enums/PaymentType'
+import { PurchaseOrigin } from '../enums/PurchaseOrigin'
 import { PurchaseType } from '../enums/PurchaseType'
+import { Role } from '../enums/Role'
 import { PaymentInput } from '../inputs/PaymentInput'
 import { ProductForPurchaseInput } from '../inputs/ProductForPurchaseInput'
 import { HistoryProduct } from '../models/HistoryProduct'
@@ -11,7 +13,6 @@ import { Payment } from '../models/Payment'
 import { Product } from '../models/Product'
 import { Purchase } from '../models/Purchase'
 import { User } from '../models/User'
-import { Role } from '../enums/Role'
 import { GatewayService } from './GatewayService'
 
 export class PurchaseService {
@@ -88,6 +89,12 @@ export class PurchaseService {
       .addSelect('EXTRACT(MONTH FROM "createdAt") as month')
       .addSelect('EXTRACT(YEAR FROM "createdAt") as year')
       .from(Purchase, 'purchase')
+      .where('type = :type', {
+        type: PurchaseType.NORMAL,
+      })
+      .andWhere('origin = :origin', {
+        origin: PurchaseOrigin.POS,
+      })
       .groupBy('year')
       .addGroupBy('month')
       .addGroupBy('date')
