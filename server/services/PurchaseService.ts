@@ -89,12 +89,7 @@ export class PurchaseService {
       .addSelect('EXTRACT(MONTH FROM "createdAt") as month')
       .addSelect('EXTRACT(YEAR FROM "createdAt") as year')
       .from(Purchase, 'purchase')
-      .where('type = :type', {
-        type: PurchaseType.NORMAL,
-      })
-      .andWhere('origin = :origin', {
-        origin: PurchaseOrigin.POS,
-      })
+
       .groupBy('year')
       .addGroupBy('month')
       .addGroupBy('date')
@@ -122,6 +117,12 @@ export class PurchaseService {
             )
           ),
         }),
+      })
+      .andWhere('type = :type', {
+        type: PurchaseType.NORMAL,
+      })
+      .andWhere('origin = :origin', {
+        origin: PurchaseOrigin.POS,
       })
       .getRawMany()
 
