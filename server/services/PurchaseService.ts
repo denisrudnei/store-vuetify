@@ -104,13 +104,13 @@ export class PurchaseService {
           hours: 23,
           minutes: 59,
           seconds: 59,
-          month: 12,
+          month: 11,
           year,
           date: getDay(
             lastDayOfMonth(
               set(new Date(), {
                 year,
-                month: 12,
+                month: 11,
               })
             )
           ),
@@ -121,7 +121,7 @@ export class PurchaseService {
     return result.map((day) =>
       set(new Date(), {
         date: day.date,
-        month: day.month,
+        month: day.month - 1,
         year: day.year,
         hours: 0,
         minutes: 0,
