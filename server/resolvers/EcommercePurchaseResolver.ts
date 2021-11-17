@@ -11,6 +11,7 @@ import {
   Resolver,
   Root,
   Subscription,
+  Int,
 } from 'type-graphql'
 
 import { DeliveryStatus } from '../enums/DeliveryStatus'
@@ -121,6 +122,14 @@ export class EcommercePurchaseResolver {
     pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
     pubSub.publish(PurchaseEvents.DELIVERY_STATUS_UPDATED, result)
     return true
+  }
+
+  @Query(() => [Date])
+  @Authorized(Role.OPERATOR)
+  public DaysWithPurchases(
+    @Arg('year', () => Int, { nullable: true }) year: number
+  ) {
+    return PurchaseService.getDaysWithPurchase(year)
   }
 
   @FieldResolver()

@@ -1,5 +1,6 @@
 import { getConnection, Not, SelectQueryBuilder } from 'typeorm'
 
+import { set, lastDayOfMonth, getDay } from 'date-fns'
 import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { PaymentType } from '../enums/PaymentType'
 import { PurchaseType } from '../enums/PurchaseType'
@@ -76,6 +77,58 @@ export class PurchaseService {
       .getRawMany()
 
     return result
+  }
+
+  public static async getDaysWithPurchase(
+    year: number = new Date().getFullYear()
+  ) {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .select('EXTRACT(DAY FROM "createdAt") as date')
+      .addSelect('EXTRACT(MONTH FROM "createdAt") as month')
+      .addSelect('EXTRACT(YEAR FROM "createdAt") as year')
+      .from(Purchase, 'purchase')
+      .groupBy('year')
+      .addGroupBy('month')
+      .addGroupBy('date')
+      .where('purchase."createdAt" BETWEEN :start and :end', {
+        start: set(new Date(), {
+          date: 0,
+          month: 0,
+          year,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        }),
+        end: set(new Date(), {
+          hours: 23,
+          minutes: 59,
+          seconds: 59,
+          month: 12,
+          year,
+          date: getDay(
+            lastDayOfMonth(
+              set(new Date(), {
+                year,
+                month: 12,
+              })
+            )
+          ),
+        }),
+      })
+      .getRawMany()
+
+    return result.map((day) =>
+      set(new Date(), {
+        date: day.date,
+        month: day.month,
+        year: day.year,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      })
+    )
   }
 
   public static async createPurchase(
