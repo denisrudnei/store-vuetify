@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     inactivate(id) {
-      this.$dialog('Inactavate product?')
+      this.$dialog('Inactivate product?')
         .then(() => {
           this.$apollo
             .mutate({

@@ -2,11 +2,11 @@ import ggl from 'graphql-tag'
 
 export const GetProductInfo = ggl`
 query {
-  GetAllCategories {
+  GetAllCategories(withNoProducts: true) {
     id
     name
   }
-  GetProducts {
+  GetProducts(limit: 12) {
     id
     name
     description

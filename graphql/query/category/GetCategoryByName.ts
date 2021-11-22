@@ -1,7 +1,7 @@
 import ggl from 'graphql-tag'
 
 export const GetCategoryByName = ggl`
-query GetCategoryByName($name: String!) {
+query GetCategoryByName($name: String!, $page: Int) {
   GetCategoryByName(name: $name) {
     id
     name
@@ -24,7 +24,22 @@ query GetCategoryByName($name: String!) {
       name
       slug
     }
-    products {
+    productsConnection(limit: 12, page: $page) {
+      total
+      pageInfo {
+        page
+        pages
+      }
+      edges {
+        node {
+          id
+          name
+          price
+          primaryImage
+        }
+      }
+    }
+    products(limit: 12) {
       id
       name
       price

@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Authorized,
   FieldResolver,
   ID,
@@ -9,12 +10,13 @@ import {
   Root,
 } from 'type-graphql'
 
+import { SearchArgs } from '../args/SearchArgs'
 import { Role } from '../enums/Role'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
-import { Product } from '../models/Product'
 import { CategoryService } from '../services/CategoryService'
+import { ProductPaginationConnection } from '../types/ProductPagination'
 
 @Resolver(() => Category)
 export class CategoryResolver {
@@ -107,8 +109,16 @@ export class CategoryResolver {
     return categoriesWithSubProducts.filter((sub) => sub.products.length > 0)
   }
 
-  @FieldResolver(() => [Product])
-  public products(@Root() root: Category) {
-    return CategoryService.getProducts(root.id)
+  @FieldResolver(() => ProductPaginationConnection)
+  public products(@Args() { limit, page }: SearchArgs, @Root() root: Category) {
+    return CategoryService.getProducts(root.id, limit, page)
+  }
+
+  @FieldResolver(() => ProductPaginationConnection)
+  public productsConnection(
+    @Args() { limit, page }: SearchArgs,
+    @Root() root: Category
+  ) {
+    return CategoryService.getProductsPaginated(root.id, limit, page)
   }
 }

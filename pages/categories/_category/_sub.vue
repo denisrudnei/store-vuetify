@@ -75,6 +75,9 @@
             :hide-category="true"
           />
         </v-col>
+        <v-col cols="12">
+          <v-pagination v-model="page" :length="pages" :total-visible="5" />
+        </v-col>
       </v-row>
     </v-col>
   </v-row>
@@ -110,6 +113,8 @@ export default {
             ...response.data.GetCategoryByName.subCategories,
           ],
           products: response.data.GetCategoryByName.products,
+          pages:
+            response.data.GetCategoryByName.productsConnection.pageInfo.pages,
         }
       })
       .catch(() => {
@@ -118,6 +123,8 @@ export default {
   },
   data() {
     return {
+      page: 1,
+      pages: 0,
       icons: {
         mdiTagRemoveOutline,
       },
@@ -171,6 +178,43 @@ export default {
           href: `/categories/${link}`,
         }
       })
+    },
+  },
+  watch: {
+    page() {
+      this.search()
+    },
+  },
+  created() {
+    const { page } = this.$router.currentRoute
+    if (page) {
+      this.page = page
+    }
+  },
+  methods: {
+    search() {
+      this.$apollo
+        .query({
+          query: GetCategoryByName,
+          variables: {
+            name: this.$route.params.category,
+            page: this.page,
+          },
+        })
+        .then((response) => {
+          this.category = response.data.GetCategoryByName
+          this.subCategories = [
+            response.data.GetCategoryByName,
+            ...response.data.GetCategoryByName.subCategories,
+          ]
+          this.products =
+            response.data.GetCategoryByName.productsConnection.edges.map(
+              (edge) => edge.node
+            )
+
+          this.pages =
+            response.data.GetCategoryByName.productsConnection.pageInfo.pages
+        })
     },
   },
   jsonld() {
