@@ -44,9 +44,7 @@
             :color="!$vuetify.theme.dark ? 'primary' : undefined"
             flat
           >
-            <v-card-text class="title">
-              Items: {{ products.length }}
-            </v-card-text>
+            <v-card-text class="title"> Items: {{ total }} </v-card-text>
           </v-card>
         </v-col>
         <v-col v-if="!products.length" align="center">
@@ -115,6 +113,7 @@ export default {
           products: response.data.GetCategoryByName.products,
           pages:
             response.data.GetCategoryByName.productsConnection.pageInfo.pages,
+          total: response.data.GetCategoryByName.productsConnection.total,
         }
       })
       .catch(() => {
@@ -123,6 +122,7 @@ export default {
   },
   data() {
     return {
+      total: 0,
       page: 1,
       pages: 0,
       icons: {
