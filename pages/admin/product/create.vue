@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import create from '@/components/product/create.vue'
 import { CreateProduct } from '../../../graphql/mutation/product/CreateProduct'
 import { AllProductsPage } from '../../../graphql/query/product/AllProductsPage'
+import create from '@/components/product/create.vue'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 export default {
   components: { create },
@@ -21,6 +21,7 @@ export default {
               amount: Number(product.amount),
               description: product.description,
               category: product.category,
+              type: product.type,
             },
           },
           awaitRefetchQueries: true,

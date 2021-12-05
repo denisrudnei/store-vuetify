@@ -26,12 +26,21 @@
             outlined
           />
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" md="6">
           <v-autocomplete
             v-model="product.category"
             label="Category"
             outlined
             :items="categories"
+          />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-autocomplete
+            v-model="product.type"
+            multiple
+            label="Type"
+            outlined
+            :items="types"
           />
         </v-col>
         <v-col cols="12">
@@ -114,6 +123,7 @@
 
 <script>
 import { mdiCheckAll, mdiImage, mdiImageOff, mdiDelete } from '@mdi/js'
+import { GetProductTypes } from '../../graphql/query/GetProductTypes'
 import { RemoveImage } from '@/graphql/mutation/product/RemoveImage'
 import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 export default {
@@ -150,6 +160,7 @@ export default {
         category: undefined,
       },
       categories: [],
+      types: [],
     }
   },
   computed: {
@@ -202,6 +213,13 @@ export default {
           text: item.name,
           value: item.id,
         }))
+      })
+    this.$apollo
+      .query({
+        query: GetProductTypes,
+      })
+      .then((response) => {
+        this.types = response.data.GetProductTypes
       })
   },
   methods: {

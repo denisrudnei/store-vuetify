@@ -25,6 +25,7 @@ import { DeletedProductResult } from '../types/DeletedProductResult'
 import { SummaryEvents } from '../enums/SummaryEvents'
 import { ProductPaginationConnection } from '../types/ProductPagination'
 import { ProductEvents } from '../enums/ProductEvents'
+import { ProductType } from '../enums/ProductType'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -44,6 +45,11 @@ export class ProductResolver {
   @Query(() => [Product])
   public GetProductsByIds(@Arg('ids', () => [ID]) ids: Product['id'][]) {
     return ProductService.getProductsByIds(ids)
+  }
+
+  @Query(() => [String])
+  public GetProductTypes() {
+    return Object.values(ProductType)
   }
 
   @Query(() => Product, { nullable: true })

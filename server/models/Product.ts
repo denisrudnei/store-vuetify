@@ -12,6 +12,7 @@ import {
 } from 'typeorm'
 import slugify from 'slugify'
 import sanitize from 'sanitize-html'
+import { ProductType } from '../enums/ProductType'
 import { Category } from './Category'
 
 @Entity()
@@ -48,6 +49,14 @@ export class Product extends BaseEntity {
   @Field()
   @Column({ default: '' })
   public slug!: string
+
+  @Field(() => [String])
+  @Column({
+    type: 'varchar',
+    default: [ProductType.ECOMMERCE],
+    array: true,
+  })
+  public type!: ProductType
 
   @Field(() => String)
   public primaryImage() {

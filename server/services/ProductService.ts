@@ -76,7 +76,15 @@ export class ProductService {
         .andWhere(search.maxPrice ? 'product.price <= :maxPrice' : '1 = 1', {
           maxPrice: search.maxPrice,
         })
+        .andWhere(
+          search.type && search.type.length > 0
+            ? `product.type && '${search.type
+                ?.map((type) => `{${type}}`)
+                .join(',')}'`
+            : '1 = 1'
+        )
     }
+
     const result = await getConnection()
       .createQueryBuilder()
       .select('*')

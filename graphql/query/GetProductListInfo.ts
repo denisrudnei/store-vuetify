@@ -6,7 +6,7 @@ query {
     id
     name
   }
-  GetProducts(limit: 12) {
+  GetProducts {
     id
     name
     description

@@ -8,6 +8,9 @@ export class EditProductInput {
   @Field()
   public description!: string
 
+  @Field(() => [String])
+  public type!: string[]
+
   @Field(() => ID)
   public category!: Category['id']
 

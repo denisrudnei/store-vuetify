@@ -15,6 +15,9 @@ export class CreateProductInput {
   @Field(() => Float)
   public amount!: number
 
+  @Field(() => [String])
+  public type!: string[]
+
   @Field(() => ID)
   public category!: Category['id']
 }
