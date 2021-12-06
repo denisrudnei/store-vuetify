@@ -50,13 +50,13 @@ export class Product extends BaseEntity {
   @Column({ default: '' })
   public slug!: string
 
-  @Field(() => [String])
+  @Field(() => [ProductType])
   @Column({
     type: 'varchar',
     default: [ProductType.ECOMMERCE],
     array: true,
   })
-  public type!: ProductType
+  public type!: ProductType[]
 
   @Field(() => String)
   public primaryImage() {

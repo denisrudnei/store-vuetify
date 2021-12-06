@@ -17,6 +17,7 @@ import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
 import { CategoryService } from '../services/CategoryService'
 import { ProductPaginationConnection } from '../types/ProductPagination'
+import { ProductType } from '../enums/ProductType'
 
 @Resolver(() => Category)
 export class CategoryResolver {
@@ -73,6 +74,17 @@ export class CategoryResolver {
   @Authorized(Role.ADMIN)
   public RemoveCategoryImage(@Arg('id', () => ID) id: Category['id']) {
     return CategoryService.removeImage(id)
+  }
+
+  @Mutation(() => Category)
+  @Authorized(Role.ADMIN)
+  public EditTypeForCategory(
+    @Arg('id', () => ID) categoryId: Category['id'],
+    @Arg('type', () => [ProductType]) types: ProductType[],
+    @Arg('applyToSubs', () => Boolean, { defaultValue: false })
+    applyToSubs: boolean
+  ) {
+    return CategoryService.editTypeForCategory(categoryId, types, applyToSubs)
   }
 
   @FieldResolver()

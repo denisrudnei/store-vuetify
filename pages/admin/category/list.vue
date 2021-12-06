@@ -2,6 +2,17 @@
   <v-row>
     <v-col>
       <v-data-table :headers="headers" :items="categories">
+        <template #item.productsTypes="{ item }">
+          <v-chip
+            v-for="value in item.productsTypes"
+            :key="value"
+            label
+            class="mx-2"
+          >
+            {{ value }}
+          </v-chip>
+        </template>
+
         <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
@@ -44,6 +55,10 @@ export default {
         {
           text: 'Name',
           value: 'name',
+        },
+        {
+          text: 'Types',
+          value: 'productsTypes',
         },
         {
           text: 'Actions',

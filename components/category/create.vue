@@ -24,6 +24,26 @@
               />
             </v-col>
             <v-col cols="12">
+              <v-row>
+                <v-col cols="auto">
+                  <v-checkbox
+                    v-model="applyToSubs"
+                    label="Apply to sub categories"
+                  >
+                  </v-checkbox>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    v-model="category.productsTypes"
+                    :items="types"
+                    outlined
+                    label="Type"
+                    multiple
+                  />
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="12">
               <v-file-input
                 v-model="image"
                 outlined
@@ -59,6 +79,7 @@
 <script>
 import { mdiCheckAll } from '@mdi/js'
 import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
+import { GetProductTypes } from '~/graphql/query/GetProductTypes'
 export default {
   props: {
     value: {
@@ -68,6 +89,7 @@ export default {
         description: '',
         father: undefined,
         image: undefined,
+        productTypes: [],
       }),
     },
   },
@@ -81,9 +103,12 @@ export default {
         name: '',
         description: '',
         father: undefined,
+        productTypes: [],
       },
       image: undefined,
       imageUrl: undefined,
+      types: [],
+      applyToSubs: false,
     }
   },
   computed: {
@@ -93,6 +118,7 @@ export default {
   },
   created() {
     Object.assign(this.categoryData, this.value)
+
     this.imageUrl = this.category.image
       ? this.category.image
       : '/images/not-set.svg'
@@ -106,10 +132,21 @@ export default {
           value: item.id,
         })).filter((item) => item.value !== this.category.id)
       })
+
+    this.$apollo
+      .query({
+        query: GetProductTypes,
+      })
+      .then((response) => {
+        this.types = response.data.GetProductTypes
+      })
   },
   methods: {
     save() {
-      this.$emit('save', this.category)
+      this.$emit('save', {
+        ...this.category,
+        applyToSubs: this.applyToSubs,
+      })
     },
     updateImage() {
       if (!this.image) return

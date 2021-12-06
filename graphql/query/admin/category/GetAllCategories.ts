@@ -8,6 +8,7 @@ query GetAllCategories ($withNoProducts: Boolean) {
     description
     slug
     image
+    productsTypes
   }
 }
 `

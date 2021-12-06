@@ -24,6 +24,7 @@ query GetCategoryByName($name: String!, $page: Int) {
       name
       slug
     }
+    productsTypes
     productsConnection(limit: 12, page: $page) {
       total
       pageInfo {

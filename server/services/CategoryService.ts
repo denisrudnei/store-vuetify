@@ -4,6 +4,7 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { S3 } from '../S3'
 import { ProductPaginationConnection } from '../types/ProductPagination'
+import { ProductType } from '../enums/ProductType'
 
 export class CategoryService {
   public static async getAllCategories(withNoProducts: Boolean = false) {
@@ -68,6 +69,13 @@ export class CategoryService {
 
     category.name = categoryToEdit.name
     category.description = categoryToEdit.description
+    if (categoryToEdit.productsTypes) {
+      this.editTypeForCategory(
+        category.id,
+        categoryToEdit.productsTypes,
+        categoryToEdit.applyToSubs != null ? categoryToEdit.applyToSubs : false
+      )
+    }
     if (!categoryToEdit.father) {
       category.father = null
     } else {
@@ -231,5 +239,37 @@ export class CategoryService {
         endCursor: products[products.length - 1].id,
       },
     }
+  }
+
+  public static async editTypeForCategory(
+    id: Category['id'],
+    types: ProductType[],
+    applyToSubs: boolean = false
+  ) {
+    const category = await Category.findOne(id, {
+      relations: ['subCategories'],
+    })
+    if (!category) throw new Error('Category not found')
+    category.productsTypes = types
+
+    await Product.update(
+      {
+        category: {
+          id,
+        },
+      },
+      {
+        type: types,
+      }
+    )
+
+    if (applyToSubs && category.subCategories.length) {
+      await Promise.all(
+        category.subCategories.map((sub) =>
+          this.editTypeForCategory(sub.id, types, true)
+        )
+      )
+    }
+    return category.save()
   }
 }

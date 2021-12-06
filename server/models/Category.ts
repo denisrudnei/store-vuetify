@@ -12,6 +12,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { ProductType } from '../enums/ProductType'
 import { Product } from './Product'
 
 @Entity()
@@ -48,6 +49,10 @@ export class Category extends BaseEntity {
   @Field(() => [Category])
   @OneToMany(() => Category, (category) => category.father)
   public subCategories!: Category[]
+
+  @Field(() => [ProductType])
+  @Column({ type: 'varchar', default: [ProductType.ECOMMERCE], array: true })
+  public productsTypes!: ProductType[]
 
   @Field()
   @UpdateDateColumn()
