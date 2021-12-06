@@ -12,6 +12,7 @@ query {
     description
     price
     amount
+    type
     category {
       id
       name

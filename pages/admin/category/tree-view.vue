@@ -70,6 +70,7 @@ export default {
           query: GetCategoryByNameTree,
           variables: {
             name: item.slug,
+            allTypes: true,
           },
         })
         .then((response) => {

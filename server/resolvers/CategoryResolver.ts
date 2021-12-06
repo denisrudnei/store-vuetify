@@ -8,6 +8,7 @@ import {
   Query,
   Resolver,
   Root,
+  Ctx,
 } from 'type-graphql'
 
 import { SearchArgs } from '../args/SearchArgs'
@@ -15,26 +16,37 @@ import { Role } from '../enums/Role'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
-import { CategoryService } from '../services/CategoryService'
+import { CategoryService, filterByType } from '../services/CategoryService'
 import { ProductPaginationConnection } from '../types/ProductPagination'
 import { ProductType } from '../enums/ProductType'
+import { CustomExpressContext } from '../types/CustomExpressContext'
 
 @Resolver(() => Category)
 export class CategoryResolver {
   @Query(() => [Category])
   public GetCategories(
+    @Ctx() { req }: CustomExpressContext,
     @Arg('withNoProducts', () => Boolean, { nullable: true })
     withNoProducts?: boolean
   ) {
-    return CategoryService.getRootCategories(withNoProducts)
+    let types = [ProductType.ECOMMERCE]
+    if (req.session.authUser && req.session.authUser!.role === Role.ADMIN) {
+      types = Object.values(ProductType)
+    }
+    return CategoryService.getRootCategories(withNoProducts, types)
   }
 
   @Query(() => [Category])
   public GetAllCategories(
+    @Ctx() { req }: CustomExpressContext,
     @Arg('withNoProducts', () => Boolean, { nullable: true })
     withNoProducts?: boolean
   ) {
-    return CategoryService.getAllCategories(withNoProducts)
+    let types = [ProductType.ECOMMERCE]
+    if (req.session.authUser && req.session.authUser!.role === Role.ADMIN) {
+      types = Object.values(ProductType)
+    }
+    return CategoryService.getAllCategories(withNoProducts, types)
   }
 
   @Query(() => [Category])
@@ -104,21 +116,32 @@ export class CategoryResolver {
   public async subCategories(
     @Arg('withNoProducts', () => Boolean, { nullable: true })
     withNoProducts: Boolean = false,
+    @Arg('allTypes', () => Boolean, {
+      nullable: true,
+      defaultValue: false,
+    })
+    allTypes: boolean,
     @Root() root: Category
   ) {
     const { subCategories } = (await Category.findOne(root.id, {
       relations: ['subCategories'],
     })) as Category
-    if (withNoProducts) return subCategories
-    const categoriesWithSubProducts = await Promise.all(
+    if (withNoProducts && allTypes) return subCategories
+    if (withNoProducts)
+      return subCategories.filter(filterByType([ProductType.ECOMMERCE]))
+    const categoriesWithSubProducts = (await Promise.all(
       subCategories.map(async (sub) => {
         return {
           ...sub,
           products: await CategoryService.getProducts(sub.id),
         }
       })
+    )) as Category[]
+    const filtered = categoriesWithSubProducts.filter(
+      (sub) => sub.products.length > 0
     )
-    return categoriesWithSubProducts.filter((sub) => sub.products.length > 0)
+    if (allTypes) return filtered
+    return filtered.filter(filterByType([ProductType.ECOMMERCE]))
   }
 
   @FieldResolver(() => ProductPaginationConnection)

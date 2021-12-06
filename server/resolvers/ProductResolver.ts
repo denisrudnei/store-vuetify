@@ -100,6 +100,7 @@ export class ProductResolver {
   ) {
     const newProduct = await ProductService.editProduct(id, product)
     pubSub.publish(ProductEvents.PRODUCT_UPDATED, newProduct)
+    return newProduct
   }
 
   @Mutation(() => Boolean)

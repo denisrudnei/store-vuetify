@@ -6,22 +6,39 @@ import { S3 } from '../S3'
 import { ProductPaginationConnection } from '../types/ProductPagination'
 import { ProductType } from '../enums/ProductType'
 
+export const filterByType =
+  (productsTypes: ProductType[]) => (category: Category) => {
+    for (const type of productsTypes) {
+      if (category.productsTypes.includes(type)) return true
+    }
+    return false
+  }
 export class CategoryService {
-  public static async getAllCategories(withNoProducts: Boolean = false) {
+  public static async getAllCategories(
+    withNoProducts: Boolean = false,
+    productsTypes: ProductType[] = [ProductType.ECOMMERCE]
+  ) {
     const categories = await Category.find({ relations: ['products'] })
-    if (withNoProducts) return categories
-    return categories.filter((category) => category.products.length)
+    if (withNoProducts) return categories.filter(filterByType(productsTypes))
+    return categories
+      .filter((category) => category.products.length)
+      .filter(filterByType(productsTypes))
   }
 
-  public static async getRootCategories(withNoProducts: Boolean = false) {
+  public static async getRootCategories(
+    withNoProducts: Boolean = false,
+    productsTypes: ProductType[] = [ProductType.ECOMMERCE]
+  ) {
     const categories = await Category.find({
       relations: ['products'],
       where: {
         father: null,
       },
     })
-    if (withNoProducts) return categories
-    return categories.filter((category) => category.products.length)
+    if (withNoProducts) return categories.filter(filterByType(productsTypes))
+    return categories
+      .filter((category) => category.products.length)
+      .filter(filterByType(productsTypes))
   }
 
   public static async getCategory(id: Category['id']) {

@@ -6,7 +6,7 @@ query {
     id
     name
     slug
-    subCategories {
+    subCategories(allTypes: true) {
       id
       name
     }

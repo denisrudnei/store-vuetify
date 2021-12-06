@@ -64,6 +64,11 @@
         <template #item.category="{ item }">
           {{ item.category.name }}
         </template>
+        <template #item.type="{ item }">
+          <v-chip v-for="type in item.type" :key="type" label class="mx-2">
+            {{ type }}
+          </v-chip>
+        </template>
         <template #item.actions="{ item }">
           <v-tooltip left>
             <template #activator="{ on }">
@@ -131,6 +136,10 @@ export default {
         {
           text: 'Category',
           value: 'category',
+        },
+        {
+          text: 'Type',
+          value: 'type',
         },
         {
           text: 'Actions',
