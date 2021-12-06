@@ -6,6 +6,7 @@ import {
   Not,
   SelectQueryBuilder,
 } from 'typeorm'
+import { ProductType } from '../enums/ProductType'
 
 import { CreateProductInput } from '../inputs/CreateProductInput'
 import { EditProductInput } from '../inputs/EditProductInput'
@@ -15,6 +16,7 @@ import { Product } from '../models/Product'
 import { S3 } from '../S3'
 import { DeletedProductResult } from '../types/DeletedProductResult'
 import { ProductPaginationConnection } from '../types/ProductPagination'
+import { convertProductTypesToPostgresString } from '../util/enum-util'
 
 export class ProductService {
   public static getProducts() {
@@ -77,11 +79,13 @@ export class ProductService {
           maxPrice: search.maxPrice,
         })
         .andWhere(
-          search.type && search.type.length > 0
-            ? `product.type && '${search.type
-                ?.map((type) => `{${type}}`)
-                .join(',')}'`
-            : '1 = 1'
+          search.type && search.type!.length > 0
+            ? `product.type && ${convertProductTypesToPostgresString(
+                search.type!
+              )}`
+            : `product.type && ${convertProductTypesToPostgresString([
+                ProductType.ECOMMERCE,
+              ])}`
         )
     }
 
