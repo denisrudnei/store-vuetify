@@ -65,7 +65,7 @@
           {{ item.category.name }}
         </template>
         <template #item.type="{ item }">
-          <v-chip v-for="type in item.type" :key="type" label class="mx-2">
+          <v-chip v-for="type in item.type" :key="type" label class="ma-2">
             {{ type }}
           </v-chip>
         </template>
