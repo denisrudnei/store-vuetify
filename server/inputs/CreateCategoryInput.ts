@@ -1,4 +1,6 @@
-import { InputType, Field, ID } from 'type-graphql'
+import { Field, ID, InputType } from 'type-graphql'
+
+import { ProductType } from '../enums/ProductType'
 import { Category } from '../models/Category'
 
 @InputType()
@@ -11,4 +13,7 @@ export class CreateCategoryInput {
 
   @Field(() => ID, { nullable: true })
   public father!: Category['id']
+
+  @Field(() => [ProductType], { nullable: true })
+  public productsTypes?: ProductType[]
 }

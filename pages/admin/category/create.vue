@@ -15,7 +15,12 @@ export default {
         .mutate({
           mutation: CreateCategory,
           variables: {
-            category,
+            category: {
+              name: category.name,
+              description: category.description,
+              father: category.father,
+              productsTypes: category.productsTypes,
+            },
           },
           awaitRefetchQueries: true,
           refetchQueries: [
