@@ -22,9 +22,7 @@
         <template #item.type="{ item }">
           <v-chip text label>
             <v-icon left>
-              {{
-                item.type === 'NORMAL' ? icons.mdiCashMultiple : icons.mdiTruck
-              }}
+              {{ getIcon(item.type) }}
             </v-icon>
             {{ item.type }}
           </v-chip>
@@ -52,7 +50,7 @@
 </template>
 
 <script>
-import { mdiEye, mdiCashMultiple, mdiTruck } from '@mdi/js'
+import { mdiEye, mdiCashMultiple, mdiTruck, mdiRoomService } from '@mdi/js'
 export default {
   data() {
     return {
@@ -60,6 +58,7 @@ export default {
         mdiEye,
         mdiCashMultiple,
         mdiTruck,
+        mdiRoomService,
       },
       headers: [
         {
@@ -110,6 +109,20 @@ export default {
       get() {
         return this.$store.getters['purchase/getPurchases']
       },
+    },
+  },
+  methods: {
+    getIcon(type) {
+      switch (type) {
+        case 'NORMAL':
+          return this.icons.mdiCashMultiple
+        case 'RESTAURANT_ORDER':
+          return this.icons.mdiRoomService
+        case 'DELIVERY':
+          return this.icons.mdiTruck
+        default:
+          return this.icons.mdiCashMultiple
+      }
     },
   },
 }
