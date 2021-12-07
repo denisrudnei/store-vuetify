@@ -7,7 +7,7 @@
             v-for="value in item.productsTypes"
             :key="value"
             label
-            class="mx-2"
+            class="ma-2"
           >
             {{ value }}
           </v-chip>
