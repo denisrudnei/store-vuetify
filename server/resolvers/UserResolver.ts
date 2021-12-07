@@ -39,7 +39,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public UpdateTheme(
     @Arg('isDark', () => Boolean) isDark: boolean,
     @Ctx() { req }: CustomExpressContext
