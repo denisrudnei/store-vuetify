@@ -27,26 +27,28 @@ export class CategoryResolver {
   public GetCategories(
     @Ctx() { req }: CustomExpressContext,
     @Arg('withNoProducts', () => Boolean, { nullable: true })
-    withNoProducts?: boolean
+    withNoProducts?: boolean,
+    @Arg('type', () => [ProductType], { nullable: true })
+    type = [ProductType.ECOMMERCE]
   ) {
-    let types = [ProductType.ECOMMERCE]
     if (req.session.authUser && req.session.authUser!.role === Role.ADMIN) {
-      types = Object.values(ProductType)
+      type = Object.values(ProductType)
     }
-    return CategoryService.getRootCategories(withNoProducts, types)
+    return CategoryService.getRootCategories(withNoProducts, type)
   }
 
   @Query(() => [Category])
   public GetAllCategories(
     @Ctx() { req }: CustomExpressContext,
     @Arg('withNoProducts', () => Boolean, { nullable: true })
-    withNoProducts?: boolean
+    withNoProducts?: boolean,
+    @Arg('type', () => [ProductType], { nullable: true })
+    type = [ProductType.ECOMMERCE]
   ) {
-    let types = [ProductType.ECOMMERCE]
     if (req.session.authUser && req.session.authUser!.role === Role.ADMIN) {
-      types = Object.values(ProductType)
+      type = Object.values(ProductType)
     }
-    return CategoryService.getAllCategories(withNoProducts, types)
+    return CategoryService.getAllCategories(withNoProducts, type)
   }
 
   @Query(() => [Category])
