@@ -6,6 +6,9 @@ export class EditProductInput {
   public name!: string
 
   @Field()
+  public barcode!: string
+
+  @Field()
   public description!: string
 
   @Field(() => [String])

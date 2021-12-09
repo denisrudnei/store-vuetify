@@ -5,6 +5,18 @@
         <v-col cols="12">
           <v-text-field v-model="product.name" outlined label="Name" />
         </v-col>
+        <v-col cols="12" md="8">
+          <v-text-field v-model="product.barcode" outlined label="Barcode" />
+        </v-col>
+        <v-col cols="12" md="4">
+          <svg
+            class="barcode"
+            jsbarcode-format="ean13"
+            jsbarcode-height="25"
+            :jsbarcode-value="product.barcode"
+            jsbarcode-textmargin="0"
+          />
+        </v-col>
         <v-col cols="12" class="black--text">
           <client-only>
             <ckeditor v-model="product.description" :editor="editor" dark />
@@ -132,8 +144,10 @@ export default {
       type: Object,
       default: () => ({
         name: '',
+        barcode: '',
         description: '',
         price: '0',
+        type: '',
         amount: 0,
         images: [],
         category: undefined,
@@ -154,6 +168,8 @@ export default {
       editor: undefined,
       productData: {
         name: '',
+        barcode: '',
+        type: '',
         description: '',
         price: '0',
         images: [],
@@ -162,6 +178,15 @@ export default {
       categories: [],
       types: [],
     }
+  },
+  head: {
+    script: [
+      {
+        type: 'text/javascript',
+        src: 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.ean-upc.min.js',
+        async: true,
+      },
+    ],
   },
   computed: {
     product() {
@@ -178,6 +203,17 @@ export default {
         !this.product.price ||
         !this.product.category
       )
+    },
+  },
+  watch: {
+    'product.barcode'() {
+      try {
+        JsBarcode('.barcode').init()
+      } catch (e) {
+        this.$toast.show('Invalid input for EAN-13', {
+          duration: 1000,
+        })
+      }
     },
   },
   beforeDestroy() {
@@ -198,6 +234,12 @@ export default {
   },
   mounted() {
     this.editor = require('@ckeditor/ckeditor5-build-classic')
+    require('jsbarcode')
+    try {
+      JsBarcode('.barcode').init()
+    } catch {
+      this.$toast.show('Invalid input for EAN-13')
+    }
   },
   created() {
     Object.assign(this.productData, this.value)
@@ -244,6 +286,7 @@ export default {
         price: parseFloat(this.product.price.toString().replace(',', '.')),
       })
       this.product.name = ''
+      this.product.barcode = ''
       this.product.description = ''
       this.product.price = '0'
       this.product.amount = 0
@@ -272,7 +315,7 @@ export default {
         .post(`/product/${this.product.id}/images`, formData)
         .then(() => {
           this.newImages = []
-          this.$toast.show('Uplaoded', {
+          this.$toast.show('Uploaded', {
             duration: 1000,
           })
         })

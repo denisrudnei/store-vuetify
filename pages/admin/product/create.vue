@@ -17,6 +17,7 @@ export default {
           variables: {
             product: {
               name: product.name,
+              barcode: product.barcode,
               price: product.price,
               amount: Number(product.amount),
               description: product.description,

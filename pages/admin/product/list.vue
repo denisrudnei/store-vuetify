@@ -134,6 +134,10 @@ export default {
           value: 'amount',
         },
         {
+          text: 'Barcode',
+          value: 'barcode',
+        },
+        {
           text: 'Category',
           value: 'category',
         },
@@ -152,6 +156,7 @@ export default {
       categories: [],
     }
   },
+
   computed: {
     products: {
       get() {

@@ -5,6 +5,7 @@ query GetProduct($id: ID!) {
   GetProductForEdit: GetProduct (id: $id) {
     id
     name
+    barcode
     images
     amount
     type

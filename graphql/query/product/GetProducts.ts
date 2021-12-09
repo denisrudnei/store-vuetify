@@ -5,6 +5,7 @@ query {
   GetProducts {
     id
     name
+    barcode
     description
     price
   }

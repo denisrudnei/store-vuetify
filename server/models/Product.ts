@@ -27,6 +27,10 @@ export class Product extends BaseEntity {
   public name!: string
 
   @Field()
+  @Column({ default: '' })
+  public barcode!: string
+
+  @Field()
   @Column({ type: 'text' })
   public description!: string
 

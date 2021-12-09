@@ -7,6 +7,9 @@ export class CreateProductInput {
   public name!: string
 
   @Field()
+  public barcode!: string
+
+  @Field()
   public description!: string
 
   @Field(() => Float)

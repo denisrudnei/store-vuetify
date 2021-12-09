@@ -41,6 +41,7 @@ export default {
             product: {
               category: product.category,
               name: product.name,
+              barcode: product.barcode,
               price: product.price,
               amount: Number(product.amount),
               description: product.description,
