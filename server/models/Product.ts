@@ -18,7 +18,7 @@ import { Category } from './Category'
 @Entity()
 @ObjectType()
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   @Field(() => ID)
   public id!: number
 

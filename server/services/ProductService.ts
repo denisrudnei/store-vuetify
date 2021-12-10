@@ -49,6 +49,36 @@ export class ProductService {
     }
   }
 
+  public static async getProductsByBarcode(
+    barcode: string,
+    page: number,
+    limit: number
+  ): Promise<ProductPaginationConnection> {
+    const [products, total] = await Product.findAndCount({
+      where: {
+        barcode,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    })
+
+    const pages = Math.round(total / limit)
+
+    return {
+      total,
+      edges: products.map((product) => ({
+        cursor: product.id,
+        node: product,
+      })),
+      pageInfo: {
+        pages,
+        page,
+        endCursor: products[products.length - 1].id,
+        hasNextPage: page < pages,
+      },
+    }
+  }
+
   public static getProduct(id: Product['id']) {
     return Product.findOne(id)
   }
@@ -62,10 +92,24 @@ export class ProductService {
     page: number,
     limit: number
   ) {
-    const where = (qb: SelectQueryBuilder<Product>) => {
-      qb.where({
+    const selects = [
+      {
         name: ILike(`%${search.name ? search.name : ''}%`),
+      },
+      {
+        barcode: ILike(`%${search.name}%`),
+      },
+    ]
+
+    if (search.name && !Number.isNaN(Number(search.name))) {
+      selects.push({
+        // @ts-ignore
+        id: search.name,
       })
+    }
+
+    const where = (qb: SelectQueryBuilder<Product>) => {
+      qb.where(selects)
         .andWhere(
           search.category ? 'product.categoryId = :category' : '1 = 1',
           {

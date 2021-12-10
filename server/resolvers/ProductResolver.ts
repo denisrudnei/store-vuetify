@@ -42,6 +42,15 @@ export class ProductResolver {
     return ProductService.getProductsPaginated(page, limit)
   }
 
+  @Query(() => ProductPaginationConnection)
+  public GetProductsByBarcode(
+    @Arg('barcode', () => String) barcode: string,
+    @Arg('page', () => Int, { defaultValue: 1 }) page: number = 1,
+    @Arg('limit', () => Int, { defaultValue: 10 }) limit: number = 10
+  ) {
+    return ProductService.getProductsByBarcode(barcode, page, limit)
+  }
+
   @Query(() => [Product])
   public GetProductsByIds(@Arg('ids', () => [ID]) ids: Product['id'][]) {
     return ProductService.getProductsByIds(ids)
