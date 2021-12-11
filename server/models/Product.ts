@@ -85,6 +85,10 @@ export class Product extends BaseEntity {
   }
 
   @Field()
+  @Column({ default: true })
+  public synchronized!: boolean
+
+  @Field()
   @UpdateDateColumn()
   public updatedAt?: Date
 
