@@ -9,7 +9,7 @@ import { CustomExpressContext } from '../types/CustomExpressContext'
 @Resolver()
 export class PhoneResolver {
   @Mutation(() => Phone)
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public CreatePhone(
     @Arg('phone', () => CreatePhoneInput) phone: CreatePhoneInput,
     @Ctx() { req }: CustomExpressContext
@@ -19,7 +19,7 @@ export class PhoneResolver {
   }
 
   @Mutation(() => Boolean)
-  @Authorized(Role.USER)
+  @Authorized(Role.USER, Role.OPERATOR)
   public RemovePhone(
     @Arg('id', () => ID) phone: Phone['id'],
     @Ctx() { req }: CustomExpressContext
