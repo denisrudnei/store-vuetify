@@ -4,11 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
 import { SynchronizationItemType } from '../enums/SynchronizationItemType'
 import { SynchronizationStatus } from '../enums/SynchronizationStatus'
+import { SynchronizationResult } from './SynchronizationResult'
 
 @ObjectType()
 @Entity()
@@ -18,8 +20,12 @@ export class SynchronizationItemResult extends BaseEntity {
   public id!: string
 
   @Field(() => ID)
-  @Column(() => Number)
+  @Column({ type: 'varchar' })
   public itemId!: number | string
+
+  @Field(() => SynchronizationResult)
+  @ManyToOne(() => SynchronizationResult)
+  public synchronization!: SynchronizationResult
 
   @Field(() => SynchronizationStatus)
   @Column()

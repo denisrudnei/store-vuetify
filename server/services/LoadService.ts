@@ -12,7 +12,7 @@ import { SynchronizationItemResult } from '../models/SynchronizationItemResult'
 import { User } from '../models/User'
 import { LoadData } from '../types/LoadData'
 import { LoadPayload } from '../types/LoadPayload'
-import { SynchronizationResult } from '../types/SynchronizationResult'
+import { SynchronizationResult } from '../models/SynchronizationResult'
 
 export class LoadService {
   public static async getRecentData(lastUpdate: Date) {
@@ -46,13 +46,13 @@ export class LoadService {
   public static async loadSynchronously(
     data: LoadPayload
   ): Promise<SynchronizationResult> {
-    const result: SynchronizationResult = {
+    const result: SynchronizationResult = SynchronizationResult.create({
       products: await this.synchronizeProductsSync(data.products),
       users: [],
       categories: [],
       purchases: [],
-    }
-    return result
+    })
+    return result.save()
   }
 
   public static async synchronizeProductsSync(
@@ -88,18 +88,25 @@ export class LoadService {
     return result
   }
 
-  public static loadAsynchronously(
+  public static async loadAsynchronously(
     data: LoadPayload,
-    id: string,
-    pubSub: PubSubEngine
-  ): String {
-    this.synchronizeProductsAsync(data.products, pubSub)
 
-    return id
+    pubSub: PubSubEngine
+  ): Promise<String> {
+    const result = await SynchronizationResult.create({
+      products: [],
+      users: [],
+      categories: [],
+      purchases: [],
+    }).save()
+    this.synchronizeProductsAsync(data.products, result, pubSub)
+
+    return result.id
   }
 
   public static async synchronizeProductsAsync(
     products: LoadPayload['products'],
+    synchronizationResult: SynchronizationResult,
     pubSub: PubSubEngine
   ) {
     if (!products) return []
@@ -115,15 +122,21 @@ export class LoadService {
           createdAt: new Date(),
         }).save()
 
+        synchronizationResult.products.push(success)
+        synchronizationResult.save()
+
         pubSub.publish(LoadEvents.ITEM_SYNCHRONIZED, success)
       } catch (e) {
         const failed = await SynchronizationItemResult.create({
           itemId: product.id,
           status: SynchronizationStatus.UNSYNCHRONIZED,
           type: SynchronizationItemType.PRODUCT,
-          reason: e instanceof Error ? e.message : 'failed to save product',
+          reason: e instanceof Error ? e.message : 'Failed to save product',
           createdAt: new Date(),
         }).save()
+
+        synchronizationResult.products.push(failed)
+        synchronizationResult.save()
 
         pubSub.publish(LoadEvents.ITEM_SYNCHRONIZED, failed)
       }

@@ -9,7 +9,6 @@ import {
   Root,
   Subscription,
 } from 'type-graphql'
-import { v4 as uuid } from 'uuid'
 
 import { LoadEvents } from '../enums/LoadEvents'
 import { Role } from '../enums/Role'
@@ -17,7 +16,7 @@ import { SynchronizationItemResult } from '../models/SynchronizationItemResult'
 import { LoadService } from '../services/LoadService'
 import { LoadData } from '../types/LoadData'
 import { LoadPayload } from '../types/LoadPayload'
-import { SynchronizationResult } from '../types/SynchronizationResult'
+import { SynchronizationResult } from '../models/SynchronizationResult'
 
 @Resolver()
 export class LoadResolver {
@@ -33,13 +32,12 @@ export class LoadResolver {
   }
 
   @Mutation(() => String)
-  public LoadAsynchronously(
+  public async LoadAsynchronously(
     @Arg('data', () => LoadPayload) data: LoadPayload,
     @PubSub() pubSub: PubSubEngine
   ) {
-    const id = uuid()
-    LoadService.loadAsynchronously(data, id, pubSub)
-    return id
+    const result = await LoadService.loadAsynchronously(data, pubSub)
+    return result
   }
 
   @Subscription(() => SynchronizationItemResult, {
