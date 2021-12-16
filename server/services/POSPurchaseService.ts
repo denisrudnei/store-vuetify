@@ -45,11 +45,14 @@ export class POSPurchaseService {
   public static async createPurchase(
     operatorId: User['id'],
     userId: User['id'],
+    posId: POS['id'],
     products: ProductForPurchaseInput[],
     payments: PaymentInput[]
   ) {
     const operator = await User.findOne(operatorId)
     if (!operator) throw new Error('Operator not found')
+    const pos = await POS.findOne(posId)
+    if (!pos) throw new Error('POS not found')
     const user = await User.findOne({
       where: {
         id: userId,
@@ -57,6 +60,7 @@ export class POSPurchaseService {
     })
     const purchase = await Purchase.create().save()
     purchase.operator = operator
+    purchase.pos = pos
     purchase.user = user
     purchase.type = PurchaseType.NORMAL
     purchase.origin = PurchaseOrigin.POS

@@ -44,6 +44,7 @@ export class POSPurchaseResolver {
   @Authorized(Role.OPERATOR)
   public async PurchaseFromPOS(
     @Arg('user', () => ID, { nullable: true }) user: User['id'],
+    @Arg('pos', () => ID) pos: POS['id'],
     @Arg('products', () => [ProductForPurchaseInput])
     products: ProductForPurchaseInput[],
     @Arg('payment', () => [PaymentInput])
@@ -56,6 +57,7 @@ export class POSPurchaseResolver {
     const purchase = await POSPurchaseService.createPurchase(
       id,
       user,
+      pos,
       products,
       payment
     )
@@ -70,5 +72,13 @@ export class POSPurchaseResolver {
       relations: ['operator'],
     })) as Purchase
     return operator
+  }
+
+  @FieldResolver()
+  public async pos(@Root() root: Purchase) {
+    const { pos } = (await Purchase.findOne(root.id, {
+      relations: ['pos'],
+    })) as Purchase
+    return pos
   }
 }
