@@ -1,4 +1,4 @@
-import { Field, ID, InterfaceType } from 'type-graphql'
+import { Field, ID, InterfaceType, Int } from 'type-graphql'
 import {
   Entity,
   ManyToOne,
@@ -18,6 +18,10 @@ export abstract class PrintLayoutItem extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   public id!: string
+
+  @Field(() => Int)
+  @Column({ type: 'int', default: '1' })
+  public position!: number
 
   @Field(() => PrintLayout)
   @ManyToOne(() => PrintLayout, (mainLayout) => mainLayout.items)
