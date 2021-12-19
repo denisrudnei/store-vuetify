@@ -17,6 +17,7 @@ import { PrintLayout } from '../models/print/PrintLayout'
 import { PrintLayoutItem } from '../models/print/PrintLayoutItem'
 import { HeaderItem } from '../models/print/single_line/HeaderItem'
 import { PrintLayoutService } from '../services/PrintLayoutService'
+import { EmptyLineItem } from '../models/print/single_line/EmptyLineItem'
 
 @Resolver(() => PrintLayout)
 export class PrintLayoutResolver {
@@ -53,7 +54,7 @@ export class PrintLayoutResolver {
     return PrintLayoutService.addHeader(id, header)
   }
 
-  @Mutation(() => HeaderItem)
+  @Mutation(() => EmptyLineItem)
   @Authorized(Role.OPERATOR)
   public AddEmptyLineInPrintLayout(
     @Arg('id', () => ID) id: PrintLayout['id'],
