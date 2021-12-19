@@ -4,6 +4,8 @@ import { HeaderItem } from '../models/print/single_line/HeaderItem'
 import { PrintLayoutItem } from '../models/print/PrintLayoutItem'
 import { AddHeaderInput } from '../inputs/print_layout/AddHeaderInput'
 import { EmptyLineItem } from '../models/print/single_line/EmptyLineItem'
+import { ProductTable } from '../models/print/single_line/ProductTable'
+import { PurchaseType } from '../enums/PurchaseType'
 
 export class PrintLayoutService {
   public static getAll() {
@@ -80,5 +82,22 @@ export class PrintLayoutService {
     await layout.save()
 
     return emptyLine.save()
+  }
+
+  public static async addProductTable(
+    id: PrintLayout['id'],
+    type: PurchaseType
+  ) {
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    if (!layout) throw new Error('Layout not found')
+    const table = await ProductTable.create().save()
+
+    table.mainLayout = layout
+    table.type = 'ProductTable'
+    table.printType = type
+    layout.items.push(table)
+    await layout.save()
+
+    return table.save()
   }
 }

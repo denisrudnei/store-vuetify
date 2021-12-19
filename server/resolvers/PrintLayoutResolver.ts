@@ -18,6 +18,8 @@ import { PrintLayoutItem } from '../models/print/PrintLayoutItem'
 import { HeaderItem } from '../models/print/single_line/HeaderItem'
 import { PrintLayoutService } from '../services/PrintLayoutService'
 import { EmptyLineItem } from '../models/print/single_line/EmptyLineItem'
+import { ProductTable } from '../models/print/single_line/ProductTable'
+import { PurchaseType } from '../enums/PurchaseType'
 
 @Resolver(() => PrintLayout)
 export class PrintLayoutResolver {
@@ -61,6 +63,15 @@ export class PrintLayoutResolver {
     @Arg('lines', () => Int) lines: number
   ) {
     return PrintLayoutService.addEmptyLine(id, lines)
+  }
+
+  @Mutation(() => ProductTable)
+  @Authorized(Role.OPERATOR)
+  public AddProductTable(
+    @Arg('id', () => ID) id: PrintLayout['id'],
+    @Arg('type', () => PurchaseType) type: PurchaseType
+  ) {
+    return PrintLayoutService.addProductTable(id, type)
   }
 
   @Mutation(() => Boolean)

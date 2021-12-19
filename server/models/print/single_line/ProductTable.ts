@@ -10,5 +10,5 @@ import { SingleLineItemLayout } from './SingleLineItemLayout'
 export class ProductTable extends SingleLineItemLayout {
   @Field()
   @Column({ default: PurchaseType.NORMAL })
-  public printType!: PurchaseType.NORMAL
+  public printType: PurchaseType = PurchaseType.NORMAL
 }
