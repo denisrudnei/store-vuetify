@@ -1,15 +1,14 @@
-import { Field, ID, InterfaceType, Int } from 'type-graphql'
+import { Field, ID, Int, InterfaceType } from 'type-graphql'
 import {
+  BaseEntity,
+  Column,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Column,
   TableInheritance,
-  BaseEntity,
 } from 'typeorm'
 
 import { PrintLayout } from './PrintLayout'
-import { PrintLayoutItemType } from './PrintLayoutItemType'
 
 @InterfaceType()
 @Entity()
@@ -27,7 +26,7 @@ export abstract class PrintLayoutItem extends BaseEntity {
   @ManyToOne(() => PrintLayout, (mainLayout) => mainLayout.items)
   public mainLayout!: PrintLayout
 
-  @Field(() => PrintLayoutItemType)
+  @Field(() => String)
   @Column()
-  public type!: PrintLayoutItemType
+  public type!: String
 }
