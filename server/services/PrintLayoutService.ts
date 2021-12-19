@@ -10,6 +10,10 @@ export class PrintLayoutService {
     return PrintLayout.find()
   }
 
+  public static getOne(id: PrintLayout['id']) {
+    return PrintLayout.findOne(id)
+  }
+
   public static create(layout: CreatePrintLayoutInput) {
     return PrintLayout.create({ name: layout.name }).save()
   }

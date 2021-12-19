@@ -25,6 +25,11 @@ export class PrintLayoutResolver {
     return PrintLayoutService.getAll()
   }
 
+  @Query(() => PrintLayout)
+  public GetPrintLayout(@Arg('id', () => ID) id: PrintLayout['id']) {
+    return PrintLayoutService.getOne(id)
+  }
+
   @Mutation(() => PrintLayout)
   @Authorized(Role.OPERATOR)
   public CreatePrintLayout(
