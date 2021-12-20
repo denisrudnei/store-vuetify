@@ -10,4 +10,6 @@ export class EmptyLineItem extends SingleLineItemLayout {
   @Field()
   @Column({ type: 'int', default: 1 })
   public numberOfLines: number = 1
+
+  type = 'EmptyLineItem'
 }
