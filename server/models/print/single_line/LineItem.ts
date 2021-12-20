@@ -10,4 +10,6 @@ export class LineItem extends SingleLineItemLayout {
   @Field()
   @Column()
   public character!: string
+
+  type = 'LineItem'
 }

@@ -6,6 +6,8 @@ import { AddHeaderInput } from '../inputs/print_layout/AddHeaderInput'
 import { EmptyLineItem } from '../models/print/single_line/EmptyLineItem'
 import { ProductTable } from '../models/print/single_line/ProductTable'
 import { PurchaseType } from '../enums/PurchaseType'
+import { LineItem } from '../models/print/single_line/LineItem'
+import { CutItem } from '../models/print/single_line/CutItem'
 
 export class PrintLayoutService {
   public static getAll() {
@@ -99,5 +101,27 @@ export class PrintLayoutService {
     await layout.save()
 
     return table.save()
+  }
+
+  public static async addLineItem(id: PrintLayout['id'], character: string) {
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    if (!layout) throw new Error('Layout not found')
+    const lineItem = await LineItem.create().save()
+    lineItem.character = character
+    lineItem.mainLayout = layout
+    await lineItem.save()
+    layout.items.push(lineItem)
+    layout.save()
+    return lineItem
+  }
+
+  public static async addCutItem(id: PrintLayout['id']) {
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    if (!layout) throw new Error('Layout not found')
+    const cut = await CutItem.create().save()
+    cut.mainLayout = layout
+    await cut.save()
+    layout.items.push(cut)
+    return cut.save()
   }
 }

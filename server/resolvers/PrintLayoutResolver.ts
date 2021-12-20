@@ -20,6 +20,8 @@ import { PrintLayoutService } from '../services/PrintLayoutService'
 import { EmptyLineItem } from '../models/print/single_line/EmptyLineItem'
 import { ProductTable } from '../models/print/single_line/ProductTable'
 import { PurchaseType } from '../enums/PurchaseType'
+import { LineItem } from '../models/print/single_line/LineItem'
+import { CutItem } from '../models/print/single_line/CutItem'
 
 @Resolver(() => PrintLayout)
 export class PrintLayoutResolver {
@@ -72,6 +74,21 @@ export class PrintLayoutResolver {
     @Arg('type', () => PurchaseType) type: PurchaseType
   ) {
     return PrintLayoutService.addProductTable(id, type)
+  }
+
+  @Mutation(() => LineItem)
+  @Authorized(Role.OPERATOR)
+  public AddLineItem(
+    @Arg('id', () => ID) id: PrintLayout['id'],
+    @Arg('character', () => String) character: PurchaseType
+  ) {
+    return PrintLayoutService.addLineItem(id, character)
+  }
+
+  @Mutation(() => CutItem)
+  @Authorized(Role.OPERATOR)
+  public AddCutItem(@Arg('id', () => ID) id: PrintLayout['id']) {
+    return PrintLayoutService.addCutItem(id)
   }
 
   @Mutation(() => Boolean)
