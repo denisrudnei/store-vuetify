@@ -146,18 +146,33 @@ export class PrintLayoutService {
   ) {
     const layout = await PrintLayout.findOne(id, { relations: ['items'] })
     if (!layout) throw new Error('Layout not found')
+    const items = layout.items.sort((a, b) => a.position - b.position)
+    if (oldPosition < newPosition) {
+      const end = newPosition - 1
+      const item = items[oldPosition]
+      let i = 0
+      let local = oldPosition
 
-    const oldItem = layout.items.find((item) => item.position === oldPosition)
-    if (!oldItem) throw new Error('Item not found')
+      do {
+        items[local] = items[++local]
+        i++
+      } while (i < end - oldPosition)
+      items[end] = item
+    }
 
-    const newItem = layout.items.find((item) => item.position === newPosition)
-    if (!newItem) throw new Error('Item not found')
+    if (oldPosition > newPosition) {
+      const item = items[oldPosition]
+      for (let i = oldPosition; i > newPosition; i--) {
+        items[i] = items[i - 1]
+      }
+      items[newPosition] = item
+    }
 
-    oldItem.position = newPosition
-    await oldItem.save()
+    for (let i = 0; i < items.length; i++) {
+      items[i].position = i
+    }
 
-    newItem.position = oldPosition
-    await newItem.save()
+    await Promise.all(items.map((item) => item.save()))
 
     return true
   }
