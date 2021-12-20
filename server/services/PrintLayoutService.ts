@@ -33,11 +33,18 @@ export class PrintLayoutService {
     id: PrintLayout['id'],
     itemId: PrintLayoutItem['id']
   ) {
-    const layout = await PrintLayout.findOne(id)
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
     if (!layout) throw new Error('Layout not found')
     const item = await PrintLayoutItem.findOne(itemId)
     if (!item) throw new Error('Item not found')
     await item.remove()
+    const items = layout.items
+      .filter((i) => i.id !== itemId)
+      .sort((a, b) => a.position - b.position)
+    for (let i = 0; i < items.length; i++) {
+      items[i].position = i
+      await items[i].save()
+    }
     return true
   }
 
