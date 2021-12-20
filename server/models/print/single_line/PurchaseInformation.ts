@@ -1,11 +1,11 @@
 import { ObjectType } from 'type-graphql'
-import { Entity } from 'typeorm'
+import { ChildEntity } from 'typeorm'
 
 import { PrintLayoutItem } from '../PrintLayoutItem'
 import { SingleLineItemLayout } from './SingleLineItemLayout'
 
 @ObjectType({ implements: [PrintLayoutItem, SingleLineItemLayout] })
-@Entity()
+@ChildEntity()
 export class PurchaseInformation extends SingleLineItemLayout {
   type = 'PurchaseInformation'
 }
