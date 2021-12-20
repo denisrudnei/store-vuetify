@@ -106,11 +106,21 @@ export class PrintLayoutResolver {
     return PrintLayoutService.removeItem(id, itemId)
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.OPERATOR)
+  public MoveItemPosition(
+    @Arg('id', () => ID) id: PrintLayout['id'],
+    @Arg('oldPosition', () => Int) oldPosition: number,
+    @Arg('newPosition', () => Int) newPosition: number
+  ) {
+    return PrintLayoutService.updatePosition(id, oldPosition, newPosition)
+  }
+
   @FieldResolver()
   public async items(@Root() root: PrintLayout) {
     const { items } = (await PrintLayout.findOne(root.id, {
       relations: ['items'],
     })) as PrintLayout
-    return items
+    return items.sort((a, b) => a.position - b.position)
   }
 }

@@ -65,6 +65,8 @@ export class PrintLayoutService {
     header.address = headerInfo.address
     header.cnpj = headerInfo.cnpj
 
+    header.position = layout.items.length
+
     layout.items.push(header)
 
     await layout.save()
@@ -78,6 +80,7 @@ export class PrintLayoutService {
     const emptyLine = await EmptyLineItem.create().save()
     emptyLine.mainLayout = layout
     emptyLine.numberOfLines = lines
+    emptyLine.position = layout.items.length
 
     layout.items.push(emptyLine)
 
@@ -97,7 +100,9 @@ export class PrintLayoutService {
     table.mainLayout = layout
     table.type = 'ProductTable'
     table.printType = type
+    table.position = layout.items.length
     layout.items.push(table)
+
     await layout.save()
 
     return table.save()
@@ -109,6 +114,7 @@ export class PrintLayoutService {
     const lineItem = await LineItem.create().save()
     lineItem.character = character
     lineItem.mainLayout = layout
+    lineItem.position = layout.items.length
     await lineItem.save()
     layout.items.push(lineItem)
     layout.save()
@@ -120,8 +126,32 @@ export class PrintLayoutService {
     if (!layout) throw new Error('Layout not found')
     const cut = await CutItem.create().save()
     cut.mainLayout = layout
+    cut.position = layout.items.length
     await cut.save()
     layout.items.push(cut)
     return cut.save()
+  }
+
+  public static async updatePosition(
+    id: PrintLayout['id'],
+    oldPosition: number,
+    newPosition: number
+  ) {
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    if (!layout) throw new Error('Layout not found')
+
+    const oldItem = layout.items.find((item) => item.position === oldPosition)
+    if (!oldItem) throw new Error('Item not found')
+
+    const newItem = layout.items.find((item) => item.position === newPosition)
+    if (!newItem) throw new Error('Item not found')
+
+    oldItem.position = newPosition
+    await oldItem.save()
+
+    newItem.position = oldPosition
+    await newItem.save()
+
+    return true
   }
 }
