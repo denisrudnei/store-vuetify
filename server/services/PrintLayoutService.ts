@@ -8,6 +8,8 @@ import { ProductTable } from '../models/print/single_line/ProductTable'
 import { PurchaseType } from '../enums/PurchaseType'
 import { LineItem } from '../models/print/single_line/LineItem'
 import { CutItem } from '../models/print/single_line/CutItem'
+import { PaymentInfoItem } from '../models/print/single_line/PaymentInfoItem'
+import { PurchaseInformation } from '../models/print/single_line/PurchaseInformation'
 
 export class PrintLayoutService {
   public static getAll() {
@@ -137,6 +139,40 @@ export class PrintLayoutService {
     await cut.save()
     layout.items.push(cut)
     return cut.save()
+  }
+
+  public static async addPaymentInfo(id: PrintLayout['id']) {
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    if (!layout) throw new Error('Layout not found')
+    const paymentInfo = await PaymentInfoItem.create().save()
+
+    paymentInfo.mainLayout = layout
+    paymentInfo.position = layout.items.length
+
+    await paymentInfo.save()
+
+    layout.items.push(paymentInfo)
+
+    await layout.save()
+
+    return paymentInfo.save()
+  }
+
+  public static async addPurchaseInformation(id: PrintLayout['id']) {
+    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    if (!layout) throw new Error('Layout not found')
+
+    const purchaseInformation = await PurchaseInformation.create().save()
+    purchaseInformation.mainLayout = layout
+    purchaseInformation.position = layout.items.length
+
+    await purchaseInformation.save()
+
+    layout.items.push(purchaseInformation)
+
+    await layout.save()
+
+    return purchaseInformation.save()
   }
 
   public static async updatePosition(

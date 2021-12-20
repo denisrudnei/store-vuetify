@@ -6,4 +6,6 @@ import { SingleLineItemLayout } from './SingleLineItemLayout'
 
 @ObjectType({ implements: [PrintLayoutItem, SingleLineItemLayout] })
 @Entity()
-export class PurchaseInformation extends SingleLineItemLayout {}
+export class PurchaseInformation extends SingleLineItemLayout {
+  type = 'PurchaseInformation'
+}
