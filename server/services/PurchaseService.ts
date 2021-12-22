@@ -1,4 +1,4 @@
-import { getDay, lastDayOfMonth, set } from 'date-fns'
+import { getDay, getMonth, lastDayOfMonth, set } from 'date-fns'
 import { getConnection, Not, SelectQueryBuilder } from 'typeorm'
 
 import { DeliveryStatus } from '../enums/DeliveryStatus'
@@ -83,6 +83,8 @@ export class PurchaseService {
   public static async getDaysWithPurchase(
     year: number = new Date().getFullYear()
   ) {
+    const month = getMonth(new Date()) + 1
+
     const result = await getConnection()
       .createQueryBuilder()
       .select('EXTRACT(DAY FROM "createdAt") as date')
@@ -106,13 +108,13 @@ export class PurchaseService {
           hours: 23,
           minutes: 59,
           seconds: 59,
-          month: 11,
+          month,
           year,
           date: getDay(
             lastDayOfMonth(
               set(new Date(), {
                 year,
-                month: 11,
+                month,
               })
             )
           ),
