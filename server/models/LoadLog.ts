@@ -1,12 +1,13 @@
-import { ObjectType, ID, Field } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql'
 import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  CreateDateColumn,
 } from 'typeorm'
+
 import { LoadLogType } from '../enums/LoadLogType'
 import { POS } from './POS'
 
@@ -14,8 +15,8 @@ import { POS } from './POS'
 @Entity()
 export class LoadLog extends BaseEntity {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  public id!: number
+  @PrimaryGeneratedColumn('uuid')
+  public id!: string
 
   @Field(() => POS)
   @ManyToOne(() => POS, (pos) => pos.loadLogs)
