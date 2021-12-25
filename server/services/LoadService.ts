@@ -13,6 +13,8 @@ import { User } from '../models/User'
 import { LoadData } from '../types/LoadData'
 import { LoadPayload } from '../types/LoadPayload'
 import { SynchronizationResult } from '../models/SynchronizationResult'
+import { Printer } from '../models/printer/Printer'
+import { PrintLayout } from '../models/print_layout/PrintLayout'
 
 export class LoadService {
   public static async getRecentData(lastUpdate: Date) {
@@ -36,6 +38,16 @@ export class LoadService {
         withDeleted: true,
       }),
       pos: await POS.find({
+        where: {
+          updatedAt: Between(lastUpdate, new Date()),
+        },
+      }),
+      printers: await Printer.find({
+        where: {
+          updatedAt: Between(lastUpdate, new Date()),
+        },
+      }),
+      printLayouts: await PrintLayout.find({
         where: {
           updatedAt: Between(lastUpdate, new Date()),
         },
