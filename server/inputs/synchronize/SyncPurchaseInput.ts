@@ -1,7 +1,7 @@
 import { InputType, Field, ID } from 'type-graphql'
 import { Purchase } from '../../models/Purchase'
 import { PurchaseOrigin } from '../../enums/PurchaseOrigin'
-import { POS } from '~/server/models/POS'
+import { POS } from '../../models/POS'
 import { User } from '~/server/models/User'
 
 @InputType()

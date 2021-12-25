@@ -1,6 +1,6 @@
 import { CreatePrinterInput } from '../inputs/printer/CreatePrinterInput'
 import { Printer } from '../models/printer/Printer'
-import { POS } from '~/server/models/POS'
+import { POS } from '../models/POS'
 
 export class PrinterService {
   public static async create(printer: CreatePrinterInput) {
