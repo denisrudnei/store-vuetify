@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import { Purchase } from './Purchase'
 import { LoadLog } from './LoadLog'
+import { Printer } from './printer/Printer'
 
 @ObjectType()
 @Entity()
@@ -29,6 +30,10 @@ export class POS extends BaseEntity {
   @Field(() => [LoadLog])
   @OneToMany(() => LoadLog, (log) => log.pos)
   public loadLogs!: LoadLog[]
+
+  @Field(() => [Printer])
+  @OneToMany(() => Printer, (printer) => printer.installedIn)
+  public printers!: []
 
   @Field()
   @CreateDateColumn()
