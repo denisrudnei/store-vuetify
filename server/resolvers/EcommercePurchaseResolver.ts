@@ -49,7 +49,7 @@ export class EcommercePurchaseResolver {
     return PurchaseService.getNormalPurchases()
   }
 
-  @Query(() => Purchase)
+  @Query(() => Purchase, { nullable: true })
   @Authorized([Role.USER, Role.OPERATOR])
   public GetPurchase(
     @Arg('id', () => ID) purchase: Purchase['id'],
