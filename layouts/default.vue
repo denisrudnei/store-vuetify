@@ -137,6 +137,7 @@ import {
 import ColorMiddleware from '../middleware/ColorMiddleware'
 import { GetDefaultInfo } from '../graphql/query/GetDefaultInto'
 import { PurchaseStatusUpdated } from '../graphql/subscription/purchase/PurchaseStatusUpdated'
+import { BulkPurchasesStatusUpdate } from '../graphql/subscription/purchase/BulkPurchasesStatusUpdate'
 import cartMenu from '~/components/cartMenu'
 import NotificationList from '~/components/notification-list'
 import mainDrawer from '~/components/drawers/main-drawer'
@@ -287,6 +288,19 @@ export default {
           vue.$store.commit(
             'purchase/updatePurchase',
             data.PurchaseStatusUpdated
+          )
+        },
+      })
+
+      const bulkPurchasesStatusUpdate = this.$apollo.subscribe({
+        query: BulkPurchasesStatusUpdate,
+      })
+
+      bulkPurchasesStatusUpdate.subscribe({
+        next({ data }) {
+          vue.$store.commit(
+            'purchase/updatePurchases',
+            data.BulkPurchasesStatusUpdate
           )
         },
       })

@@ -40,4 +40,10 @@ export const mutations = {
       Object.assign(state.purchases[existingPurchaseIndex], purchase)
     }
   },
+
+  updatePurchases(_, purchases) {
+    purchases.forEach((purchase) => {
+      this.commit('purchase/updatePurchase', purchase)
+    })
+  },
 }
