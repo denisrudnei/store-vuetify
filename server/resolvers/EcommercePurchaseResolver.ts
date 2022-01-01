@@ -124,6 +124,39 @@ export class EcommercePurchaseResolver {
     return true
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.OPERATOR)
+  public async ChangePurchasesStatus(
+    @Arg('ids', () => [ID]) ids: Purchase['id'][],
+    @Arg('status', () => DeliveryStatus) status: DeliveryStatus,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const map = new Map<User['id'], Purchase[]>()
+    const result = await PurchaseService.changeStatusForPurchases(ids, status)
+
+    result.forEach((purchase) => {
+      if (map.has(purchase.user!.id)) {
+        const list = map.get(purchase.user!.id)!
+        list.push(purchase)
+        map.set(purchase.user!.id, list)
+      } else {
+        map.set(purchase.user!.id, [purchase])
+      }
+    })
+
+    for (const [, value] of map) {
+      const notification = Notification.create()
+      notification.content = `${value.length} purchases had their status updated to ${status}`
+      notification.user = value[0].user
+
+      await notification.save()
+      pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
+    }
+
+    pubSub.publish(PurchaseEvents.BULK_DELIVERY_STATUS_UPDATED, result)
+    return true
+  }
+
   @Query(() => [Date])
   @Authorized(Role.OPERATOR)
   public DaysWithPurchases(
@@ -183,6 +216,18 @@ export class EcommercePurchaseResolver {
     },
   })
   public PurchaseStatusUpdated(@Root() payload: Purchase) {
+    return payload
+  }
+
+  @Subscription(() => [Purchase], {
+    topics: PurchaseEvents.BULK_DELIVERY_STATUS_UPDATED,
+    filter: ({ context }) => {
+      if (!context.req || !context.req.authUser) return false
+
+      return [Role.OPERATOR, Role.ADMIN].includes(context.req.authUser.role)
+    },
+  })
+  public BulkPurchasesStatusUpdate(@Root() payload: Purchase[]) {
     return payload
   }
 }

@@ -1,5 +1,5 @@
 import { getDay, getMonth, lastDayOfMonth, set } from 'date-fns'
-import { getConnection, Not, SelectQueryBuilder } from 'typeorm'
+import { getConnection, Not, SelectQueryBuilder, In } from 'typeorm'
 
 import { DeliveryStatus } from '../enums/DeliveryStatus'
 import { PaymentType } from '../enums/PaymentType'
@@ -228,5 +228,21 @@ export class PurchaseService {
       ...purchase,
       status,
     }
+  }
+
+  public static async changeStatusForPurchases(
+    ids: Purchase['id'][],
+    status: DeliveryStatus
+  ) {
+    const purchases = await Purchase.findByIds(ids, { relations: ['user'] })
+    await Purchase.update(
+      {
+        id: In(ids),
+      },
+      {
+        status,
+      }
+    )
+    return purchases
   }
 }
