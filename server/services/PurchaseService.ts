@@ -234,7 +234,6 @@ export class PurchaseService {
     ids: Purchase['id'][],
     status: DeliveryStatus
   ) {
-    const purchases = await Purchase.findByIds(ids, { relations: ['user'] })
     await Purchase.update(
       {
         id: In(ids),
@@ -243,6 +242,7 @@ export class PurchaseService {
         status,
       }
     )
+    const purchases = await Purchase.findByIds(ids, { relations: ['user'] })
     return purchases
   }
 }
