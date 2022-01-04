@@ -182,6 +182,8 @@ export default {
           variables: {
             id: notification.id,
           },
+          awaitRefetchQueries: true,
+          refetchQueries: [{ query: GetNotifications }],
         })
         .then(() => {
           this.$store.commit('notification/readNotification', notification)
@@ -191,6 +193,8 @@ export default {
       this.$apollo
         .mutate({
           mutation: ReadAllNotifications,
+          awaitRefetchQueries: true,
+          refetchQueries: [{ query: GetNotifications }],
         })
         .then(() => {
           this.$store.commit('notification/setNotifications', [])
