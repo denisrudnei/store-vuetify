@@ -1,4 +1,4 @@
-import { getDay, getMonth, lastDayOfMonth, set } from 'date-fns'
+import { set } from 'date-fns'
 import { getConnection, Not, SelectQueryBuilder, In } from 'typeorm'
 
 import { DeliveryStatus } from '../enums/DeliveryStatus'
@@ -80,10 +80,12 @@ export class PurchaseService {
     return result
   }
 
-  public static async getDaysWithPurchase(
-    year: number = new Date().getFullYear()
-  ) {
-    const month = getMonth(new Date()) + 1
+  public static async getDaysWithPurchase() {
+    const { first, last } = await getConnection()
+      .createQueryBuilder()
+      .select('min("createdAt") as first, max("createdAt") as last')
+      .from(Purchase, 'purchase')
+      .getRawOne()
 
     const result = await getConnection()
       .createQueryBuilder()
@@ -91,34 +93,12 @@ export class PurchaseService {
       .addSelect('EXTRACT(MONTH FROM "createdAt") as month')
       .addSelect('EXTRACT(YEAR FROM "createdAt") as year')
       .from(Purchase, 'purchase')
-
       .groupBy('year')
       .addGroupBy('month')
       .addGroupBy('date')
       .where('purchase."createdAt" BETWEEN :start and :end', {
-        start: set(new Date(), {
-          date: 0,
-          month: 0,
-          year,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        }),
-        end: set(new Date(), {
-          hours: 23,
-          minutes: 59,
-          seconds: 59,
-          month,
-          year,
-          date: getDay(
-            lastDayOfMonth(
-              set(new Date(), {
-                year,
-                month,
-              })
-            )
-          ),
-        }),
+        start: new Date(first),
+        end: new Date(last),
       })
       .andWhere('type = :type', {
         type: PurchaseType.NORMAL,
