@@ -7,6 +7,10 @@ import { Purchase } from '../models/Purchase'
 import { ItemType } from '../models/summary/ItemType'
 import { SummaryItem } from '../models/summary/SummaryItem'
 import { User } from '../models/User'
+import { PurchaseOrigin } from '../enums/PurchaseOrigin'
+import { POS } from '../models/POS'
+import { PurchaseType } from '../enums/PurchaseType'
+import { Role } from '../enums/Role'
 
 export class SummaryService {
   public static async allTime(): Promise<SummaryItem[]> {
@@ -21,9 +25,65 @@ export class SummaryService {
         value: await Purchase.count(),
       },
       {
+        name: 'Purchases made in person',
+        type: ItemType.COUNT,
+        value: await Purchase.count({
+          where: {
+            origin: PurchaseOrigin.POS,
+          },
+        }),
+      },
+      {
+        name: 'Orders',
+        type: ItemType.COUNT,
+        value: await Purchase.count({
+          where: {
+            type: PurchaseType.DELIVERY,
+            origin: PurchaseOrigin.ECOMMERCE,
+          },
+        }),
+      },
+      {
+        name: 'Purchases from ecommerce',
+        type: ItemType.COUNT,
+        value: await Purchase.count({
+          where: {
+            type: PurchaseType.NORMAL,
+            origin: PurchaseOrigin.ECOMMERCE,
+          },
+        }),
+      },
+      {
         name: 'Users',
         type: ItemType.COUNT,
         value: await User.count(),
+      },
+      {
+        name: 'Customers',
+        type: ItemType.COUNT,
+        value: await User.count({
+          where: {
+            role: Role.USER,
+          },
+        }),
+      },
+      {
+        name: 'Admins',
+        type: ItemType.COUNT,
+        value: await User.count({
+          where: {
+            role: Role.ADMIN,
+          },
+        }),
+      },
+      {
+        name: 'Operators',
+        type: ItemType.COUNT,
+        value: await User.count({
+          where: {
+            role: Role.OPERATOR,
+          },
+        }),
       },
       {
         name: 'Products',
@@ -34,6 +94,11 @@ export class SummaryService {
         name: 'Categories',
         type: ItemType.COUNT,
         value: await Category.count(),
+      },
+      {
+        name: 'Registered POS',
+        type: ItemType.COUNT,
+        value: await POS.count(),
       },
       {
         name: 'Total sold',
