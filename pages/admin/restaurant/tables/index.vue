@@ -1,12 +1,12 @@
 <template>
-  <create />
+  <list />
 </template>
 
 <script>
-import create from './create'
+import list from './list'
 export default {
   components: {
-    create,
+    list,
   },
 }
 </script>

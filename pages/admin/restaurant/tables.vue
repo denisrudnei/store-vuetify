@@ -2,6 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-tabs>
+        <v-tab to="/admin/restaurant/tables/list">List</v-tab>
         <v-tab to="/admin/restaurant/tables/create"> Create </v-tab>
       </v-tabs>
     </v-col>
