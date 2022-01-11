@@ -35,15 +35,27 @@ export class EstablishmentTableService {
     if (!table.activeOrder || !table.inUse) throw new Error('Table not in use')
     const product = await Product.findOne(productInput.id)
     if (!product) throw new Error('Product not found')
-    const historyProduct = HistoryProduct.create()
-    historyProduct.data = product
-    historyProduct.data.amount = productInput.amount
+    let historyProduct: HistoryProduct
 
-    historyProduct.productId = productInput.id
-    historyProduct.purchase = table.activeOrder
+    const existingIndex = table.activeOrder.products.findIndex(
+      (history) => Number(history.productId) === Number(product.id)
+    )
+
+    if (existingIndex !== -1) {
+      historyProduct = table.activeOrder.products[existingIndex]
+      historyProduct.data.amount =
+        Number(productInput.amount) + Number(historyProduct.data.amount)
+    } else {
+      historyProduct = HistoryProduct.create()
+      historyProduct.data = product
+      historyProduct.data.amount = productInput.amount
+
+      historyProduct.productId = productInput.id
+      historyProduct.purchase = table.activeOrder
+
+      table.activeOrder.products.push(historyProduct)
+    }
     await historyProduct.save()
-
-    table.activeOrder.products.push(historyProduct)
     await table.save()
     return {
       tableId: table.id,
