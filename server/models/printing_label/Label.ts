@@ -17,6 +17,7 @@ export class Label extends BaseEntity {
   public id!: string
 
   @Field()
+  @Column()
   public name!: String
 
   @Field(() => Float)
