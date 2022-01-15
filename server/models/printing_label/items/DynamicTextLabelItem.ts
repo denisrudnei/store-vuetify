@@ -14,5 +14,5 @@ export class DynamicTextLabelItem extends LabelItem {
 
   @Column()
   @Field(() => LabelFontSize)
-  public fontSIze!: LabelFontSize
+  public fontSize!: LabelFontSize
 }
