@@ -21,6 +21,11 @@ export class PrintingLabelResolver {
     return PrintingLabelService.getAll()
   }
 
+  @Query(() => Label)
+  public GetLabel(@Arg('id', () => ID) labelId: Label['id']) {
+    return PrintingLabelService.getOne(labelId)
+  }
+
   @Mutation(() => Label)
   public CreateLabel(
     @Arg('label', () => CreateLabelInput) label: CreateLabelInput

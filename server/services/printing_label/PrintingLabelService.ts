@@ -10,6 +10,12 @@ export class PrintingLabelService {
     return Label.find()
   }
 
+  public static async getOne(id: Label['id']) {
+    const label = await Label.findOne(id)
+    if (!label) throw new Error('Label not found')
+    return label
+  }
+
   public static create(newLabel: CreateLabelInput) {
     const label = Label.create()
 
