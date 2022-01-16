@@ -49,6 +49,8 @@ export class PrintingLabelService {
     const item = BarcodeLabelItem.create()
     const origin = OriginPoint.create()
 
+    item.name = barcodeItem.name
+
     origin.x = barcodeItem.origin.x
     origin.y = barcodeItem.origin.y
 
