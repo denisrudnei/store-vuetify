@@ -9,8 +9,4 @@ export class BarcodeLabelItem extends LabelItem {
   @Field()
   @Column()
   public showNumbers!: boolean
-
-  @Field()
-  @Column()
-  public content!: String
 }

@@ -56,7 +56,6 @@ export class PrintingLabelService {
 
     item.origin = await origin.save()
 
-    item.content = barcodeItem.content
     item.showNumbers = barcodeItem.showNumbers
     item.label = label
 

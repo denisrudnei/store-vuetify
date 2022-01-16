@@ -11,7 +11,4 @@ export class CreateBarcodeItemInput {
 
   @Field()
   public showNumbers!: boolean
-
-  @Field()
-  public content!: String
 }
