@@ -26,6 +26,7 @@ export abstract class LabelItem extends BaseEntity {
   public label!: Label
 
   @Field()
+  @Column()
   public name!: String
 
   @Field(() => OriginPoint)
