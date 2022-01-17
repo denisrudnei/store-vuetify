@@ -23,6 +23,7 @@ export class ImportProductService {
     product.amount = newAmount
     const newPrice = isNaN(Number(price)) ? 0 : Number(price)
     product.price = newPrice
+    product.type = []
 
     pubSub?.publish(ImportEvents.productImported, `Product ${name} imported`)
 
