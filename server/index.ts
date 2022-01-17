@@ -59,6 +59,11 @@ async function start() {
 
   const nuxt = await loadNuxt(isDev ? 'dev' : 'start')
 
+  server.use('*', (req: express.Request, _, next) => {
+    req.pubSub = pubSub
+    next()
+  })
+
   server.use(app)
 
   const httpServer = http.createServer(server)

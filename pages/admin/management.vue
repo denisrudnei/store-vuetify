@@ -32,6 +32,28 @@
             @change="updateCurrency"
           />
         </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+            v-model="username"
+            label="Username"
+            outlined
+            hide-details
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+            v-model="password"
+            label="Password"
+            type="password"
+            outlined
+            hide-details
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-btn class="primary" @click="generateConfigFile">
+            Generate config file
+          </v-btn>
+        </v-col>
         <v-col cols="12">
           <v-autocomplete
             label="Locale"
@@ -42,6 +64,17 @@
             :prepend-inner-icon="icons.mdiTranslate"
             @change="updateLocale"
           />
+        </v-col>
+        <v-col>
+          <v-file-input v-model="file" accept=".csv" />
+          <v-btn
+            class="primary white--text"
+            :disabled="!file"
+            @click="importProducts"
+          >
+            Import products from csv file
+          </v-btn>
+          <span>{{ imported }}</span>
         </v-col>
       </v-row>
     </v-card-text>
@@ -56,6 +89,7 @@ import { GetCurrency } from '../../graphql/query/admin/management/GetCurrency'
 import { UpdateLocale } from '../../graphql/mutation/admin/management/UpdateLocale'
 import { GetLocale } from '../../graphql/query/admin/management/GetLocale'
 import { ToggleAdSense } from '../../graphql/mutation/site-settings/ToggleAdSense'
+import { ProductImported } from '../../graphql/subscription/admin/management/ProductImported'
 import values from './currencies.json'
 import { FixCategoriesSlug } from '~/graphql/mutation/category/FixCategoriesSlug'
 import { GetSiteSettings } from '~/graphql/query/site-settings/GetSiteSettings'
@@ -70,6 +104,10 @@ export default {
         mdiCurrencyUsd,
         mdiTranslate,
       },
+      username: '',
+      password: '',
+      file: null,
+      imported: '',
     }
   },
   computed: {
@@ -93,6 +131,7 @@ export default {
       text: value[1],
       value: value[0],
     }))
+
     this.$apollo
       .query({
         query: GetCurrency,
@@ -103,6 +142,17 @@ export default {
           response.data.GetCurrency.currency
         )
       })
+  },
+  mounted() {
+    const productImportedSubscription = this.$apollo.subscribe({
+      query: ProductImported,
+    })
+    const vue = this
+    productImportedSubscription.subscribe({
+      next({ data }) {
+        vue.imported = data.ProductImported
+      },
+    })
   },
   methods: {
     fixCategoriesSlug() {
@@ -168,6 +218,33 @@ export default {
             duration: 1000,
           })
         })
+    },
+    generateConfigFile() {
+      this.$axios
+        .post('/config/info', {
+          username: this.username,
+          password: this.password,
+        })
+        .then((response) => {
+          const url = URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'info.json')
+          document.body.appendChild(link)
+          link.click()
+        })
+        .catch(() => {
+          this.$toast.error('Failed to login')
+        })
+    },
+    importProducts() {
+      const formData = new FormData()
+      formData.append('csv', this.file)
+      this.$axios.post('/import/products', formData).then(() => {
+        this.$toast.show('Uploaded', {
+          duration: 1000,
+        })
+      })
     },
   },
 }
