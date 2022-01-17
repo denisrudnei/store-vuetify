@@ -14,27 +14,33 @@ export class ImportProductService {
   ) {
     const product = Product.create()
     product.name = name
+    product.category = await Category.findOne({
+      where: {
+        name: category,
+      },
+    })
     const newAmount = isNaN(Number(amount)) ? 0 : Number(amount)
     product.amount = newAmount
     const newPrice = isNaN(Number(price)) ? 0 : Number(price)
     product.price = newPrice
 
-    const categoryInDb = await Category.findOne({
-      where: {
-        name: category,
-      },
-    })
-    if (!categoryInDb) {
-      const newCategory = Category.create()
-      newCategory.name = category ?? ''
-      await newCategory.save()
-      product.category = newCategory
-    } else {
-      product.category = categoryInDb
-    }
-
     pubSub?.publish(ImportEvents.productImported, `Product ${name} imported`)
 
     await product.save()
+  }
+
+  public static async saveCategories(categories: string[]) {
+    for (const category of categories) {
+      const categoryInDb = await Category.findOne({
+        where: {
+          name: category,
+        },
+      })
+      if (!categoryInDb) {
+        const newCategory = Category.create()
+        newCategory.name = category ?? ''
+        await newCategory.save()
+      }
+    }
   }
 }
