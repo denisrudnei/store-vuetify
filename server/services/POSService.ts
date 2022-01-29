@@ -6,6 +6,10 @@ export class POSService {
     return POS.find()
   }
 
+  public static getOnePOS(id: POS['id']) {
+    return POS.findOne(id)
+  }
+
   public static create(pos: CreatePOSInput) {
     const newPOS = POS.create()
     newPOS.name = pos.name

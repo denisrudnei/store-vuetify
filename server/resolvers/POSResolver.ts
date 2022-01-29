@@ -6,6 +6,7 @@ import {
   Arg,
   FieldResolver,
   Root,
+  ID,
 } from 'type-graphql'
 import { POS } from '../models/POS'
 import { POSService } from '../services/POSService'
@@ -18,6 +19,12 @@ export class POSResolver {
   @Authorized(Role.OPERATOR, Role.ADMIN)
   public GetPOS() {
     return POSService.getAll()
+  }
+
+  @Query(() => POS)
+  @Authorized(Role.OPERATOR, Role.ADMIN)
+  public GetOnePOS(@Arg('id', () => ID) id: POS['id']) {
+    return POSService.getOnePOS(id)
   }
 
   @Mutation(() => POS)
