@@ -21,13 +21,13 @@ export class POSResolver {
     return POSService.getAll()
   }
 
-  @Query(() => POS)
+  @Query(() => POS, { nullable: true })
   @Authorized(Role.OPERATOR, Role.ADMIN)
   public GetOnePOS(@Arg('id', () => ID) id: POS['id']) {
     return POSService.getOnePOS(id)
   }
 
-  @Mutation(() => POS, { nullable: true })
+  @Mutation(() => POS)
   @Authorized(Role.ADMIN)
   public CreatePOS(@Arg('pos', () => CreatePOSInput) pos: CreatePOSInput) {
     return POSService.create(pos)
