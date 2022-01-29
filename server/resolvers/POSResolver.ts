@@ -27,7 +27,7 @@ export class POSResolver {
     return POSService.getOnePOS(id)
   }
 
-  @Mutation(() => POS)
+  @Mutation(() => POS, { nullable: true })
   @Authorized(Role.ADMIN)
   public CreatePOS(@Arg('pos', () => CreatePOSInput) pos: CreatePOSInput) {
     return POSService.create(pos)
