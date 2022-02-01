@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, Float } from 'type-graphql'
+import { Field, ID, ObjectType, Float, Int } from 'type-graphql'
 import {
   BaseEntity,
   Column,
@@ -27,6 +27,10 @@ export class Label extends BaseEntity {
   @Field(() => Float)
   @Column({ type: 'float' })
   public height!: number
+
+  @Field(() => Int)
+  @Column({ type: 'int', default: 1 })
+  public numberOfLabels!: number
 
   @OneToMany(() => LabelItem, (labelItem) => labelItem.label)
   @Field(() => [LabelItem])

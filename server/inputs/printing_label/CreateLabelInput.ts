@@ -1,4 +1,4 @@
-import { InputType, Field, Float } from 'type-graphql'
+import { InputType, Field, Float, Int } from 'type-graphql'
 
 @InputType()
 export class CreateLabelInput {
@@ -10,4 +10,7 @@ export class CreateLabelInput {
 
   @Field(() => Float)
   public height!: number
+
+  @Field(() => Int, { defaultValue: 1, nullable: true })
+  public numberOfLabels!: number
 }
