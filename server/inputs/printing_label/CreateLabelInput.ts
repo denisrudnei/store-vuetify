@@ -13,4 +13,7 @@ export class CreateLabelInput {
 
   @Field(() => Int, { defaultValue: 1, nullable: true })
   public numberOfLabels!: number
+
+  @Field(() => Float, { nullable: true, defaultValue: 3 })
+  public spaceBetweenLabels!: number
 }

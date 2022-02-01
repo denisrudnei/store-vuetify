@@ -23,6 +23,7 @@ export class PrintingLabelService {
     label.width = newLabel.width
     label.height = newLabel.height
     label.numberOfLabels = newLabel.numberOfLabels
+    label.spaceBetweenLabels = newLabel.spaceBetweenLabels
 
     return label.save()
   }

@@ -32,6 +32,10 @@ export class Label extends BaseEntity {
   @Column({ type: 'int', default: 1 })
   public numberOfLabels!: number
 
+  @Field(() => Float)
+  @Column({ type: 'float', default: 3 })
+  public spaceBetweenLabels!: number
+
   @OneToMany(() => LabelItem, (labelItem) => labelItem.label)
   @Field(() => [LabelItem])
   public items!: LabelItem[]
