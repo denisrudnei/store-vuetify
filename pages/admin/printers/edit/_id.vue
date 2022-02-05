@@ -41,7 +41,7 @@ export default {
               type: printer.type,
               model: printer.model,
               manufacturer: printer.manufacturer,
-              installedIn: printer.installedIn,
+              installedIn: printer.installedIn.id,
             },
           },
           awaitRefetchQueries: true,
