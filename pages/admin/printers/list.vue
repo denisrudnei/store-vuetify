@@ -1,5 +1,8 @@
 <template>
   <v-data-table :headers="headers" :items="printers">
+    <template #item.installedIn="{ item }">
+      <span>{{ item.installedIn.id }} - {{ item.installedIn.name }}</span>
+    </template>
     <template #item.actions="{ item }">
       <v-btn class="primary--text" :to="`/admin/printers/edit/${item.id}`" icon>
         <v-icon>{{ icons.mdiPencil }}</v-icon>
@@ -29,6 +32,10 @@ export default {
           value: 'name',
         },
         {
+          text: 'Type',
+          value: 'type',
+        },
+        {
           text: 'Manufacturer',
           value: 'manufacturer',
         },
@@ -39,6 +46,10 @@ export default {
         {
           text: 'Path',
           value: 'path',
+        },
+        {
+          text: 'Installed In',
+          value: 'installedIn',
         },
         {
           text: 'Actions',

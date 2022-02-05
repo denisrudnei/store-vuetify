@@ -1,4 +1,5 @@
 import { InputType, Field, ID } from 'type-graphql'
+import { PrinterType } from '../../enums/PrinterType'
 
 @InputType()
 export class CreatePrinterInput {
@@ -16,4 +17,7 @@ export class CreatePrinterInput {
 
   @Field(() => ID)
   public installedIn!: string
+
+  @Field(() => PrinterType, { nullable: true })
+  public type?: PrinterType
 }

@@ -1,6 +1,8 @@
 import { CreatePrinterInput } from '../inputs/printer/CreatePrinterInput'
 import { Printer } from '../models/printer/Printer'
 import { POS } from '../models/POS'
+import { PrinterType } from '../enums/PrinterType'
+import { UpdatePrinterInput } from '../inputs/printer/UpdatePrinterInput'
 
 export class PrinterService {
   public static async create(printer: CreatePrinterInput) {
@@ -12,11 +14,20 @@ export class PrinterService {
       manufacturer: printer.manufacturer,
       model: printer.model,
       installedIn: pos,
+      type: printer.type ?? PrinterType.THERMAL,
     }).save()
   }
 
   public static getAll() {
     return Printer.find()
+  }
+
+  public static getPrinterByType(type: PrinterType) {
+    return Printer.find({
+      where: {
+        type,
+      },
+    })
   }
 
   public static async getOne(id: Printer['id']) {
@@ -30,6 +41,17 @@ export class PrinterService {
     if (!printer) throw new Error('Printer not found')
     await Printer.softRemove(printer)
     return true
+  }
+
+  public static async updatePrinter(
+    id: Printer['id'],
+    printer: UpdatePrinterInput
+  ) {
+    const printerToUpdate = await Printer.findOne(id)
+    if (!printerToUpdate) throw new Error('Printer not found')
+
+    Object.assign(printerToUpdate, printer)
+    return printerToUpdate.save()
   }
 
   public static async updatePath(id: Printer['id'], path: string) {

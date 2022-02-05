@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { POS } from '../POS'
+import { PrinterType } from '../../enums/PrinterType'
 
 @ObjectType()
 @Entity()
@@ -33,6 +34,10 @@ export class Printer extends BaseEntity {
   @Field()
   @Column()
   public path!: string
+
+  @Field(() => PrinterType)
+  @Column({ type: 'varchar', default: PrinterType.THERMAL })
+  public type!: PrinterType
 
   @Field()
   @CreateDateColumn()

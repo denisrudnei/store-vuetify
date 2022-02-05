@@ -4,15 +4,21 @@ import {
   FieldResolver,
   ID,
   Mutation,
+  PubSub,
   Query,
   Resolver,
   Root,
+  Subscription,
 } from 'type-graphql'
 
+import { PubSubEngine } from 'graphql-subscriptions'
 import { Role } from '../enums/Role'
 import { CreatePrinterInput } from '../inputs/printer/CreatePrinterInput'
 import { Printer } from '../models/printer/Printer'
 import { PrinterService } from '../services/PrinterService'
+import { PrinterType } from '../enums/PrinterType'
+import { UpdatePrinterInput } from '../inputs/printer/UpdatePrinterInput'
+import { PrinterEvents } from '../enums/PrinterEvents'
 
 @Resolver(() => Printer)
 export class PrinterResolver {
@@ -28,12 +34,39 @@ export class PrinterResolver {
     return PrinterService.getOne(id)
   }
 
+  @Query(() => [String])
+  @Authorized(Role.ADMIN, Role.OPERATOR)
+  GetPrinterTypes() {
+    return Object.values(PrinterType)
+  }
+
+  @Query(() => [Printer])
+  @Authorized(Role.ADMIN, Role.OPERATOR)
+  GetPrinterByType(@Arg('type', () => PrinterType) type: PrinterType) {
+    return PrinterService.getPrinterByType(type)
+  }
+
   @Mutation(() => Printer)
   @Authorized(Role.OPERATOR)
-  public CreatePrinter(
-    @Arg('printer', () => CreatePrinterInput) printer: CreatePrinterInput
+  public async CreatePrinter(
+    @Arg('printer', () => CreatePrinterInput) printer: CreatePrinterInput,
+    @PubSub() pubSub: PubSubEngine
   ) {
-    return PrinterService.create(printer)
+    const result = await PrinterService.create(printer)
+    pubSub.publish(PrinterEvents.NEW_PRINTER, result)
+    return result
+  }
+
+  @Mutation(() => Printer)
+  @Authorized(Role.ADMIN, Role.OPERATOR)
+  public async UpdatePrinter(
+    @Arg('id', () => ID) id: Printer['id'],
+    @Arg('printer', () => UpdatePrinterInput) printer: UpdatePrinterInput,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const result = await PrinterService.updatePrinter(id, printer)
+    pubSub.publish(PrinterEvents.PRINTER_UPDATED, result)
+    return result
   }
 
   @Mutation(() => Printer)
@@ -75,5 +108,19 @@ export class PrinterResolver {
       relations: ['installedIn'],
     })) as Printer
     return installedIn
+  }
+
+  @Subscription(() => Printer, {
+    topics: PrinterEvents.PRINTER_UPDATED,
+  })
+  public PrinterUpdated(@Root() payload: Printer) {
+    return payload
+  }
+
+  @Subscription(() => Printer, {
+    topics: PrinterEvents.NEW_PRINTER,
+  })
+  public NewPrinter(@Root() payload: Printer) {
+    return payload
   }
 }

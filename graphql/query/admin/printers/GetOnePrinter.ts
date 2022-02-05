@@ -1,8 +1,8 @@
 import ggl from 'graphql-tag'
 
-export const GetAllPrinters = ggl`
-query {
-  GetAllPrinters {
+export const GetOnePrinter = ggl`
+query GetOnePrinter($id: ID!) {
+  GetOnePrinter(id: $id) {
     id
     name
     path
@@ -10,8 +10,9 @@ query {
     model
     type
     installedIn {
-      name
       id
+      name
+      createdAt
     }
   }
 }
