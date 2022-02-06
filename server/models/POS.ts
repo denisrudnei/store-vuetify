@@ -42,4 +42,8 @@ export class POS extends BaseEntity {
   @Field({ nullable: true })
   @UpdateDateColumn()
   public updatedAt?: Date
+
+  @Field()
+  @Column({ default: '' })
+  public hostname!: string
 }

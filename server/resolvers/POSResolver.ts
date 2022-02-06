@@ -27,10 +27,31 @@ export class POSResolver {
     return POSService.getOnePOS(id)
   }
 
+  @Query(() => POS, { nullable: true })
+  @Authorized(Role.OPERATOR, Role.ADMIN)
+  public GetPOSByHostname(@Arg('hostname', () => String) hostname: string) {
+    return POSService.getByHostname(hostname)
+  }
+
+  @Query(() => [POS])
+  @Authorized(Role.ADMIN, Role.OPERATOR)
+  public GetAvailablePOS() {
+    return POSService.getAvailablePOS()
+  }
+
   @Mutation(() => POS)
   @Authorized(Role.ADMIN)
   public CreatePOS(@Arg('pos', () => CreatePOSInput) pos: CreatePOSInput) {
     return POSService.create(pos)
+  }
+
+  @Mutation(() => POS)
+  @Authorized(Role.ADMIN, Role.OPERATOR)
+  public ConfigurePOS(
+    @Arg('id', () => ID) id: POS['id'],
+    @Arg('hostname', () => String) hostname: string
+  ) {
+    return POSService.configure(id, hostname)
   }
 
   @FieldResolver()
