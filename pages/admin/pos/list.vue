@@ -20,6 +20,10 @@ export default {
           text: 'Name',
           value: 'name',
         },
+        {
+          text: 'Hostname',
+          value: 'hostname',
+        },
       ],
       pos: [],
     }

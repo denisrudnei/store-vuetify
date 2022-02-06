@@ -4,6 +4,7 @@ query {
   GetPOS {
     id
     name
+    hostname
   }
 }
 `
