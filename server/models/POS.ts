@@ -1,16 +1,18 @@
-import { ObjectType, ID, Field } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql'
 import {
+  BaseEntity,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  BaseEntity,
-  CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Purchase } from './Purchase'
+
 import { LoadLog } from './LoadLog'
 import { Printer } from './printer/Printer'
+import { Purchase } from './Purchase'
 
 @ObjectType()
 @Entity()
@@ -42,6 +44,10 @@ export class POS extends BaseEntity {
   @Field({ nullable: true })
   @UpdateDateColumn()
   public updatedAt?: Date
+
+  @Field({ nullable: true })
+  @DeleteDateColumn()
+  public deletedAt?: Date
 
   @Field()
   @Column({ default: '' })

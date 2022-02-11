@@ -1,5 +1,5 @@
 import { PubSubEngine } from 'graphql-subscriptions'
-import { Between } from 'typeorm'
+import { Between, IsNull, Not } from 'typeorm'
 
 import { LoadEvents } from '../enums/LoadEvents'
 import { SynchronizationItemType } from '../enums/SynchronizationItemType'
@@ -52,7 +52,52 @@ export class LoadService {
           updatedAt: Between(lastUpdate, new Date()),
         },
       }),
+      deleted: await this.getDeleted(lastUpdate),
     } as LoadData
+  }
+
+  public static async getDeleted(lastUpdate?: Date) {
+    const deletedAt = lastUpdate
+      ? Between(lastUpdate, new Date())
+      : Not(IsNull())
+    return {
+      products: await Product.find({
+        where: {
+          deletedAt,
+        },
+        withDeleted: true,
+      }),
+      users: await User.find({
+        where: {
+          deletedAt,
+        },
+        withDeleted: true,
+      }),
+      categories: await Category.find({
+        where: {
+          deletedAt,
+        },
+        withDeleted: true,
+      }),
+      pos: await POS.find({
+        where: {
+          deletedAt,
+        },
+        withDeleted: true,
+      }),
+      printers: await Printer.find({
+        where: {
+          deletedAt,
+        },
+        withDeleted: true,
+      }),
+      printLayouts: await PrintLayout.find({
+        where: {
+          deletedAt,
+        },
+        withDeleted: true,
+      }),
+    }
   }
 
   public static async loadSynchronously(

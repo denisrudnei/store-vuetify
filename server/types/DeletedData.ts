@@ -6,11 +6,10 @@ import { PrintLayout } from '../models/print_layout/PrintLayout'
 import { Printer } from '../models/printer/Printer'
 import { Product } from '../models/Product'
 import { User } from '../models/User'
-import { DeletedData } from './DeletedData'
 
 @ObjectType()
-export class LoadData {
-  @Field(() => [Product])
+export class DeletedData {
+  @Field(() => [User])
   public products!: Product[]
 
   @Field(() => [User])
@@ -27,7 +26,4 @@ export class LoadData {
 
   @Field(() => [PrintLayout])
   public printLayouts!: PrintLayout[]
-
-  @Field(() => DeletedData)
-  public deleted!: DeletedData
 }

@@ -17,6 +17,7 @@ import { LoadService } from '../services/LoadService'
 import { LoadData } from '../types/LoadData'
 import { LoadPayload } from '../types/LoadPayload'
 import { SynchronizationResult } from '../models/SynchronizationResult'
+import { DeletedData } from '../types/DeletedData'
 
 @Resolver()
 export class LoadResolver {
@@ -24,6 +25,12 @@ export class LoadResolver {
   @Authorized(Role.OPERATOR)
   public GetLastRecentData(@Arg('lastUpdate', () => Date) lastUpdate: Date) {
     return LoadService.getRecentData(lastUpdate)
+  }
+
+  @Query(() => DeletedData)
+  @Authorized(Role.OPERATOR)
+  public GetDeletedData() {
+    return LoadService.getDeleted()
   }
 
   @Mutation(() => SynchronizationResult)
