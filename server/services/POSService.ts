@@ -43,4 +43,11 @@ export class POSService {
     pos.hostname = hostname
     return pos.save()
   }
+
+  public static async remove(id: POS['id']) {
+    const pos = await POS.findOne(id)
+    if (!pos) throw new Error('POS not found')
+    await pos.softRemove()
+    return true
+  }
 }

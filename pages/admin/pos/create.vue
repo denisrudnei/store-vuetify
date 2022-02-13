@@ -26,7 +26,7 @@
 
 <script>
 import { mdiContentSave } from '@mdi/js'
-import { CreatePOS } from '../../../graphql/mutation/admin/CreatePOS'
+import { CreatePOS } from '../../../graphql/mutation/admin/pos/CreatePOS'
 import { GetPOS } from '~/graphql/query/admin/GetPOS'
 export default {
   data() {

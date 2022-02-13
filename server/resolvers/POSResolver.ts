@@ -54,6 +54,12 @@ export class POSResolver {
     return POSService.configure(id, hostname)
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public RemovePOS(@Arg('id', () => ID) id: POS['id']) {
+    return POSService.remove(id)
+  }
+
   @FieldResolver()
   public async printers(@Root() root: POS) {
     const { printers } = (await POS.findOne(root.id, {
