@@ -57,6 +57,9 @@
         :items="searchedProducts"
         :headers="headers"
         show-select
+        :page="page"
+        :server-items-length="total"
+        @update:options="paginate"
       >
         <template #item.price="{ item }">
           {{ item.price | dinero }}
@@ -108,11 +111,14 @@ import { InactivateProduct } from '../../../graphql/mutation/product/InactivateP
 import { InactivateProducts } from '../../../graphql/mutation/product/InactivateProducts'
 import { GetProductInfo } from '../../../graphql/query/GetProductListInfo'
 import { UpdateCategoryForProducts } from '../../../graphql/mutation/product/UpdateCategoryForProducts'
+import { GetProductsPaginated } from '../../../graphql/query/admin/products/GetProductsPaginated'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 import { GetInactivatedProducts } from '~/graphql/query/product/GetInactivatedProducts'
 export default {
   data() {
     return {
+      page: 1,
+      total: 1,
       icons: {
         mdiMagnify,
         mdiTagOutline,
@@ -156,7 +162,6 @@ export default {
       categories: [],
     }
   },
-
   computed: {
     products: {
       get() {
@@ -178,12 +183,22 @@ export default {
     },
   },
   created() {
+    if (this.$route.query.page) {
+      this.page = parseInt(this.$route.query.page)
+    } else {
+      this.$router.push({
+        query: {
+          page: parseInt(this.page),
+        },
+      })
+    }
+
+    this.getProducts()
     this.$apollo
       .query({
         query: GetProductInfo,
       })
       .then((response) => {
-        this.products = response.data.GetProducts
         this.categories = response.data.GetAllCategories.map((category) => ({
           text: category.name,
           value: category,
@@ -191,6 +206,21 @@ export default {
       })
   },
   methods: {
+    getProducts() {
+      this.$apollo
+        .query({
+          query: GetProductsPaginated,
+          variables: {
+            page: parseInt(this.page),
+          },
+        })
+        .then((response) => {
+          this.products = response.data.GetProductsPaginated.edges.map(
+            (edge) => edge.node
+          )
+          this.total = response.data.GetProductsPaginated.total
+        })
+    },
     inactivate(id) {
       this.$dialog('Inactivate product?')
         .then(() => {
@@ -301,6 +331,15 @@ export default {
             duration: 1000,
           })
         })
+    },
+    paginate(value) {
+      this.page = value.page
+      this.$router.push({
+        query: {
+          page: parseInt(this.page),
+        },
+      })
+      this.getProducts()
     },
   },
 }

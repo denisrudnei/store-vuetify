@@ -6,18 +6,5 @@ query {
     id
     name
   }
-  GetProducts {
-    id
-    name
-    barcode
-    description
-    price
-    amount
-    type
-    category {
-      id
-      name
-    }
-  }
 }
 `
