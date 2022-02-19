@@ -1,5 +1,6 @@
 import { POS } from '../models/POS'
 import { CreatePOSInput } from '../inputs/CreatePOSInput'
+import { PrinterService } from './PrinterService'
 
 export class POSService {
   public static getAll() {
@@ -45,8 +46,9 @@ export class POSService {
   }
 
   public static async remove(id: POS['id']) {
-    const pos = await POS.findOne(id)
+    const pos = await POS.findOne(id, { relations: ['printers'] })
     if (!pos) throw new Error('POS not found')
+    await PrinterService.removeMany(pos.printers.map((printer) => printer.id))
     await pos.softRemove()
     return true
   }

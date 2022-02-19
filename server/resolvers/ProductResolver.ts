@@ -4,28 +4,29 @@ import {
   Authorized,
   FieldResolver,
   ID,
+  Int,
   Mutation,
   PubSub,
   PubSubEngine,
   Query,
   Resolver,
   Root,
-  Int,
   Subscription,
 } from 'type-graphql'
 
+import { ProductEvents } from '../enums/ProductEvents'
+import { ProductType } from '../enums/ProductType'
 import { Role } from '../enums/Role'
+import { SummaryEvents } from '../enums/SummaryEvents'
 import { CreateProductInput } from '../inputs/CreateProductInput'
 import { EditProductInput } from '../inputs/EditProductInput'
 import { SearchProductInput } from '../inputs/SearchProductInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
+import { Supplier } from '../models/Supplier'
 import { ProductService } from '../services/ProductService'
 import { DeletedProductResult } from '../types/DeletedProductResult'
-import { SummaryEvents } from '../enums/SummaryEvents'
-import { ProductPaginationConnection } from '../types/ProductPagination'
-import { ProductEvents } from '../enums/ProductEvents'
-import { ProductType } from '../enums/ProductType'
+import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -217,6 +218,14 @@ export class ProductResolver {
     })
       .replace('<br />', '\n')
       .slice(0, 157)}...`
+  }
+
+  @FieldResolver(() => [Supplier])
+  public async suppliers(@Root() root: Product) {
+    const { suppliers } = (await Product.findOne(root.id, {
+      relations: ['suppliers'],
+    })) as Product
+    return suppliers
   }
 
   @Subscription(() => Product, {

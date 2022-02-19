@@ -15,7 +15,8 @@ import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { S3 } from '../S3'
 import { DeletedProductResult } from '../types/DeletedProductResult'
-import { ProductPaginationConnection } from '../types/ProductPagination'
+import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
+
 import { convertProductTypesToPostgresString } from '../util/enum-util'
 
 export class ProductService {

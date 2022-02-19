@@ -77,4 +77,8 @@ export class PrinterService {
     printer.model = model
     return printer.save()
   }
+
+  public static async removeMany(ids: Printer['id'][]) {
+    await Promise.all(ids.map((id) => this.remove(id)))
+  }
 }

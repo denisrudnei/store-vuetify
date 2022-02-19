@@ -3,7 +3,7 @@ import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
 import { Product } from '../models/Product'
 import { S3 } from '../S3'
-import { ProductPaginationConnection } from '../types/ProductPagination'
+import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
 import { ProductType } from '../enums/ProductType'
 
 export const filterByType =

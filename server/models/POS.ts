@@ -35,7 +35,7 @@ export class POS extends BaseEntity {
 
   @Field(() => [Printer])
   @OneToMany(() => Printer, (printer) => printer.installedIn)
-  public printers!: []
+  public printers!: Printer[]
 
   @Field()
   @CreateDateColumn()

@@ -5,9 +5,11 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
+import { Supplier } from './Supplier'
 import { User } from './User'
 
 @ObjectType()
@@ -60,4 +62,8 @@ export class Address extends BaseEntity {
   public fullName() {
     return `${this.street} - ${this.city}, ${this.state} (${this.zipCode})`
   }
+
+  @Field(() => Supplier)
+  @OneToOne(() => Supplier)
+  public supplier!: Supplier
 }

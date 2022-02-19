@@ -6,6 +6,7 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,6 +15,7 @@ import slugify from 'slugify'
 import sanitize from 'sanitize-html'
 import { ProductType } from '../enums/ProductType'
 import { Category } from './Category'
+import { Supplier } from './Supplier'
 
 @Entity()
 @ObjectType()
@@ -95,4 +97,8 @@ export class Product extends BaseEntity {
   @Field({ nullable: true })
   @DeleteDateColumn()
   public deletedAt?: Date
+
+  @Field(() => [Supplier])
+  @ManyToMany(() => Supplier, (supplier) => supplier.products)
+  public suppliers!: Supplier[]
 }

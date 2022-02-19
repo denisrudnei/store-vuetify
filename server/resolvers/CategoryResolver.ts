@@ -17,9 +17,9 @@ import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
 import { CategoryService, filterByType } from '../services/CategoryService'
-import { ProductPaginationConnection } from '../types/ProductPagination'
 import { ProductType } from '../enums/ProductType'
 import { CustomExpressContext } from '../types/CustomExpressContext'
+import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
 
 @Resolver(() => Category)
 export class CategoryResolver {
