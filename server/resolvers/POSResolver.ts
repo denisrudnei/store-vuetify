@@ -35,8 +35,10 @@ export class POSResolver {
 
   @Query(() => [POS])
   @Authorized(Role.ADMIN, Role.OPERATOR)
-  public GetAvailablePOS() {
-    return POSService.getAvailablePOS()
+  public GetAvailablePOS(
+    @Arg('hostname', () => String, { nullable: true }) hostname: String = ''
+  ) {
+    return POSService.getAvailablePOS(hostname)
   }
 
   @Mutation(() => POS)

@@ -25,10 +25,10 @@ export class POSService {
     })
   }
 
-  public static getAvailablePOS() {
+  public static getAvailablePOS(hostname: String = '') {
     return POS.find({
       where: {
-        hostname: '',
+        hostname,
       },
     })
   }
