@@ -18,8 +18,8 @@ import { Purchase } from './Purchase'
 @Entity()
 export class POS extends BaseEntity {
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  public id!: number
+  @PrimaryGeneratedColumn('uuid')
+  public id!: string
 
   @Field()
   @Column()
