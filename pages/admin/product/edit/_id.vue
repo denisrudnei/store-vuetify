@@ -23,7 +23,7 @@ export default {
           id: this.$route.params.id,
         },
       })
-      .then((response) => {
+      .then(async (response) => {
         await this.$nextTick()
         this.product = {
           ...response.data.GetProductForEdit,

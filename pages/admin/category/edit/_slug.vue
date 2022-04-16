@@ -23,7 +23,7 @@ export default {
           name: this.$route.params.slug,
         },
       })
-      .then((response) => {
+      .then(async (response) => {
         await this.$nextTick()
         this.category = {
           ...response.data.GetCategoryByName,
