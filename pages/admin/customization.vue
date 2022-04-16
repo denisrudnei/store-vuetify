@@ -226,6 +226,7 @@
 import faker from 'faker'
 import ColorThief from 'colorthief'
 import { mdiPalette, mdiCheckAll, mdiContentSave } from '@mdi/js'
+// eslint-disable-next-line import/named
 import { TheMask } from 'vue-the-mask'
 import colorSelect from '~/components/color-select.vue'
 import { EditSiteSettings } from '~/graphql/mutation/site-settings/EditSiteSettings'

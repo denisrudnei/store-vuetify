@@ -54,7 +54,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { mdiDelete } from '@mdi/js'
-import cartInfo from './cartInfo.vue'
+import cartInfo from './cart-info.vue'
 export default {
   components: { cartInfo },
   computed: {

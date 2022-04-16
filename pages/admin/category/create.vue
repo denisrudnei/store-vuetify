@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import create from '~/components/category/create.vue'
+import create from '~/components/category/create-category.vue'
 import { CreateCategory } from '~/graphql/mutation/category/CreateCategory'
 import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 import { GetCategories } from '~/graphql/query/category/GetCategories'

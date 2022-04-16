@@ -4,7 +4,7 @@
 
 <script>
 import { EditProduct } from '../../../../graphql/mutation/product/EditProduct'
-import create from '@/components/product/create.vue'
+import create from '~/components/product/create-product.vue'
 import { GetProductForEdit } from '~/graphql/query/product/GetProductForEdit'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 import { GetProductInfo } from '~/graphql/query/GetProductListInfo'
@@ -24,7 +24,7 @@ export default {
         },
       })
       .then((response) => {
-        this.$nextTick()
+        await this.$nextTick()
         this.product = {
           ...response.data.GetProductForEdit,
           category: response.data.GetProductForEdit.category.id,

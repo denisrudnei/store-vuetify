@@ -4,7 +4,7 @@
 
 <script>
 import { EditCategory } from '../../../../graphql/mutation/category/EditCategory'
-import create from '@/components/category/create.vue'
+import create from '~/components/category/create-category.vue'
 import { GetCategoryByNameEdit } from '~/graphql/query/category/GetCategoryByNameEdit'
 import { GetAllCategories } from '~/graphql/query/category/GetAllCategories'
 import { GetCategories } from '~/graphql/query/category/GetCategories'
@@ -24,7 +24,7 @@ export default {
         },
       })
       .then((response) => {
-        this.$nextTick()
+        await this.$nextTick()
         this.category = {
           ...response.data.GetCategoryByName,
           father: response.data.GetCategoryByName.father

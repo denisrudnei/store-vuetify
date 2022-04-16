@@ -69,10 +69,11 @@
 </template>
 
 <script>
+// eslint-disable-next-line import/named
 import { TheMask } from 'vue-the-mask'
 import slugify from 'slugify'
 import { mdiCart, mdiPlus, mdiMinus } from '@mdi/js'
-import Rating from '~/components/rating.vue'
+import Rating from '~/components/rating-card.vue'
 import productPage from '~/mixins/product-page'
 import theme from '~/mixins/theme'
 export default {

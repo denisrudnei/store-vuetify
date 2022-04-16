@@ -236,6 +236,7 @@ import {
   mdiDelete,
   mdiPhoneDial,
 } from '@mdi/js'
+// eslint-disable-next-line import/named
 import { TheMask } from 'vue-the-mask'
 import { UpdateUserInfo } from '../../graphql/mutation/user/UpdateUserInfo'
 import { ResetPassword } from '../../graphql/mutation/user/ResetPassword'

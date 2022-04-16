@@ -5,7 +5,7 @@
 <script>
 import { CreateProduct } from '../../../graphql/mutation/product/CreateProduct'
 import { AllProductsPage } from '../../../graphql/query/product/AllProductsPage'
-import create from '@/components/product/create.vue'
+import create from '~/components/product/create-product.vue'
 import { GetProducts } from '~/graphql/query/product/GetProducts'
 export default {
   components: { create },

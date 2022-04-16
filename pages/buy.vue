@@ -209,6 +209,8 @@
 </template>
 
 <script>
+// eslint-disable-next-line import/named
+// eslint-disable-next-line import/named
 import { TheMask } from 'vue-the-mask'
 import { mapGetters } from 'vuex'
 import {
@@ -218,7 +220,7 @@ import {
   mdiCashMultiple,
 } from '@mdi/js'
 import { Buy } from '../graphql/mutation/buy/Buy'
-import cartInfo from '~/components/cartInfo.vue'
+import cartInfo from '~/components/cart-info.vue'
 import { GetMyPurchases } from '~/graphql/query/purchase/GetMyPurchases'
 import { GetActualUser } from '~/graphql/query/user/GetActualUser'
 export default {
