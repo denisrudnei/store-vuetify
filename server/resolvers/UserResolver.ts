@@ -23,7 +23,7 @@ export class UserResolver {
   @Authorized(Role.USER, Role.OPERATOR)
   public GetActualUser(@Ctx() { req }: CustomExpressContext) {
     const id = req.session.authUser!.id
-    return User.findOne(id)
+    return User.findOneBy({ id })
   }
 
   @Query(() => [User])
@@ -71,7 +71,10 @@ export class UserResolver {
 
   @FieldResolver(() => [Address])
   public async addresses(@Root() root: User) {
-    const { addresses } = (await User.findOne(root.id, {
+    const { addresses } = (await User.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['addresses'],
     })) as User
     return addresses
@@ -79,7 +82,10 @@ export class UserResolver {
 
   @FieldResolver(() => [Address])
   public async phones(@Root() root: User) {
-    const { phones } = (await User.findOne(root.id, {
+    const { phones } = (await User.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['phones'],
     })) as User
     return phones
@@ -87,7 +93,10 @@ export class UserResolver {
 
   @FieldResolver(() => [Purchase])
   public async purchases(@Root() root: User) {
-    const { purchases } = (await User.findOne(root.id, {
+    const { purchases } = (await User.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['purchases'],
     })) as User
     return purchases

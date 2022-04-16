@@ -7,7 +7,7 @@ import { User } from '../models/User'
 
 export class PhoneService {
   public static async create(phone: CreatePhoneInput, userId: User['id']) {
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
     const newPhone = Phone.create()
     newPhone.description = phone.description
@@ -27,6 +27,7 @@ export class PhoneService {
           user: 'phone.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Phone>) => {
         qb.where({
           id: phoneId,

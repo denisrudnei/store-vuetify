@@ -8,7 +8,7 @@ import { User } from '../models/User'
 
 export class AddressService {
   public static async create(address: CreateAddressInput, userId: User['id']) {
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
     const newAddress = Address.create()
     Object.assign(newAddress, address)
@@ -22,7 +22,7 @@ export class AddressService {
     addressToUpdate: UpdateAddressInput,
     userId: User['id']
   ) {
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
 
     const address = await Address.findOne({
@@ -32,10 +32,13 @@ export class AddressService {
           user: 'address.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Address>) => {
         qb.where({
           id: addressToUpdate.id,
-        }).andWhere('user.id = :userId', { userId })
+        }).andWhere('user.id = :userId', {
+          userId,
+        })
       },
     })
 
@@ -52,7 +55,7 @@ export class AddressService {
   }
 
   public static async remove(addressId: Address['id'], userId: User['id']) {
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
     const address = await Address.findOne({
       join: {
@@ -61,6 +64,7 @@ export class AddressService {
           user: 'address.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Address>) => {
         qb.where({
           id: addressId,

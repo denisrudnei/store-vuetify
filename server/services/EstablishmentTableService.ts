@@ -14,7 +14,7 @@ export class EstablishmentTableService {
   }
 
   public static getOne(id: EstablishmentTable['id']) {
-    return EstablishmentTable.findOne(id)
+    return EstablishmentTable.findOneBy({ id })
   }
 
   public static create(table: CreateEstablishmentTableInput) {
@@ -27,13 +27,16 @@ export class EstablishmentTableService {
     id: EstablishmentTable['id'],
     productInput: ProductForPurchaseInput
   ) {
-    const table = await EstablishmentTable.findOne(id, {
+    const table = await EstablishmentTable.findOne({
+      where: {
+        id,
+      },
       relations: ['activeOrder', 'activeOrder.products'],
     })
 
     if (!table) throw new Error('Table not found')
     if (!table.activeOrder || !table.inUse) throw new Error('Table not in use')
-    const product = await Product.findOne(productInput.id)
+    const product = await Product.findOneBy({ id: productInput.id })
     if (!product) throw new Error('Product not found')
     let historyProduct: HistoryProduct
 
@@ -68,11 +71,14 @@ export class EstablishmentTableService {
     inUse: boolean,
     userId: User['id']
   ) {
-    const table = await EstablishmentTable.findOne(id, {
+    const table = await EstablishmentTable.findOne({
+      where: {
+        id,
+      },
       relations: ['activeOrder', 'activeOrder.products'],
     })
     if (!table) throw new Error('Table not found')
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
 
     table.inUse = inUse
@@ -96,7 +102,7 @@ export class EstablishmentTableService {
       const purchasesToRemove = await Purchase.find({
         where: {
           origin: PurchaseOrigin.ESTABLISHMENT_TABLE,
-          establishmentTable: null,
+          establishmentTable: undefined,
         },
       })
       await Purchase.remove(purchasesToRemove)

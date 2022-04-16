@@ -3,7 +3,7 @@ import { EditSiteSettingsInput } from '../inputs/EditSiteSettingsInput'
 
 export class SiteSettingsService {
   public static async getSiteSettings() {
-    let siteSettings = await SiteSettings.findOne()
+    let siteSettings = await SiteSettings.findOne({})
     if (siteSettings) return siteSettings
     siteSettings = SiteSettings.create()
     return siteSettings.save()

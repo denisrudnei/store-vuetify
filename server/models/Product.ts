@@ -46,7 +46,7 @@ export class Product extends BaseEntity {
 
   @Field(() => Category)
   @ManyToOne(() => Category)
-  public category?: Category
+  public category?: Category | null
 
   @Field()
   @Column({ type: 'decimal' })

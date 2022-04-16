@@ -32,7 +32,7 @@ export class CategoryService {
     const categories = await Category.find({
       relations: ['products'],
       where: {
-        father: null,
+        father: undefined,
       },
     })
     if (withNoProducts) return categories.filter(filterByType(productsTypes))
@@ -42,7 +42,7 @@ export class CategoryService {
   }
 
   public static async getCategory(id: Category['id']) {
-    const category = await Category.findOne(id)
+    const category = await Category.findOneBy({ id })
     if (!category) throw new Error('Category not found')
     return category
   }
@@ -60,7 +60,7 @@ export class CategoryService {
   public static getSubCategories(id: Category['id']) {
     return Category.find({
       where: {
-        father: id,
+        father: { id },
       },
     })
   }
@@ -68,7 +68,7 @@ export class CategoryService {
   public static async createCategory(categoryToCreate: CreateCategoryInput) {
     const category = Category.create()
     Object.assign(category, categoryToCreate)
-    const father = await Category.findOne(categoryToCreate.father)
+    const father = await Category.findOneBy({ id: categoryToCreate.father })
     if (categoryToCreate.father && father) {
       category.father = father
     }
@@ -79,7 +79,10 @@ export class CategoryService {
     id: Category['id'],
     categoryToEdit: EditCategoryInput
   ) {
-    const category = await Category.findOne(id, {
+    const category = await Category.findOne({
+      where: {
+        id,
+      },
       relations: ['subCategories'],
     })
     if (!category) throw new Error('Category not found')
@@ -96,7 +99,7 @@ export class CategoryService {
     if (!categoryToEdit.father) {
       category.father = null
     } else {
-      const father = await Category.findOne(categoryToEdit.father)
+      const father = await Category.findOneBy({ id: categoryToEdit.father })
       if (father && father.id !== category.id) {
         if (!category.subCategories.map((sub) => sub.id).includes(father.id)) {
           category.father = father
@@ -108,7 +111,10 @@ export class CategoryService {
   }
 
   public static async getFullName(id: Category['id']): Promise<String> {
-    const category = await Category.findOne(id, {
+    const category = await Category.findOne({
+      where: {
+        id,
+      },
       relations: ['father', 'father.subCategories', 'subCategories'],
     })
     if (!category) throw new Error('Category not found')
@@ -137,7 +143,7 @@ export class CategoryService {
   }
 
   public static async removeImage(id: Category['id']) {
-    const category = await Category.findOne(id)
+    const category = await Category.findOneBy({ id })
     if (!category) throw new Error('Category not found')
     const params = {
       Bucket: process.env.AWS_S3_BUCKET!,
@@ -163,12 +169,15 @@ export class CategoryService {
     limit: number = 10,
     page: number = 1
   ): Promise<Product[]> {
-    const { subCategories } = (await Category.findOne(id, {
+    const { subCategories } = (await Category.findOne({
+      where: {
+        id,
+      },
       relations: ['products', 'subCategories'],
     })) as Category
     const products = await Product.find({
       where: {
-        category: id,
+        category: { id },
       },
       take: limit,
       skip: (page - 1) * limit,
@@ -193,12 +202,15 @@ export class CategoryService {
     limit: number = 10,
     page: number = 1
   ): Promise<ProductPaginationConnection> {
-    const { subCategories } = (await Category.findOne(id, {
+    const { subCategories } = (await Category.findOne({
+      where: {
+        id,
+      },
       relations: ['products', 'subCategories'],
     })) as Category
     const [products, total] = await Product.findAndCount({
       where: {
-        category: id,
+        category: { id },
       },
       take: limit,
       skip: (page - 1) * limit,
@@ -263,7 +275,10 @@ export class CategoryService {
     types: ProductType[],
     applyToSubs: boolean = false
   ) {
-    const category = await Category.findOne(id, {
+    const category = await Category.findOne({
+      where: {
+        id,
+      },
       relations: ['subCategories'],
     })
     if (!category) throw new Error('Category not found')

@@ -8,7 +8,7 @@ export class POSService {
   }
 
   public static getOnePOS(id: POS['id']) {
-    return POS.findOne(id)
+    return POS.findOneBy({ id })
   }
 
   public static create(pos: CreatePOSInput) {
@@ -17,7 +17,7 @@ export class POSService {
     return newPOS.save()
   }
 
-  public static getByHostname(hostname: String) {
+  public static getByHostname(hostname: string) {
     return POS.findOne({
       where: {
         hostname,
@@ -25,16 +25,14 @@ export class POSService {
     })
   }
 
-  public static getAvailablePOS(hostname: String = '') {
-    return POS.find({
-      where: {
-        hostname,
-      },
+  public static getAvailablePOS(hostname: string = '') {
+    return POS.findBy({
+      hostname,
     })
   }
 
   public static async configure(id: POS['id'], hostname: string) {
-    const pos = await POS.findOne(id)
+    const pos = await POS.findOneBy({ id })
     if (!pos) throw new Error('POS not found')
 
     if (pos.hostname !== '' && pos.hostname !== hostname) {
@@ -46,7 +44,12 @@ export class POSService {
   }
 
   public static async remove(id: POS['id']) {
-    const pos = await POS.findOne(id, { relations: ['printers'] })
+    const pos = await POS.findOne({
+      where: {
+        id,
+      },
+      relations: ['printers'],
+    })
     if (!pos) throw new Error('POS not found')
     await PrinterService.removeMany(pos.printers.map((printer) => printer.id))
     await pos.softRemove()

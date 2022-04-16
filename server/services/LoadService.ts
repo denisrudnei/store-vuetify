@@ -203,10 +203,10 @@ export class LoadService {
   }
 
   public static async saveProduct(product: SyncProductInput) {
-    const inDb = await Product.findOne(product.id)
+    const inDb = await Product.findOneBy({ id: product.id })
     if (!inDb) return Promise.reject(Error('Product not found'))
 
-    const category = await Category.findOne(product.category)
+    const category = await Category.findOneBy({ id: product.category })
     if (!category) return Promise.reject(Error('Category not found'))
 
     const newProduct = {

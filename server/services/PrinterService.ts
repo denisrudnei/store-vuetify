@@ -6,7 +6,7 @@ import { UpdatePrinterInput } from '../inputs/printer/UpdatePrinterInput'
 
 export class PrinterService {
   public static async create(printer: CreatePrinterInput) {
-    const pos = await POS.findOne(printer.installedIn)
+    const pos = await POS.findOneBy({ id: printer.installedIn })
     if (!pos) throw new Error('POS not found')
     return Printer.create({
       name: printer.name,
@@ -31,13 +31,13 @@ export class PrinterService {
   }
 
   public static async getOne(id: Printer['id']) {
-    const printer = await Printer.findOne(id)
+    const printer = await Printer.findOneBy({ id })
     if (!printer) throw new Error('Printer not found')
     return printer
   }
 
   public static async remove(id: Printer['id']) {
-    const printer = await Printer.findOne(id)
+    const printer = await Printer.findOneBy({ id })
     if (!printer) throw new Error('Printer not found')
     await Printer.softRemove(printer)
     return true
@@ -47,7 +47,7 @@ export class PrinterService {
     id: Printer['id'],
     printer: UpdatePrinterInput
   ) {
-    const printerToUpdate = await Printer.findOne(id)
+    const printerToUpdate = await Printer.findOneBy({ id })
     if (!printerToUpdate) throw new Error('Printer not found')
 
     Object.assign(printerToUpdate, printer)
@@ -55,7 +55,7 @@ export class PrinterService {
   }
 
   public static async updatePath(id: Printer['id'], path: string) {
-    const printer = await Printer.findOne(id)
+    const printer = await Printer.findOneBy({ id })
     if (!printer) throw new Error('Printer not found')
     printer.path = path
     return printer.save()
@@ -65,14 +65,14 @@ export class PrinterService {
     id: Printer['id'],
     manufacturer: string
   ) {
-    const printer = await Printer.findOne(id)
+    const printer = await Printer.findOneBy({ id })
     if (!printer) throw new Error('Printer not found')
     printer.manufacturer = manufacturer
     return printer.save()
   }
 
   public static async updateModel(id: Printer['id'], model: string) {
-    const printer = await Printer.findOne(id)
+    const printer = await Printer.findOneBy({ id })
     if (!printer) throw new Error('Printer not found')
     printer.model = model
     return printer.save()

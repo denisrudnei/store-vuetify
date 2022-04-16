@@ -16,7 +16,7 @@ export class POSPurchaseService {
   public static getPurchasesFromPOS(id: POS['id']) {
     return Purchase.find({
       where: {
-        pos: id,
+        pos: { id },
       },
     })
   }
@@ -49,9 +49,9 @@ export class POSPurchaseService {
     products: ProductForPurchaseInput[],
     payments: PaymentInput[]
   ) {
-    const operator = await User.findOne(operatorId)
+    const operator = await User.findOneBy({ id: operatorId })
     if (!operator) throw new Error('Operator not found')
-    const pos = await POS.findOne(posId)
+    const pos = await POS.findOneBy({ id: posId })
     if (!pos) throw new Error('POS not found')
     const user = await User.findOne({
       where: {
@@ -67,7 +67,7 @@ export class POSPurchaseService {
     purchase.status = DeliveryStatus.DELIVERED
     purchase.products = await Promise.all(
       products.map(async (productForPurchase) => {
-        const product = await Product.findOne(productForPurchase.id)
+        const product = await Product.findOneBy({ id: productForPurchase.id })
         if (!product)
           throw new Error(`Product with id ${productForPurchase.id} not found`)
         await Product.update(

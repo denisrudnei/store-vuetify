@@ -37,7 +37,7 @@ export class Purchase extends BaseEntity {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.purchases, { nullable: true })
-  public user?: User
+  public user?: User | null
 
   @Field(() => POS, { nullable: true })
   @ManyToOne(() => POS, (pos) => pos.purchases, { nullable: true })
@@ -45,7 +45,7 @@ export class Purchase extends BaseEntity {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.purchasesMade, { nullable: true })
-  public operator?: User
+  public operator?: User | null
 
   @Field(() => PurchaseOrigin)
   @Column({ default: PurchaseOrigin.ECOMMERCE, type: 'varchar' })
@@ -73,7 +73,10 @@ export class Purchase extends BaseEntity {
   @Field(() => Int)
   public async totalAmount() {
     if (!this.products) {
-      const purchase = (await Purchase.findOne(this.id, {
+      const purchase = (await Purchase.findOne({
+        where: {
+          id: this.id,
+        },
         relations: ['products'],
       })) as Purchase
       this.products = purchase.products
@@ -87,7 +90,10 @@ export class Purchase extends BaseEntity {
   @Field(() => Payment)
   public async payment() {
     if (!this.payments) {
-      const purchase = (await Purchase.findOne(this.id, {
+      const purchase = (await Purchase.findOne({
+        where: {
+          id: this.id,
+        },
         relations: ['payments'],
       })) as Purchase
       this.payments = purchase.payments
@@ -108,7 +114,10 @@ export class Purchase extends BaseEntity {
   @Field(() => Float)
   public async totalPrice() {
     if (!this.products) {
-      const purchase = (await Purchase.findOne(this.id, {
+      const purchase = (await Purchase.findOne({
+        where: {
+          id: this.id,
+        },
         relations: ['products'],
       })) as Purchase
       this.products = purchase.products

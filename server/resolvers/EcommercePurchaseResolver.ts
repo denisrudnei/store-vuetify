@@ -115,7 +115,10 @@ export class EcommercePurchaseResolver {
     const result = await PurchaseService.changeStatus(id, status)
     const notification = Notification.create()
     notification.content = `Your purchase had the status updated to ${status}`
-    const purchase = await Purchase.findOne(result.id, { relations: ['user'] })
+    const purchase = await Purchase.findOne({
+      where: { id: result.id },
+      relations: ['user'],
+    })
     notification.user = purchase!.user
     await notification.save()
     pubSub.publish(NotificationEvents.NEW_NOTIFICATION, notification)
@@ -164,7 +167,10 @@ export class EcommercePurchaseResolver {
 
   @FieldResolver()
   public async products(@Root() root: Purchase) {
-    const { products } = (await Purchase.findOne(root.id, {
+    const { products } = (await Purchase.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['products'],
     })) as Purchase
     return products
@@ -172,7 +178,10 @@ export class EcommercePurchaseResolver {
 
   @FieldResolver()
   public async user(@Root() root: Purchase) {
-    const { user } = (await Purchase.findOne(root.id, {
+    const { user } = (await Purchase.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['user'],
     })) as Purchase
     return user
@@ -194,7 +203,10 @@ export class EcommercePurchaseResolver {
 
   @FieldResolver()
   public async payments(@Root() root: Purchase) {
-    const { payments } = (await Purchase.findOne(root.id, {
+    const { payments } = (await Purchase.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['payments'],
     })) as Purchase
     return payments

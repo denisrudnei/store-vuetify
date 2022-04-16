@@ -11,9 +11,10 @@ export class NotificationService {
           user: 'notification.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Notification>) => {
         qb.where('notification.user = :userId', {
-          userId,
+          id: userId,
         }).andWhere('notification.read = false')
       },
       order: {
@@ -30,6 +31,7 @@ export class NotificationService {
           user: 'notification.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Notification>) => {
         qb.where('notification.user = :userId', {
           userId,
@@ -52,6 +54,7 @@ export class NotificationService {
           user: 'notification.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Notification>) => {
         qb.where({
           id: notificationId,
@@ -78,6 +81,7 @@ export class NotificationService {
           user: 'notification.user',
         },
       },
+      // @ts-ignore
       where: (qb: SelectQueryBuilder<Notification>) => {
         qb.where('notification.user = :userId', {
           userId,

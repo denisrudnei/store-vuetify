@@ -19,7 +19,7 @@ export class Notification extends BaseEntity {
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, (user) => user.notifications)
-  public user?: User
+  public user?: User | null
 
   @Field()
   @Column({ type: 'text' })

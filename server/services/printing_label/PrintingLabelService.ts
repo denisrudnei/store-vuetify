@@ -1,3 +1,4 @@
+import { In } from 'typeorm'
 import { Label } from '../../models/printing_label/Label'
 import { CreateLabelInput } from '../../inputs/printing_label/CreateLabelInput'
 import { BarcodeLabelItem } from '../../models/printing_label/items/BarcodeLabelItem'
@@ -11,7 +12,7 @@ export class PrintingLabelService {
   }
 
   public static async getOne(id: Label['id']) {
-    const label = await Label.findOne(id)
+    const label = await Label.findOneBy({ id })
     if (!label) throw new Error('Label not found')
     return label
   }
@@ -37,7 +38,11 @@ export class PrintingLabelService {
     })
 
     if (!label) throw new Error('Label not found')
-    const items = await LabelItem.findByIds(label.items.map((item) => item.id))
+    const items = await LabelItem.find({
+      where: {
+        id: In(label.items.map((item) => item.id)),
+      },
+    })
     await Promise.all(items.map((item) => item.remove()))
     await label.remove()
   }
@@ -46,7 +51,12 @@ export class PrintingLabelService {
     labelId: Label['id'],
     barcodeItem: CreateBarcodeItemInput
   ) {
-    const label = await Label.findOne(labelId, { relations: ['items'] })
+    const label = await Label.findOne({
+      where: {
+        id: labelId,
+      },
+      relations: ['items'],
+    })
     if (!label) throw new Error('Label not found')
     const item = BarcodeLabelItem.create()
     const origin = OriginPoint.create()
@@ -71,7 +81,7 @@ export class PrintingLabelService {
   }
 
   public static async removeLabelItem(itemId: LabelItem['id']) {
-    const item = await LabelItem.findOne(itemId)
+    const item = await LabelItem.findOneBy({ id: itemId })
     if (!item) throw new Error('Label item not found')
     await item.remove()
   }

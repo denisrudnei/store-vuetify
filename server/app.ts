@@ -3,9 +3,9 @@ import './types/CustomExpressContext'
 import compression from 'compression'
 import redisConnect from 'connect-redis'
 import cors from 'cors'
-import express, { Router } from 'express'
+import { json, Router } from 'express'
 import session from 'express-session'
-import redis from 'redis'
+import { createClient } from 'redis'
 
 import { AuthController } from './controllers/AuthController'
 import { CategoryController } from './controllers/CategoryController'
@@ -21,8 +21,12 @@ import { ImportProductsController } from './controllers/import_controllers/Impor
 const app = Router()
 
 const RedisStore = redisConnect(session)
-const redisClient = redis.createClient({ url: process.env.REDIS_URL })
-const store = new RedisStore({ client: redisClient })
+export const redisClient = createClient({
+  url: process.env.REDIS_URL,
+  legacyMode: true,
+})
+
+const store = new RedisStore({ client: redisClient as any })
 
 app.use(compression())
 
@@ -35,7 +39,7 @@ app.use(
   })
 )
 
-app.use(express.json())
+app.use(json())
 
 app.use(
   session({

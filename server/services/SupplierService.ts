@@ -11,7 +11,9 @@ export class SupplierService {
     newSupplier.ie = supplier.ie ?? ''
 
     if (supplier.address) {
-      newSupplier.address = (await Address.findOne(supplier.address)) as Address
+      newSupplier.address = (await Address.findOneBy({
+        id: supplier.address,
+      })) as Address
     }
 
     return newSupplier.save()
@@ -43,7 +45,7 @@ export class SupplierService {
   }
 
   public static async remove(id: Supplier['id']) {
-    const supplier = await Supplier.findOne(id)
+    const supplier = await Supplier.findOneBy({ id })
     if (!supplier) throw new Error('Supplier not found')
     await supplier.softRemove()
   }

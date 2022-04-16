@@ -16,7 +16,7 @@ import { LabelItemRotation } from '../../../enums/printing_label/LabelItemRotati
 @InterfaceType()
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'columnType' } })
-export abstract class LabelItem extends BaseEntity {
+export class LabelItem extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   public id!: string

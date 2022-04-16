@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs'
+import { genSaltSync, hashSync } from 'bcryptjs'
 import { Field, ID, ObjectType } from 'type-graphql'
 import {
   AfterLoad,
@@ -91,8 +91,8 @@ export class User extends BaseEntity {
   @BeforeUpdate()
   hashPassword() {
     if (this.password && this.password !== this.tempPassword) {
-      const salt = bcrypt.genSaltSync(12)
-      this.password = bcrypt.hashSync(this.password, salt)
+      const salt = genSaltSync(12)
+      this.password = hashSync(this.password, salt)
     }
     this.tempPassword = ''
   }

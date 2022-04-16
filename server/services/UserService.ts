@@ -4,7 +4,7 @@ import { UpdateUserInfoInput } from '../inputs/UpdateUserInfoInput'
 
 export class UserService {
   public static getOne(id: User['id']) {
-    return User.findOne(id)
+    return User.findOneBy({ id })
   }
 
   public static getAll() {
@@ -12,7 +12,7 @@ export class UserService {
   }
 
   public static async updateTheme(id: User['id'], isDark: boolean) {
-    const user = await User.findOne(id)
+    const user = await User.findOneBy({ id })
     if (!user) throw new Error('User not found')
     user.darkTheme = isDark
     return user.save()
@@ -22,14 +22,14 @@ export class UserService {
     id: User['id'],
     userToUpdate: UpdateUserInfoInput
   ) {
-    const user = await User.findOne(id)
+    const user = await User.findOneBy({ id })
     if (!user) throw new Error('User not found')
     Object.assign(user, userToUpdate)
     return user.save()
   }
 
   public static async resetPassword(id: User['id'], newPassword: string) {
-    const user = await User.findOne(id)
+    const user = await User.findOneBy({ id })
     if (!user) throw new Error('User not found')
     user.password = newPassword
     return user.save()

@@ -132,7 +132,10 @@ export class PrintLayoutResolver {
 
   @FieldResolver()
   public async items(@Root() root: PrintLayout) {
-    const { items } = (await PrintLayout.findOne(root.id, {
+    const { items } = (await PrintLayout.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['items'],
     })) as PrintLayout
     return items.sort((a, b) => a.position - b.position)

@@ -37,14 +37,14 @@ AuthController.post(
   async (req: express.Request, res: express.Response) => {
     if (req.session.authUser) {
       return res.status(200).json({
-        user: await User.findOne(req.session.authUser.id),
+        user: await User.findOneBy({ id: req.session.authUser.id }),
       })
     }
     if (req.headers.authorization) {
       const token = req.headers.authorization.split('Bearer ')[1]
 
       const data = jwt.decode(token)
-      const user = await User.findOne((data as User).id)
+      const user = await User.findOneBy({ id: (data as User).id })
       req.session.authUser = user
       res.header('authorization', `Bearer ${token}`)
       return res.status(200).json({

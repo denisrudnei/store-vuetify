@@ -120,14 +120,7 @@ export default {
 
   apollo: {
     clientConfigs: {
-      default: {
-        httpEndpoint: process.env.GRAPHQL || 'http://localhost:3000/graphql',
-        wsEndpoint:
-          process.env.SUBSCRIPTIONS || 'ws://localhost:3000/subscriptions',
-        httpLinkOptions: {
-          credentials: 'include',
-        },
-      },
+      default: '~/apollo.config.js',
     },
     tokenName: 'auth._token.local',
     authenticationType: 'Bearer',

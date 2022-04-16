@@ -103,7 +103,10 @@ export class CategoryResolver {
 
   @FieldResolver()
   public async father(@Root() root: Category) {
-    const { father } = (await Category.findOne(root.id, {
+    const { father } = (await Category.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['father'],
     })) as Category
     return father
@@ -125,7 +128,10 @@ export class CategoryResolver {
     allTypes: boolean,
     @Root() root: Category
   ) {
-    const { subCategories } = (await Category.findOne(root.id, {
+    const { subCategories } = (await Category.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['subCategories'],
     })) as Category
     if (withNoProducts && allTypes) return subCategories

@@ -72,7 +72,7 @@ export class EstablishmentTableResolver {
     @Arg('id', () => ID) id: EstablishmentTable['id'],
     @PubSub() pubSub: PubSubEngine
   ) {
-    const establishmentTable = await EstablishmentTable.findOne(id)
+    const establishmentTable = await EstablishmentTable.findOneBy({ id })
     if (!establishmentTable) throw new Error('Establishment table not found')
     await EstablishmentTable.softRemove(establishmentTable)
     pubSub.publish(EstablishmentTableEvents.TABLE_REMOVED, establishmentTable)
@@ -94,7 +94,10 @@ export class EstablishmentTableResolver {
 
   @FieldResolver()
   public async activeOrder(@Root() root: EstablishmentTable) {
-    const { activeOrder } = (await EstablishmentTable.findOne(root.id, {
+    const { activeOrder } = (await EstablishmentTable.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['activeOrder'],
     })) as EstablishmentTable
     return activeOrder
@@ -102,7 +105,10 @@ export class EstablishmentTableResolver {
 
   @FieldResolver()
   public async orders(@Root() root: EstablishmentTable) {
-    const { orders } = (await EstablishmentTable.findOne(root.id, {
+    const { orders } = (await EstablishmentTable.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['orders'],
     })) as EstablishmentTable
     return orders

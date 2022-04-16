@@ -1,15 +1,16 @@
 import http from 'http'
 import path from 'path'
-import { ApolloServer, PubSub } from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-express'
 import consola from 'consola'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 
-import { app } from './app'
+import { PubSub } from 'graphql-subscriptions'
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core/dist/plugin/landingPage/graphqlPlayground'
+import { app, redisClient } from './app'
 import CustomAuthChecker from './CustomAuthChecker'
 import createConnection from './db/typeormConnection'
 import { GatewayService } from './services/GatewayService'
-import { onConnect } from './util/graphql-functions'
 
 const server = express()
 
@@ -31,23 +32,13 @@ async function start() {
       authChecker: CustomAuthChecker,
       pubSub,
     }),
-    context: ({ req, res, connection }) => {
-      if (!req || !req.headers) {
-        return connection!.context
-      } else {
-        return {
-          req,
-          res,
-          pubSub,
-        }
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    context: ({ req, res }) => {
+      return {
+        req,
+        res,
+        pubSub,
       }
-    },
-    playground: {
-      endpoint: '/graphql',
-    },
-    subscriptions: {
-      path: '/subscriptions',
-      onConnect,
     },
   })
 
@@ -58,9 +49,12 @@ async function start() {
 
   server.use(app)
 
+  await apolloServer.start()
+
+  await redisClient.connect()
+
   const httpServer = http.createServer(server)
-  apolloServer.applyMiddleware({ app: server, cors: false })
-  apolloServer.installSubscriptionHandlers(httpServer)
+  apolloServer.applyMiddleware({ app: server, path: '/graphql', cors: false })
 
   httpServer.listen(port, host)
   consola.info({

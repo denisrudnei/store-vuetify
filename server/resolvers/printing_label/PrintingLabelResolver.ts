@@ -55,7 +55,10 @@ export class PrintingLabelResolver {
 
   @FieldResolver()
   public async items(@Root() root: Label) {
-    const { items } = (await Label.findOne(root.id, {
+    const { items } = (await Label.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['items'],
     })) as Label
     return items

@@ -7,7 +7,7 @@ import { Product } from '../models/Product'
 export class HistoryProductResolver {
   @FieldResolver()
   public async data(@Root() root: HistoryProduct) {
-    const realProduct = await Product.findOne(root.productId)
+    const realProduct = await Product.findOneBy({ id: root.productId })
     if (realProduct) {
       root.data.images = realProduct.images
     }

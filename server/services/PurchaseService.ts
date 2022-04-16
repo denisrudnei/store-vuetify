@@ -28,7 +28,7 @@ export class PurchaseService {
     return Purchase.find({
       where: {
         type: PurchaseType.DELIVERY,
-        status: Not(DeliveryStatus.DELIVERED),
+        status: Not(In([DeliveryStatus.DELIVERED])),
       },
     })
   }
@@ -37,13 +37,13 @@ export class PurchaseService {
     return Purchase.find({
       where: {
         type: PurchaseType.NORMAL,
-        status: Not(DeliveryStatus.DELIVERED),
+        status: Not(In([DeliveryStatus.DELIVERED])),
       },
     })
   }
 
   public static async getPurchase(userId: User['id'], id: Purchase['id']) {
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
     const result = await getConnection()
       .createQueryBuilder()
@@ -129,7 +129,7 @@ export class PurchaseService {
     nonce: string,
     deviceData: string
   ) {
-    const user = await User.findOne(userId)
+    const user = await User.findOneBy({ id: userId })
     if (!user) throw new Error('User not found')
     const purchase = await Purchase.create().save()
     purchase.user = user
@@ -137,7 +137,7 @@ export class PurchaseService {
 
     purchase.products = await Promise.all(
       productsForPurchase.map(async (productForPurchase) => {
-        const product = await Product.findOne(productForPurchase.id)
+        const product = await Product.findOneBy({ id: productForPurchase.id })
         if (!product)
           throw new Error(`Product with id ${productForPurchase.id} not found`)
         await Product.update(
@@ -194,7 +194,7 @@ export class PurchaseService {
   }
 
   public static async changeStatus(id: Purchase['id'], status: DeliveryStatus) {
-    const purchase = await Purchase.findOne(id)
+    const purchase = await Purchase.findOneBy({ id })
     if (!purchase) throw new Error('Purchase not found')
     await Purchase.update(
       {
@@ -222,7 +222,12 @@ export class PurchaseService {
         status,
       }
     )
-    const purchases = await Purchase.findByIds(ids, { relations: ['user'] })
+    const purchases = await Purchase.find({
+      where: {
+        id: In(ids),
+      },
+      relations: ['user'],
+    })
     return purchases
   }
 }

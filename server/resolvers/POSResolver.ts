@@ -36,7 +36,7 @@ export class POSResolver {
   @Query(() => [POS])
   @Authorized(Role.ADMIN, Role.OPERATOR)
   public GetAvailablePOS(
-    @Arg('hostname', () => String, { nullable: true }) hostname: String = ''
+    @Arg('hostname', () => String, { nullable: true }) hostname: string = ''
   ) {
     return POSService.getAvailablePOS(hostname)
   }
@@ -64,7 +64,10 @@ export class POSResolver {
 
   @FieldResolver()
   public async printers(@Root() root: POS) {
-    const { printers } = (await POS.findOne(root.id, {
+    const { printers } = (await POS.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['printers'],
     })) as POS
     return printers

@@ -205,7 +205,10 @@ export class ProductResolver {
 
   @FieldResolver()
   public async category(@Root() root: Product) {
-    const { category } = (await Product.findOne(root.id, {
+    const { category } = (await Product.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['category'],
     })) as Product
     return category
@@ -222,7 +225,10 @@ export class ProductResolver {
 
   @FieldResolver(() => [Supplier])
   public async suppliers(@Root() root: Product) {
-    const { suppliers } = (await Product.findOne(root.id, {
+    const { suppliers } = (await Product.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['suppliers'],
     })) as Product
     return suppliers

@@ -44,11 +44,11 @@ export class Category extends BaseEntity {
 
   @Field(() => Category, { nullable: true })
   @ManyToOne(() => Category, (category) => category.subCategories)
-  public father?: Category | null
+  public father?: this | null
 
   @Field(() => [Category])
   @OneToMany(() => Category, (category) => category.father)
-  public subCategories!: Category[]
+  public subCategories!: this[]
 
   @Field(() => [ProductType])
   @Column({ type: 'varchar', default: [ProductType.ECOMMERCE], array: true })

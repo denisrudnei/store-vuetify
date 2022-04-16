@@ -13,7 +13,7 @@ import { PrintLayout } from './PrintLayout'
 @InterfaceType()
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
-export abstract class PrintLayoutItem extends BaseEntity {
+export class PrintLayoutItem extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   public id!: string

@@ -5,7 +5,7 @@ import { User } from './models/User'
 import { Role } from './enums/Role'
 
 export const CustomAuthChecker: AuthChecker<CustomExpressContext> = async (
-  { root, args, context, info },
+  { context },
   roles
 ) => {
   const { req } = context
@@ -23,7 +23,7 @@ export const CustomAuthChecker: AuthChecker<CustomExpressContext> = async (
 
   req.session.authUser = data as User
 
-  const user = await User.findOne((data as User).id)
+  const user = await User.findOneBy({ id: (data as User).id })
   if (!user) return false
   if (user.role === Role.ADMIN) return true
   return roles.includes(user.role)

@@ -4,7 +4,7 @@ import { LoadLogType } from '../enums/LoadLogType'
 @InputType()
 export class CreateLoadLogInput {
   @Field(() => ID)
-  public pos!: number
+  public pos!: string
 
   @Field()
   public message!: string

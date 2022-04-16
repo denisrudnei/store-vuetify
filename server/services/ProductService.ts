@@ -81,7 +81,7 @@ export class ProductService {
   }
 
   public static getProduct(id: Product['id']) {
-    return Product.findOne(id)
+    return Product.findOneBy({ id })
   }
 
   public static getProductsByIds(ids: Product['id'][]) {
@@ -195,7 +195,7 @@ export class ProductService {
   public static async createProduct(productToCreate: CreateProductInput) {
     const product = Product.create()
     Object.assign(product, productToCreate)
-    const category = await Category.findOne(productToCreate.category)
+    const category = await Category.findOneBy({ id: productToCreate.category })
     if (!category) throw new Error('Category not found')
     product.category = category
     return product.save()
@@ -205,15 +205,15 @@ export class ProductService {
     id: Product['id'],
     productToEdit: EditProductInput
   ) {
-    const product = await Product.findOne(id)
+    const product = await Product.findOneBy({ id })
     if (!product) throw new Error('Product not found')
     Object.assign(product, productToEdit)
-    product.category = await Category.findOne(productToEdit.category)
+    product.category = await Category.findOneBy({ id: productToEdit.category })
     return product.save()
   }
 
   public static async inactivate(id: Product['id']) {
-    const product = await Product.findOne(id)
+    const product = await Product.findOneBy({ id })
     if (!product) throw new Error('Product not found')
     await Product.softRemove(product)
     return true
@@ -226,7 +226,12 @@ export class ProductService {
   }
 
   public static async reactivate(id: Product['id']) {
-    const product = await Product.findOne(id, { withDeleted: true })
+    const product = await Product.findOne({
+      where: {
+        id,
+      },
+      withDeleted: true,
+    })
     if (!product) throw new Error('Product not found')
     await Product.update({ id }, { deletedAt: undefined })
     return true
@@ -297,7 +302,7 @@ export class ProductService {
   }
 
   public static async removeImage(productId: Product['id'], image: string) {
-    const product = await Product.findOne(productId)
+    const product = await Product.findOneBy({ id: productId })
     if (!product) throw new Error('Product not found')
     const items = image.split('/')
     const name = items[items.length - 1]

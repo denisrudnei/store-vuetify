@@ -16,10 +16,8 @@ ProductController.post(
     if (!isLogged(req)) return res.sendStatus(401)
     if (req.session.authUser!.role !== 'ADMIN') return res.sendStatus(401)
     if (!req.files) res.sendStatus(400)
-    const product = await Product.findOne({
-      where: {
-        id: req.params.id,
-      },
+    const product = await Product.findOneBy({
+      id: parseInt(req.params.id),
     })
     if (!product)
       return res.sendStatus(400).json({

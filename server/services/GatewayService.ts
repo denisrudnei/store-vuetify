@@ -1,4 +1,4 @@
-import braintree from 'braintree'
+import braintree, { BraintreeGateway, Environment } from 'braintree'
 
 import { Purchase } from '../models/Purchase'
 
@@ -6,8 +6,8 @@ export class GatewayService {
   public static gateway?: braintree.BraintreeGateway
 
   public static init() {
-    this.gateway = new braintree.BraintreeGateway({
-      environment: braintree.Environment.Sandbox,
+    this.gateway = new BraintreeGateway({
+      environment: Environment.Sandbox,
       merchantId: process.env.MERCHANT_ID!,
       publicKey: process.env.BRAINTREE_PUBLIC_KEY!,
       privateKey: process.env.BRAINTREE_PRIVATE_KEY!,

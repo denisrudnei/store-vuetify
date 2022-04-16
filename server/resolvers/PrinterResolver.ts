@@ -104,7 +104,10 @@ export class PrinterResolver {
 
   @FieldResolver()
   public async installedIn(@Root() root: Printer) {
-    const { installedIn } = (await Printer.findOne(root.id, {
+    const { installedIn } = (await Printer.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['installedIn'],
     })) as Printer
     return installedIn

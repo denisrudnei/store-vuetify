@@ -68,7 +68,10 @@ export class POSPurchaseResolver {
 
   @FieldResolver()
   public async operator(@Root() root: Purchase) {
-    const { operator } = (await Purchase.findOne(root.id, {
+    const { operator } = (await Purchase.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['operator'],
     })) as Purchase
     return operator
@@ -76,7 +79,10 @@ export class POSPurchaseResolver {
 
   @FieldResolver()
   public async pos(@Root() root: Purchase) {
-    const { pos } = (await Purchase.findOne(root.id, {
+    const { pos } = (await Purchase.findOne({
+      where: {
+        id: root.id,
+      },
       relations: ['pos'],
     })) as Purchase
     return pos

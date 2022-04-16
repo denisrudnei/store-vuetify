@@ -1,3 +1,4 @@
+import { In, getManager } from 'typeorm'
 import { CreatePrintLayoutInput } from '../inputs/print_layout/CreatePrintLayoutInput'
 import { PrintLayout } from '../models/print_layout/PrintLayout'
 import { HeaderItem } from '../models/print_layout/single_line/HeaderItem'
@@ -17,7 +18,7 @@ export class PrintLayoutService {
   }
 
   public static getOne(id: PrintLayout['id']) {
-    return PrintLayout.findOne(id)
+    return PrintLayout.findOneBy({ id })
   }
 
   public static create(layout: CreatePrintLayoutInput) {
@@ -25,7 +26,7 @@ export class PrintLayoutService {
   }
 
   public static async remove(id: PrintLayout['id']) {
-    const layout = await PrintLayout.findOne(id)
+    const layout = await PrintLayout.findOneBy({ id })
     if (!layout) throw new Error('Layout not found')
     await layout.softRemove()
     return true
@@ -35,9 +36,14 @@ export class PrintLayoutService {
     id: PrintLayout['id'],
     itemId: PrintLayoutItem['id']
   ) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
-    const item = await PrintLayoutItem.findOne(itemId)
+    const item = await PrintLayoutItem.findOneBy({ id: itemId })
     if (!item) throw new Error('Item not found')
     await item.remove()
     const items = layout.items
@@ -51,12 +57,19 @@ export class PrintLayoutService {
   }
 
   public static async clearItems(id: PrintLayout['id']) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
 
-    const items = await PrintLayoutItem.findByIds(
-      layout.items.map((item) => item.id)
-    )
+    const items = await getManager().find(PrintLayout, {
+      where: {
+        id: In(layout.items.map((item) => item.id)),
+      },
+    })
     await Promise.all(items.map((item) => item.remove()))
     return true
   }
@@ -65,7 +78,12 @@ export class PrintLayoutService {
     id: PrintLayout['id'],
     headerInfo: AddHeaderInput
   ) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const header = await HeaderItem.create().save()
     header.mainLayout = layout
@@ -84,7 +102,12 @@ export class PrintLayoutService {
   }
 
   public static async addEmptyLine(id: PrintLayout['id'], lines: number) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const emptyLine = await EmptyLineItem.create().save()
     emptyLine.mainLayout = layout
@@ -102,7 +125,12 @@ export class PrintLayoutService {
     id: PrintLayout['id'],
     type: PurchaseType
   ) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const table = await ProductTable.create().save()
 
@@ -118,7 +146,12 @@ export class PrintLayoutService {
   }
 
   public static async addLineItem(id: PrintLayout['id'], character: string) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const lineItem = await LineItem.create().save()
     lineItem.character = character
@@ -131,7 +164,12 @@ export class PrintLayoutService {
   }
 
   public static async addCutItem(id: PrintLayout['id']) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const cut = await CutItem.create().save()
     cut.mainLayout = layout
@@ -142,7 +180,12 @@ export class PrintLayoutService {
   }
 
   public static async addPaymentInfo(id: PrintLayout['id']) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const paymentInfo = await PaymentInfoItem.create().save()
 
@@ -159,7 +202,12 @@ export class PrintLayoutService {
   }
 
   public static async addPurchaseInformation(id: PrintLayout['id']) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
 
     const purchaseInformation = await PurchaseInformation.create().save()
@@ -180,7 +228,12 @@ export class PrintLayoutService {
     oldPosition: number,
     newPosition: number
   ) {
-    const layout = await PrintLayout.findOne(id, { relations: ['items'] })
+    const layout = await PrintLayout.findOne({
+      where: {
+        id,
+      },
+      relations: ['items'],
+    })
     if (!layout) throw new Error('Layout not found')
     const items = layout.items.sort((a, b) => a.position - b.position)
     if (oldPosition < newPosition) {

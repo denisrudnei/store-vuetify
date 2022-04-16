@@ -5,7 +5,7 @@ import { PubSubEngine } from 'type-graphql'
 import { User } from '../models/User'
 
 type Content = {
-  authUser?: User
+  authUser?: User | null
 }
 
 declare module 'express' {
@@ -17,7 +17,7 @@ declare module 'express' {
 
 declare module 'express-session' {
   export interface SessionData {
-    authUser?: User
+    authUser?: User | null
     id: string
   }
 }
