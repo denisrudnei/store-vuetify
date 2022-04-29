@@ -26,16 +26,16 @@ export default {
       },
       headers: [
         {
-          text: 'ID',
-          value: 'id',
-        },
-        {
           text: 'Name',
           value: 'name',
         },
         {
           text: 'Hostname',
           value: 'hostname',
+        },
+        {
+          text: 'ID',
+          value: 'id',
         },
         {
           text: 'Actions',
