@@ -248,7 +248,7 @@ export default {
 
         this.$store.commit(
           'category/setCategories',
-          response.data.GetCategories
+          response.data.GetCategories.edges.map((edge) => edge.node)
         )
         Object.entries(response.data.GetSocialNetworks).forEach((entry) => {
           const [name, value] = entry

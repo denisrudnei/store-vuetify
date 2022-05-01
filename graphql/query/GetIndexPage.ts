@@ -1,13 +1,21 @@
 import ggl from 'graphql-tag'
 
 export const GetIndexPage = ggl`
-query {
-  GetCategories {
-    id
-    name
-    description
-    slug
-    image
+query GetIndexPage ($page: Int, $limit: Int){
+  GetCategories(page: $page, limit: $limit) {
+    total
+    pageInfo {
+      page
+      pages
+    }
+    edges {
+      node {
+        id
+        name
+        description
+        slug
+      }
+    }
   }
   GetSiteSettings {
     id

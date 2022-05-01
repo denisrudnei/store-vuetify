@@ -55,12 +55,14 @@ export default {
         query: GetCategoryTree,
       })
       .then((response) => {
-        this.categories = response.data.GetCategories.map((item) => ({
-          id: item.id,
-          name: item.name,
-          slug: item.slug,
-          children: item.subCategories.length ? [] : undefined,
-        }))
+        this.categories = response.data.GetCategories.edges
+          .map((edge) => edge.node)
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            slug: item.slug,
+            children: item.subCategories.length ? [] : undefined,
+          }))
       })
   },
   methods: {

@@ -1,3 +1,4 @@
+import { In, SelectQueryBuilder } from 'typeorm'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
@@ -5,6 +6,8 @@ import { Product } from '../models/Product'
 import { S3 } from '../S3'
 import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
 import { ProductType } from '../enums/ProductType'
+import { CategoryPagination } from '~/server/types/pagination/category/CategoryPagination'
+import { convertProductTypesToPostgresString } from '~/server/util/enum-util'
 
 export const filterByType =
   (productsTypes: ProductType[]) => (category: Category) => {
@@ -27,18 +30,39 @@ export class CategoryService {
 
   public static async getRootCategories(
     withNoProducts: Boolean = false,
-    productsTypes: ProductType[] = [ProductType.ECOMMERCE]
-  ) {
-    const categories = await Category.find({
+    productsTypes: ProductType[] = [ProductType.ECOMMERCE],
+    page: number = 1,
+    limit: number = 10
+  ): Promise<CategoryPagination> {
+    const where = (qb: SelectQueryBuilder<Category>) => {
+      qb.where([{ father: null }]).andWhere(
+        `"productsTypes" && ${convertProductTypesToPostgresString(
+          productsTypes
+        )}`
+      )
+    }
+    const [categories, total] = await Category.findAndCount({
       relations: ['products'],
-      where: {
-        father: null,
-      },
+      skip: (page - 1) * limit,
+      take: limit,
+      where,
     })
-    if (withNoProducts) return categories.filter(filterByType(productsTypes))
-    return categories
-      .filter((category) => category.products.length)
-      .filter(filterByType(productsTypes))
+
+    const pages = Math.round(total / limit)
+
+    return {
+      total,
+      edges: categories.map((category) => ({
+        cursor: category.id,
+        node: category,
+      })),
+      pageInfo: {
+        page,
+        pages,
+        endCursor: categories[categories.length - 1].id,
+        hasNextPage: page < pages,
+      },
+    }
   }
 
   public static async getCategory(id: Category['id']) {

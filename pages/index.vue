@@ -30,6 +30,9 @@
         </v-card-text>
       </v-card>
     </v-col>
+    <v-col cols="12">
+      <v-pagination v-model="page" :total-visible="10" :length="pages" />
+    </v-col>
   </v-row>
 </template>
 
@@ -37,13 +40,22 @@
 import { GetIndexPage } from '../graphql/query/GetIndexPage'
 export default {
   auth: false,
-  async asyncData({ store, app }) {
+  async asyncData({ store, app, route }) {
     const { data } = await app.apolloProvider.defaultClient.query({
       query: GetIndexPage,
+      variables: {
+        page: route.params.page ?? 1,
+        limit: 10,
+      },
     })
-    store.commit('category/setCategories', data.GetCategories)
+    store.commit(
+      'category/setCategories',
+      data.GetCategories.edges.map((edge) => edge.node)
+    )
     return {
-      categories: data.GetCategories,
+      categories: data.GetCategories.edges.map((edge) => edge.node),
+      page: data.GetCategories.pageInfo.page,
+      pages: data.GetCategories.pageInfo.pages,
       title: data.GetSiteSettings.name,
       description: data.GetSiteSettings.name,
       image: data.GetSiteSettings.logo,
@@ -52,6 +64,8 @@ export default {
   head() {
     return {
       title: this.title,
+      page: 1,
+      pages: 0,
       meta: [
         {
           hid: 'description',
@@ -75,6 +89,37 @@ export default {
         },
       ],
     }
+  },
+  watch: {
+    page() {
+      this.$router.push({
+        query: {
+          page: this.page,
+        },
+      })
+      this.search()
+    },
+  },
+  mounted() {
+    if (this.$route.query.page !== undefined) {
+      this.page = parseInt(this.$route.query.page)
+    }
+  },
+  methods: {
+    search() {
+      this.$apollo
+        .query({
+          query: GetIndexPage,
+          variables: {
+            page: this.page,
+          },
+        })
+        .then((response) => {
+          this.categories = response.data.GetCategories.edges.map(
+            (edge) => edge.node
+          )
+        })
+    },
   },
 }
 </script>

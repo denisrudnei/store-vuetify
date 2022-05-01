@@ -9,6 +9,7 @@ import {
   Resolver,
   Root,
   Ctx,
+  Int,
 } from 'type-graphql'
 
 import { SearchArgs } from '../args/SearchArgs'
@@ -20,21 +21,25 @@ import { CategoryService, filterByType } from '../services/CategoryService'
 import { ProductType } from '../enums/ProductType'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
+import { CategoryPagination } from '~/server/types/pagination/category/CategoryPagination'
 
 @Resolver(() => Category)
 export class CategoryResolver {
-  @Query(() => [Category])
+  @Query(() => CategoryPagination)
   public GetCategories(
     @Ctx() { req }: CustomExpressContext,
     @Arg('withNoProducts', () => Boolean, { nullable: true })
     withNoProducts?: boolean,
     @Arg('type', () => [ProductType], { nullable: true })
-    type = [ProductType.ECOMMERCE]
-  ) {
+    type = [ProductType.ECOMMERCE],
+    @Arg('page', () => Int, { nullable: true, defaultValue: 1 }) page?: number,
+    @Arg('limit', () => Int, { nullable: true, defaultValue: 10 })
+    limit?: number
+  ): Promise<CategoryPagination> {
     if (req.session.authUser && req.session.authUser!.role === Role.ADMIN) {
       type = Object.values(ProductType)
     }
-    return CategoryService.getRootCategories(withNoProducts, type)
+    return CategoryService.getRootCategories(withNoProducts, type, page, limit)
   }
 
   @Query(() => [Category])
