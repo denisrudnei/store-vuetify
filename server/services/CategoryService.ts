@@ -1,4 +1,4 @@
-import { In, SelectQueryBuilder } from 'typeorm'
+import { SelectQueryBuilder } from 'typeorm'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
@@ -6,8 +6,8 @@ import { Product } from '../models/Product'
 import { S3 } from '../S3'
 import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
 import { ProductType } from '../enums/ProductType'
-import { CategoryPagination } from '~/server/types/pagination/category/CategoryPagination'
-import { convertProductTypesToPostgresString } from '~/server/util/enum-util'
+import { CategoryPagination } from '../types/pagination/category/CategoryPagination'
+import { convertProductTypesToPostgresString } from '../util/enum-util'
 
 export const filterByType =
   (productsTypes: ProductType[]) => (category: Category) => {

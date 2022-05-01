@@ -21,7 +21,7 @@ import { CategoryService, filterByType } from '../services/CategoryService'
 import { ProductType } from '../enums/ProductType'
 import { CustomExpressContext } from '../types/CustomExpressContext'
 import { ProductPaginationConnection } from '../types/pagination/product/ProductPagination'
-import { CategoryPagination } from '~/server/types/pagination/category/CategoryPagination'
+import { CategoryPagination } from '../types/pagination/category/CategoryPagination'
 
 @Resolver(() => Category)
 export class CategoryResolver {
