@@ -77,7 +77,9 @@ export default {
         },
       })
       .then((response) => {
-        this.categories = response.data.GetAllCategories
+        this.categories = response.data.GetAllCategories.edges.map(
+          (edge) => edge.node
+        )
       })
   },
 }

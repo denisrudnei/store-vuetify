@@ -125,12 +125,18 @@ export default {
     this.$apollo
       .query({
         query: GetAllCategories,
+        variables: {
+          limit: 10000,
+        },
       })
       .then((response) => {
-        this.categories = response.data.GetAllCategories.map((item) => ({
-          text: item.name,
-          value: item.id,
-        })).filter((item) => item.value !== this.category.id)
+        this.categories = response.data.GetAllCategories.edges
+          .map((edge) => edge.node)
+          .map((item) => ({
+            text: item.name,
+            value: item.id,
+          }))
+          .filter((item) => item.value !== this.category.id)
       })
 
     this.$apollo

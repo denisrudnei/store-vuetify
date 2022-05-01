@@ -31,7 +31,7 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-pagination v-model="page" :total-visible="10" :length="pages" />
+      <v-pagination v-model="page" :total-visible="5" :length="pages" />
     </v-col>
   </v-row>
 </template>

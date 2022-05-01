@@ -19,13 +19,39 @@ export const filterByType =
 export class CategoryService {
   public static async getAllCategories(
     withNoProducts: Boolean = false,
-    productsTypes: ProductType[] = [ProductType.ECOMMERCE]
-  ) {
-    const categories = await Category.find({ relations: ['products'] })
-    if (withNoProducts) return categories.filter(filterByType(productsTypes))
-    return categories
-      .filter((category) => category.products.length)
-      .filter(filterByType(productsTypes))
+    productsTypes: ProductType[] = [ProductType.ECOMMERCE],
+    page: number = 1,
+    limit: number = 10
+  ): Promise<CategoryPagination> {
+    const where = (qb: SelectQueryBuilder<Category>) => {
+      qb.where(
+        `"productsTypes" && ${convertProductTypesToPostgresString(
+          productsTypes
+        )}`
+      )
+    }
+    const [categories, total] = await Category.findAndCount({
+      relations: ['products'],
+      skip: (page - 1) * limit,
+      take: limit,
+      where,
+    })
+
+    const pages = Math.round(total / limit)
+
+    return {
+      total,
+      edges: categories.map((category) => ({
+        cursor: category.id,
+        node: category,
+      })),
+      pageInfo: {
+        page,
+        pages,
+        endCursor: categories[categories.length - 1].id,
+        hasNextPage: page < pages,
+      },
+    }
   }
 
   public static async getRootCategories(
@@ -35,14 +61,16 @@ export class CategoryService {
     limit: number = 10
   ): Promise<CategoryPagination> {
     const where = (qb: SelectQueryBuilder<Category>) => {
-      qb.where([{ father: null }]).andWhere(
-        `"productsTypes" && ${convertProductTypesToPostgresString(
-          productsTypes
-        )}`
-      )
+      qb.where([])
+        .andWhere('Category.fatherId is null')
+        .andWhere(
+          `Category.productsTypes && ${convertProductTypesToPostgresString(
+            productsTypes
+          )}`
+        )
     }
     const [categories, total] = await Category.findAndCount({
-      relations: ['products'],
+      relations: ['products', 'father'],
       skip: (page - 1) * limit,
       take: limit,
       where,
@@ -111,7 +139,7 @@ export class CategoryService {
     category.name = categoryToEdit.name
     category.description = categoryToEdit.description
     if (categoryToEdit.productsTypes) {
-      this.editTypeForCategory(
+      await this.editTypeForCategory(
         category.id,
         categoryToEdit.productsTypes,
         categoryToEdit.applyToSubs != null ? categoryToEdit.applyToSubs : false

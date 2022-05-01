@@ -41,7 +41,7 @@ SitemapController.get('/sitemap.xml', async (_, res) => {
       })
     }
 
-    for (const category of categories) {
+    for (const category of categories.edges.map((edge) => edge.node)) {
       sitemapStream.write({
         url: `${hostname}categories/${category.slug}`,
         changefreq: 'daily',

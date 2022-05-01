@@ -1,7 +1,7 @@
 <template>
   <v-data-table :headers="headers" :items="printers">
     <template #item.installedIn="{ item }">
-      <span>{{ item.installedIn.id }} - {{ item.installedIn.name }}</span>
+      <span> {{ item.installedIn.name }}</span>
     </template>
     <template #item.actions="{ item }">
       <v-btn class="primary--text" :to="`/admin/printers/edit/${item.id}`" icon>

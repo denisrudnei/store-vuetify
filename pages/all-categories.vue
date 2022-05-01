@@ -25,6 +25,9 @@
         </v-card-title>
       </v-card>
     </v-col>
+    <v-col cols="12">
+      <v-pagination v-model="page" :total-visible="5" :length="pages" />
+    </v-col>
   </v-row>
 </template>
 
@@ -36,13 +39,57 @@ export default {
     const { data } = await app.apolloProvider.defaultClient.query({
       query: GetAllCategories,
     })
-    store.commit('category/setAllCategories', data.GetAllCategories)
+    store.commit(
+      'category/setAllCategories',
+      data.GetAllCategories.edges.map((edge) => edge.node)
+    )
     return {
-      allCategories: data.GetAllCategories,
+      allCategories: data.GetAllCategories.edges.map((edge) => edge.node),
+      pages: data.GetAllCategories.pageInfo.pages,
+      page: data.GetAllCategories.pageInfo.page,
+    }
+  },
+  data() {
+    return {
+      page: 1,
     }
   },
   head: {
     title: 'Categories',
+  },
+  watch: {
+    page() {
+      console.log(`Page ${this.page}`)
+      this.$router.push({
+        query: {
+          page: this.page,
+        },
+      })
+      this.search()
+    },
+  },
+  mounted() {
+    if (this.$route.query.page !== undefined) {
+      this.page = parseInt(this.$route.query.page)
+    }
+  },
+  methods: {
+    search() {
+      this.$apollo
+        .query({
+          query: GetAllCategories,
+          variables: {
+            page: this.page,
+          },
+        })
+        .then((response) => {
+          this.allCategories = response.data.GetAllCategories.edges.map(
+            (edge) => edge.node
+          )
+          this.page = response.data.GetAllCategories.pageInfo.page
+          this.pages = response.data.GetAllCategories.pageInfo.pages
+        })
+    },
   },
 }
 </script>

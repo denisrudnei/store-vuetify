@@ -42,18 +42,21 @@ export class CategoryResolver {
     return CategoryService.getRootCategories(withNoProducts, type, page, limit)
   }
 
-  @Query(() => [Category])
+  @Query(() => CategoryPagination)
   public GetAllCategories(
     @Ctx() { req }: CustomExpressContext,
     @Arg('withNoProducts', () => Boolean, { nullable: true })
     withNoProducts?: boolean,
     @Arg('type', () => [ProductType], { nullable: true })
-    type = [ProductType.ECOMMERCE]
+    type = [ProductType.ECOMMERCE],
+    @Arg('page', () => Int, { nullable: true, defaultValue: 1 }) page?: number,
+    @Arg('limit', () => Int, { nullable: true, defaultValue: 10 })
+    limit?: number
   ) {
     if (req.session.authUser && req.session.authUser!.role === Role.ADMIN) {
       type = Object.values(ProductType)
     }
-    return CategoryService.getAllCategories(withNoProducts, type)
+    return CategoryService.getAllCategories(withNoProducts, type, page, limit)
   }
 
   @Query(() => [Category])
