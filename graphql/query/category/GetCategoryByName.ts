@@ -14,15 +14,33 @@ query GetCategoryByName($name: String!, $page: Int) {
       id
       slug
       subCategories {
-        id
-        name
-        slug
+        total
+        pageInfo {
+          page
+          pages
+        }
+        edges {
+          node {
+            id
+            name
+            slug
+          }
+        }
       }
     }
     subCategories {
-      id
-      name
-      slug
+      total
+      pageInfo {
+        page
+        pages
+      }
+      edges {
+        node {
+          id
+          name
+          slug
+        }
+      }
     }
     productsTypes
     productsConnection(limit: 12, page: $page) {
@@ -41,10 +59,19 @@ query GetCategoryByName($name: String!, $page: Int) {
       }
     }
     products(limit: 12) {
-      id
-      name
-      price
-      primaryImage
+      total
+      pageInfo {
+        page
+        pages
+      }
+      edges {
+        node {
+          id
+          name
+          price
+          primaryImage
+        }
+      }
     }
   }
 }

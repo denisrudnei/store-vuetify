@@ -1,4 +1,4 @@
-import { SelectQueryBuilder } from 'typeorm'
+import { In, SelectQueryBuilder } from 'typeorm'
 import { CreateCategoryInput } from '../inputs/CreateCategoryInput'
 import { EditCategoryInput } from '../inputs/EditCategoryInput'
 import { Category } from '../models/Category'
@@ -87,7 +87,8 @@ export class CategoryService {
       pageInfo: {
         page,
         pages,
-        endCursor: categories[categories.length - 1].id,
+        endCursor:
+          categories.length > 0 ? categories[categories.length - 1].id : '',
         hasNextPage: page < pages,
       },
     }
@@ -210,34 +211,53 @@ export class CategoryService {
     return true
   }
 
+  public static async getAllSubsRecursive(
+    id: Category['id']
+  ): Promise<Category[]> {
+    const subs: Category[] = []
+    const category = await Category.findOne(id, {
+      relations: ['subCategories'],
+    })
+    if (!category) throw new Error('Category not found')
+    if (category.subCategories.length === 0) return []
+    for (const sub of category.subCategories) {
+      subs.push(...(await this.getAllSubsRecursive(sub.id)))
+    }
+    return subs
+  }
+
   public static async getProducts(
     id: Category['id'],
     limit: number = 10,
     page: number = 1
-  ): Promise<Product[]> {
-    const { subCategories } = (await Category.findOne(id, {
-      relations: ['products', 'subCategories'],
-    })) as Category
-    const products = await Product.find({
+  ): Promise<ProductPaginationConnection> {
+    // FIXME
+
+    const subsIds = (await this.getAllSubsRecursive(id)).map((sub) => sub.id)
+
+    const [products, total] = await Product.findAndCount({
       where: {
-        category: id,
+        category: In(subsIds),
       },
       take: limit,
       skip: (page - 1) * limit,
     })
 
-    if (!products.length && !subCategories.length) return []
-    if (!products.length) {
-      const productsInSubCategories: Product[] = []
+    const pages = Math.round(total / limit)
 
-      for (const sub of subCategories) {
-        productsInSubCategories.push(
-          ...(await this.getProducts(sub.id, limit, page))
-        )
-      }
-      return await Promise.all(productsInSubCategories)
+    return {
+      total,
+      pageInfo: {
+        pages,
+        page,
+        hasNextPage: page < pages,
+        endCursor: products.length > 0 ? products[products.length - 1].id : '',
+      },
+      edges: products.map((product) => ({
+        cursor: product.id,
+        node: product,
+      })),
     }
-    return products
   }
 
   public static async getProductsPaginated(

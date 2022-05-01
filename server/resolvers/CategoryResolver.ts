@@ -122,7 +122,7 @@ export class CategoryResolver {
     return CategoryService.getFullName(root.id)
   }
 
-  @FieldResolver()
+  @FieldResolver(() => CategoryPagination)
   public async subCategories(
     @Arg('withNoProducts', () => Boolean, { nullable: true })
     withNoProducts: Boolean = false,
@@ -131,27 +131,39 @@ export class CategoryResolver {
       defaultValue: false,
     })
     allTypes: boolean,
-    @Root() root: Category
-  ) {
-    const { subCategories } = (await Category.findOne(root.id, {
-      relations: ['subCategories'],
-    })) as Category
-    if (withNoProducts && allTypes) return subCategories
-    if (withNoProducts)
-      return subCategories.filter(filterByType([ProductType.ECOMMERCE]))
-    const categoriesWithSubProducts = (await Promise.all(
-      subCategories.map(async (sub) => {
-        return {
-          ...sub,
-          products: await CategoryService.getProducts(sub.id),
-        }
-      })
-    )) as Category[]
-    const filtered = categoriesWithSubProducts.filter(
-      (sub) => sub.products.length > 0
-    )
-    if (allTypes) return filtered
-    return filtered.filter(filterByType([ProductType.ECOMMERCE]))
+    @Root() root: Category,
+    @Arg('page', () => Int, { nullable: true, defaultValue: 1 })
+    page: number = 1,
+    @Arg('limit', () => Int, { nullable: true, defaultValue: 10 })
+    limit: number = 10
+  ): Promise<CategoryPagination> {
+    // FIXME
+    const [subCategories, total] = await Category.findAndCount({
+      where: {
+        father: root.id,
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+    })
+
+    const pages = Math.round(total / limit)
+
+    return {
+      total,
+      pageInfo: {
+        page,
+        pages,
+        endCursor:
+          subCategories.length > 0
+            ? subCategories[subCategories.length - 1].id
+            : '',
+        hasNextPage: page < pages,
+      },
+      edges: subCategories.map((category) => ({
+        cursor: category.id,
+        node: category,
+      })),
+    }
   }
 
   @FieldResolver(() => ProductPaginationConnection)

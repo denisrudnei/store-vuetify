@@ -38,7 +38,6 @@ export class Category extends BaseEntity {
   @Column({ default: '/images/not-set.svg' })
   public image!: string
 
-  @Field(() => [Product])
   @OneToMany(() => Product, (product) => product.category)
   public products!: Product[]
 
@@ -46,7 +45,6 @@ export class Category extends BaseEntity {
   @ManyToOne(() => Category, (category) => category.subCategories)
   public father?: Category | null
 
-  @Field(() => [Category])
   @OneToMany(() => Category, (category) => category.father)
   public subCategories!: Category[]
 

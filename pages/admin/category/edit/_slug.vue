@@ -13,14 +13,17 @@ export default {
   data() {
     return {
       category: undefined,
+      page: 1,
     }
   },
   created() {
+    this.page = this.$route.query.page
     this.$apollo
       .query({
         query: GetCategoryByNameEdit,
         variables: {
           name: this.$route.params.slug,
+          page: this.page,
         },
       })
       .then((response) => {

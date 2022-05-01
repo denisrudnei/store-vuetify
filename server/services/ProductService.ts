@@ -20,8 +20,10 @@ import { ProductPaginationConnection } from '../types/pagination/product/Product
 import { convertProductTypesToPostgresString } from '../util/enum-util'
 
 export class ProductService {
-  public static getProducts() {
-    return Product.find()
+  public static getProducts(limit?: number) {
+    return Product.find({
+      take: limit,
+    })
   }
 
   public static async getProductsPaginated(

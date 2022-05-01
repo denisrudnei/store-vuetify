@@ -31,8 +31,8 @@ import { ProductPaginationConnection } from '../types/pagination/product/Product
 @Resolver(() => Product)
 export class ProductResolver {
   @Query(() => [Product])
-  public GetProducts() {
-    return ProductService.getProducts()
+  public GetProducts(@Arg('limit', { nullable: true }) limit?: number) {
+    return ProductService.getProducts(limit)
   }
 
   @Query(() => ProductPaginationConnection)
