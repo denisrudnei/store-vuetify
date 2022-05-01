@@ -11,6 +11,7 @@ query GetIndexPage ($page: Int, $limit: Int){
     edges {
       node {
         id
+        image
         name
         description
         slug
