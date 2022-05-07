@@ -21,6 +21,7 @@ import { convertProductTypesToPostgresString } from '../util/enum-util'
 
 export class ProductService {
   public static getProducts(limit?: number) {
+    if (!limit) return Product.find()
     return Product.find({
       take: limit,
     })
