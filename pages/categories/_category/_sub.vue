@@ -112,11 +112,13 @@ export default {
               (edge) => edge.node
             ),
           ],
-          products: response.data.GetCategoryByName.products.edges.map(
-            (edge) => edge.node
-          ),
-          pages: response.data.GetCategoryByName.products.pageInfo.pages,
-          total: response.data.GetCategoryByName.products.total,
+          products:
+            response.data.GetCategoryByName.productsConnection.edges.map(
+              (edge) => edge.node
+            ),
+          pages:
+            response.data.GetCategoryByName.productsConnection.pageInfo.pages,
+          total: response.data.GetCategoryByName.productsConnection.total,
         }
       })
       .catch(() => {
@@ -190,7 +192,7 @@ export default {
   },
   created() {
     const { page } = this.$route.query
-    console.log(page)
+
     if (page !== undefined) {
       this.page = parseInt(page)
     }
@@ -209,7 +211,9 @@ export default {
           this.category = response.data.GetCategoryByName
           this.subCategories = [
             response.data.GetCategoryByName,
-            ...response.data.GetCategoryByName.subCategories,
+            ...response.data.GetCategoryByName.subCategories.edges.map(
+              (edge) => edge.node
+            ),
           ]
           this.products =
             response.data.GetCategoryByName.productsConnection.edges.map(
