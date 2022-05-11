@@ -63,8 +63,8 @@ export class ProductResolver {
   }
 
   @Query(() => Product, { nullable: true })
-  GetProduct(@Arg('id', () => ID) id: Product['id']) {
-    return ProductService.getProduct(id)
+  GetProduct(@Arg('id', () => ID) id: string) {
+    return ProductService.getProduct(parseInt(id))
   }
 
   @Query(() => ProductPaginationConnection)
