@@ -6,7 +6,7 @@ export enum PrinterType {
   LABEL = 'LABEL',
   NETWORK = 'NETWORK',
   BLUETOOTH = 'BLUETOOTH',
-  
+  BUILT_IN = 'BUILT_IN',
 }
 
 registerEnumType(PrinterType, {
