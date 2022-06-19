@@ -102,6 +102,13 @@ export class PrinterResolver {
     return PrinterService.remove(id)
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.ADMIN)
+  public async RemovePrinters(@Arg('ids', () => [ID]) ids: Printer['id'][]) {
+    await PrinterService.removeMany(ids)
+    return true
+  }
+
   @FieldResolver()
   public async installedIn(@Root() root: Printer) {
     const { installedIn } = (await Printer.findOne(root.id, {
