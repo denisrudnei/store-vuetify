@@ -18,4 +18,4 @@ EXPOSE 80
 ARG PORT=80
 ARG HOST=0.0.0.0
 
-CMD npm start
+CMD npm run start
