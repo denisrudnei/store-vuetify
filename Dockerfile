@@ -10,7 +10,7 @@ COPY ./ /opt/e_commerce/
 
 RUN apt-get update
 RUN apt-get -yqq install build-essential nodejs npm
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 EXPOSE 80
